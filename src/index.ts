@@ -1,11 +1,8 @@
-import Ajv from "ajv"
 import jexl from "jexl"
 import type {
   JSONSchema7Type as IJSON,
   JSONSchema7 as JSONSchema
 } from "json-schema"
-
-const ajv = new Ajv()
 
 export interface Edge {
   id: string
@@ -186,21 +183,16 @@ export class JexlEngine implements IExpressionEngine {
 export class WorkflowEngine<T extends NodesDefinition = NodesDefinition> {
   workflow: Workflow
   nodeDefinitions: T
-  validationEnabled: boolean
   private expressionEngine: IExpressionEngine
-  // biome-ignore lint/suspicious/noExplicitAny: ajv validate function
-  private schemaCache = new WeakMap<object, any>()
 
   constructor({
     workflow,
     nodeDefinitions,
-    expressionEngine = new JexlEngine(),
-    validationEnabled = true
+    expressionEngine = new JexlEngine()
   }: {
     workflow: WorkflowDefinition<T>
     nodeDefinitions: T
     expressionEngine?: IExpressionEngine
-    validationEnabled?: boolean
   }) {
     this.workflow = {
       nodes: new Map(workflow.nodes.map((node) => [node.id, node as Node])),
@@ -208,7 +200,6 @@ export class WorkflowEngine<T extends NodesDefinition = NodesDefinition> {
     }
     this.nodeDefinitions = nodeDefinitions
     this.expressionEngine = expressionEngine
-    this.validationEnabled = validationEnabled
   }
 
   async validateWorkflow(): Promise<void> {
@@ -333,8 +324,6 @@ export class WorkflowEngine<T extends NodesDefinition = NodesDefinition> {
         contextData
       )
 
-      this.validateData(definition.input, resolvedInput, node.id, "input")
-
       const result = await definition.executor(
         resolvedInput,
         context,
@@ -349,8 +338,6 @@ export class WorkflowEngine<T extends NodesDefinition = NodesDefinition> {
           totalExecutionTime
         }
       }
-
-      this.validateData(definition.output, result.data, node.id, "output")
 
       const currentAttempt =
         snapshot.retryState?.nodeId === node.id
@@ -476,26 +463,5 @@ export class WorkflowEngine<T extends NodesDefinition = NodesDefinition> {
     )
 
     return targetEdge ? targetEdge.target : null
-  }
-
-  private validateData(
-    schema: JSONSchema,
-    data: IJSON,
-    nodeId: string,
-    type: string
-  ) {
-    if (Object.keys(schema).length === 0 || !this.validationEnabled) return
-
-    let validate = this.schemaCache.get(schema)
-    if (!validate) {
-      validate = ajv.compile(schema)
-      this.schemaCache.set(schema, validate)
-    }
-
-    if (!validate(data)) {
-      throw new Error(
-        `Validation failed for node ${nodeId} (${type}): ${ajv.errorsText(validate.errors)}`
-      )
-    }
   }
 }
