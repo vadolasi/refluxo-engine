@@ -1,9 +1,10 @@
 name: CI
 
-on: [push, pull_request]
-
-permissions:
-  contents: read
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
 
 jobs:
   commitlint:
@@ -42,7 +43,7 @@ jobs:
         if: github.event_name == 'pull_request'
         run: pnpm dlx commitlint --from ${{ github.event.pull_request.base.sha }} --to ${{ github.event.pull_request.head.sha }} --verbose
 
-  lint:
+  lint-and-test:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -66,3 +67,11 @@ jobs:
 
       - name: Run lint-staged
         run: pnpm exec lint-staged
+      
+      - name: Run Tests with Coverage
+        run: pnpm test:coverage
+
+      - name: Upload coverage to Codecov
+        uses: codecov/codecov-action@v4
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}

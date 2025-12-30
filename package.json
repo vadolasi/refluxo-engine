@@ -19,7 +19,9 @@
 		"build": "tsup src/index.ts --format cjs,esm --dts --clean",
 		"dev": "tsup src/index.ts --format cjs,esm --watch --dts",
 		"lint": "tsc --noEmit",
-		"test": "vitest",
+		"test": "vitest run",
+		"test:watch": "vitest",
+		"test:coverage": "vitest run --coverage --coverage.reporter=lcov",
 		"prepare": "husky",
 		"prepublishOnly": "pnpm run build"
 	},
@@ -69,6 +71,7 @@
 		"@size-limit/preset-small-lib": "^12.0.0",
 		"@types/jexl": "^2.3.4",
 		"@types/json-schema": "^7.0.15",
+		"@vitest/coverage-v8": "^4.0.16",
 		"commitizen": "^4.3.1",
 		"cz-conventional-changelog": "^3.3.0",
 		"husky": "^9.1.7",
