@@ -1,5 +1,5 @@
-import { Tournament } from "@n8n/tournament"
 import Ajv from "ajv"
+import jexl from "jexl"
 import type {
   JSONSchema7Type as IJSON,
   JSONSchema7 as JSONSchema
@@ -85,36 +85,57 @@ interface Snapshot {
 }
 
 export interface IExpressionEngine {
-  prepareContext(context: Context): unknown
-  resolve(value: string, context: unknown): IJSON
-  resolveData(data: IJSON, context: unknown): IJSON
+  prepareContext(context: Context): Promise<unknown>
+  resolve(value: string, context: unknown): Promise<IJSON>
+  resolveData(data: IJSON, context: unknown): Promise<IJSON>
 }
+export class JexlEngine implements IExpressionEngine {
+  private jexl = new jexl.Jexl()
 
-export class TournamentEngine implements IExpressionEngine {
-  private tournament = new Tournament()
-
-  // biome-ignore lint/suspicious/noExplicitAny: dynamic context for parser
-  prepareContext(context: Context): Record<string, any> {
+  async prepareContext(context: Context): Promise<Record<string, unknown>> {
     return this.flattenContext(context)
   }
 
-  resolve(value: string, context: unknown): IJSON {
-    return this.runParser(value, context)
+  async resolve(value: string, context: unknown): Promise<IJSON> {
+    if (!value.includes("{{")) {
+      return value as IJSON
+    }
+
+    const fullMatch = value.match(/^\{\{(.+?)\}\}$/)
+    if (fullMatch) {
+      return this.runParser(fullMatch[1], context)
+    }
+
+    const parts = value.split(/(\{\{.+?\}\})/)
+    const resolvedParts = await Promise.all(
+      parts.map(async (part) => {
+        const match = part.match(/^\{\{(.+?)\}\}$/)
+        if (match) {
+          const result = await this.runParser(match[1], context)
+          return String(result ?? "")
+        }
+        return part
+      })
+    )
+
+    return resolvedParts.join("")
   }
 
-  resolveData(data: IJSON, context: unknown): IJSON {
+  async resolveData(data: IJSON, context: unknown): Promise<IJSON> {
     if (typeof data === "string") {
       return this.resolve(data, context)
     }
 
     if (Array.isArray(data)) {
-      return data.map((item) => this.resolveData(item as IJSON, context))
+      return Promise.all(
+        data.map((item) => this.resolveData(item as IJSON, context))
+      )
     }
 
     if (data !== null && typeof data === "object") {
-      const resolvedObject: IJSON = {}
+      const resolvedObject: Record<string, IJSON> = {}
       for (const [key, value] of Object.entries(data)) {
-        resolvedObject[key] = this.resolveData(value as IJSON, context)
+        resolvedObject[key] = await this.resolveData(value as IJSON, context)
       }
       return resolvedObject
     }
@@ -122,24 +143,27 @@ export class TournamentEngine implements IExpressionEngine {
     return data
   }
 
-  private runParser(expression: string, flatContext: unknown): IJSON {
+  private async runParser(
+    expression: string,
+    flatContext: unknown
+  ): Promise<IJSON> {
     try {
-      return this.tournament.execute(expression, flatContext) as IJSON
-    } catch {
+      return (await this.jexl.eval(
+        expression.trim(),
+        // biome-ignore lint/suspicious/noExplicitAny: jexl context
+        flatContext as any
+      )) as IJSON
+    } catch (e) {
+      console.error(`Jexl Error in [${expression}]:`, e)
       return null
     }
   }
 
-  // biome-ignore lint/suspicious/noExplicitAny: dynamic context for parser
-  private flattenContext(context: Context): Record<string, any> {
-    // biome-ignore lint/suspicious/noExplicitAny: dynamic context for parser
-    const nodes: Record<string, any> = {}
-
+  private flattenContext(context: Context): Record<string, unknown> {
+    const nodes: Record<string, unknown> = {}
     for (const [nodeId, results] of Object.entries(context)) {
       if (results.length === 0) continue
-
       const lastResult = results[results.length - 1]
-
       nodes[nodeId] = {
         output: lastResult.output,
         last: {
@@ -170,7 +194,7 @@ export class WorkflowEngine<T extends NodesDefinition = NodesDefinition> {
   constructor({
     workflow,
     nodeDefinitions,
-    expressionEngine = new TournamentEngine(),
+    expressionEngine = new JexlEngine(),
     validationEnabled = true
   }: {
     workflow: WorkflowDefinition<T>
@@ -303,8 +327,8 @@ export class WorkflowEngine<T extends NodesDefinition = NodesDefinition> {
     if (!definition) throw new Error("Node definition not found")
 
     try {
-      const contextData = this.expressionEngine.prepareContext(context)
-      const resolvedInput = this.expressionEngine.resolveData(
+      const contextData = await this.expressionEngine.prepareContext(context)
+      const resolvedInput = await this.expressionEngine.resolveData(
         node.data,
         contextData
       )
@@ -377,11 +401,16 @@ export class WorkflowEngine<T extends NodesDefinition = NodesDefinition> {
     const definition = this.nodeDefinitions[node.type]
     const policy = definition?.retryPolicy
 
-    const contextData = this.expressionEngine.prepareContext(snapshot.context)
+    const contextData = await this.expressionEngine.prepareContext(
+      snapshot.context
+    )
 
     const maxAttempts = policy
       ? Number(
-          this.expressionEngine.resolve(String(policy.maxAttempts), contextData)
+          await this.expressionEngine.resolve(
+            String(policy.maxAttempts),
+            contextData
+          )
         )
       : 0
 

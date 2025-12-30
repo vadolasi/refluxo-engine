@@ -1,5 +1,10 @@
 # Refluxo 🤢🔄
 
+![NPM Version](https://img.shields.io/npm/v/refluxo-engine)
+![License](https://img.shields.io/github/license/vadolasi/refluxo-engine)
+![Bundle Size](https://img.shields.io/bundlephobia/minzip/refluxo-engine)
+![NPM Downloads](https://img.shields.io/npm/dm/refluxo-engine)
+
 A stateless, snapshot‑based, and serverless‑ready workflow engine for JavaScript.
 
 Refluxo is a lightweight engine designed for modern distributed environments. Unlike traditional engines that "run" a process, Refluxo transitions states. It takes a snapshot, processes a step, and returns a new snapshot. This makes it the perfect backbone for "Human-in-the-loop" systems, long-running processes, and serverless architectures.
@@ -26,7 +31,7 @@ Native integration with JSON Schema (via Ajv) to ensure data integrity between n
 
 ### 🧠 Powerful Expressions
 
-Uses @n8n/tournament to allow dynamic data mapping using the familiar n8n syntax: {{ nodes.myNode.last.data.value }}.
+Uses JEXL to allow dynamic data mapping similar to n8n syntax.
 
 ### ⏸ Human-in-the-loop 
 
@@ -78,7 +83,7 @@ Workflows are plain JSON objects, making them easy to store and fetch from a fro
 const workflow = {
   nodes: [
     { id: 'start', type: 'http_request', data: { url: 'https://api.example.com/data' } },
-    { id: 'check_status', type: 'condition', data: { check: '{{ nodes.start.last.data.status === "ok" }}' } }
+    { id: 'check_status', type: 'condition', data: { check: 'nodes.start.last.data.status === "ok"' } }
   ],
   edges: [
     { source: 'start', target: 'check_status' },
@@ -119,7 +124,7 @@ Retries can be static or dynamic, driven by expressions.
 const apiNode = {
   type: 'api_call',
   retryPolicy: {
-    maxAttempts: '{{ nodes.config.last.data.retryCount }}',
+    maxAttempts: 'nodes.config.last.data.retryCount',
     interval: 5000,
     backoff: 'exponential'
   },
