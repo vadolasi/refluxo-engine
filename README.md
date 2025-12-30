@@ -27,13 +27,15 @@ Refluxo is isomorphic. It runs wherever JavaScript runs:
 
 Every execution step is serializable. Pause a flow, save it to a database, and resume it days later.
 
-### 🛡️ Strict Schemas
+### 🛡️ Validation & Strict Schemasype Safety
 
-Native integration with JSON Schema (via Ajv) to ensure data integrity between nodes.
+Refluxo supports any validation library that implements [Standard Schema](https://standardschema.dev). You can use the popular [Zod](https://zod.dev), [Valibot](https://valibot.dev) for a small bundle size, [TypeBox](https://github.com/sinclairzx81/typebox) or [ArkType](https://arktype.io) for better peformance, or any other.
+
+If you store your schema outside code, like in a database, you can write a logic to convert it to a Standad Schema object, for a example, [read the docs](#)
 
 ### 🧠 Powerful Expressions
 
-Uses JEXL to allow dynamic data mapping similar to n8n syntax.
+Uses JEXL to allow dynamic data mapping similar to n8n.
 
 ### ⏸ Human-in-the-loop 
 
@@ -57,18 +59,14 @@ pnpm add refluxo-engine
 Executors are pure logic. They receive resolved data and return an output.
 
 ```typescript
-import { NodeDefinition } from 'refluxo';
+import { NodeDefinition } from 'refluxo-engine';
+import * as v from 'valibot'; // or any other
 
 const httpRequest: NodeDefinition = {
-  // Enforce data contracts
-  input: { 
-    type: 'object', 
-    properties: { url: { type: 'string' } },
-    required: ['url']
-  },
-  output: { type: 'object' },
+  input: v.object({
+    url: v.pipe(v.string(), v.url())
+  }),
   
-  // Logic
   async executor(data, context) {
     const response = await fetch(data.url);
     const json = await response.json();
@@ -85,7 +83,7 @@ Workflows are plain JSON objects, making them easy to store and fetch from a fro
 const workflow = {
   nodes: [
     { id: 'start', type: 'http_request', data: { url: 'https://api.example.com/data' } },
-    { id: 'check_status', type: 'condition', data: { check: 'nodes.start.last.data.status === "ok"' } }
+    data: { check: '{{ nodes.start.last.data.status === "ok" }}' }
   ],
   edges: [
     { source: 'start', target: 'check_status' },

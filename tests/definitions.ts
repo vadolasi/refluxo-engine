@@ -1,26 +1,32 @@
+import * as v from "valibot"
 import type { NodesDefinition } from "../src"
 
 const definitions: NodesDefinition = {
   "test:input": {
-    input: {},
-    output: {},
+    input: v.looseObject({}),
     executor: async (data, _ctx, payload) => ({ data: payload || data })
   },
   "test:condition": {
-    input: { type: "object" },
-    output: {},
-    executor: async (data: unknown) => ({
+    input: v.object({
+      check: v.boolean()
+    }),
+    executor: async (data) => ({
       data: {},
       nextHandle: (data as { check: boolean }).check ? "true" : "false"
     })
   },
   "test:fail": {
-    input: {},
-    output: {},
-    retryPolicy: { maxAttempts: 1, interval: 10, backoff: "fixed" },
+    retryPolicy: {
+      maxAttempts: "{{ nodes.config.last.data.retries }}",
+      interval: 10,
+      backoff: "fixed"
+    },
     executor: async () => {
       throw new Error("Fail")
     }
+  },
+  "test:log": {
+    executor: async (data) => ({ data })
   }
 }
 

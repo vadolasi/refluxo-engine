@@ -1,8 +1,5 @@
+import type { StandardSchemaV1 } from "@standard-schema/spec"
 import jexl from "jexl"
-import type {
-  JSONSchema7Type as IJSON,
-  JSONSchema7 as JSONSchema
-} from "json-schema"
 
 export interface Edge {
   id: string
@@ -17,16 +14,23 @@ export interface RetryPolicy {
   backoff: string | "fixed" | "exponential"
 }
 
-export interface NodeDefinition {
-  input: JSONSchema
-  output: JSONSchema
+export interface NodeDefinition<
+  TInput extends StandardSchemaV1 = StandardSchemaV1,
+  TOutput extends StandardSchemaV1 = StandardSchemaV1
+> {
+  input?: TInput
+  output?: TOutput
   retryPolicy?: RetryPolicy
   executor: (
-    data: IJSON,
+    data: TInput extends StandardSchemaV1
+      ? StandardSchemaV1.InferOutput<TInput>
+      : unknown,
     context: Context,
-    externalPayload?: IJSON
+    externalPayload?: unknown
   ) => Promise<{
-    data: IJSON
+    data: TOutput extends StandardSchemaV1
+      ? StandardSchemaV1.InferInput<TOutput>
+      : unknown
     __pause?: true
     nextHandle?: string
   }>
@@ -37,7 +41,7 @@ export type NodesDefinition = Record<string, NodeDefinition>
 export interface Node<TType = string> {
   id: string
   type: TType
-  data: IJSON
+  data: unknown
 }
 
 interface Workflow {
@@ -53,7 +57,7 @@ export interface WorkflowDefinition<
 }
 
 interface NodeResult {
-  output: IJSON | null
+  output: unknown | null
   timestamp: number
   error?: string
   attempt: number
@@ -83,8 +87,8 @@ interface Snapshot {
 
 export interface IExpressionEngine {
   prepareContext(context: Context): Promise<unknown>
-  resolve(value: string, context: unknown): Promise<IJSON>
-  resolveData(data: IJSON, context: unknown): Promise<IJSON>
+  resolve(value: string, context: unknown): Promise<unknown>
+  resolveData(data: unknown, context: unknown): Promise<unknown>
 }
 export class JexlEngine implements IExpressionEngine {
   private jexl = new jexl.Jexl()
@@ -93,9 +97,9 @@ export class JexlEngine implements IExpressionEngine {
     return this.flattenContext(context)
   }
 
-  async resolve(value: string, context: unknown): Promise<IJSON> {
+  async resolve(value: string, context: unknown): Promise<unknown> {
     if (!value.includes("{{")) {
-      return value as IJSON
+      return value
     }
 
     const fullMatch = value.match(/^\{\{(.+?)\}\}$/)
@@ -118,21 +122,19 @@ export class JexlEngine implements IExpressionEngine {
     return resolvedParts.join("")
   }
 
-  async resolveData(data: IJSON, context: unknown): Promise<IJSON> {
+  async resolveData(data: unknown, context: unknown): Promise<unknown> {
     if (typeof data === "string") {
       return this.resolve(data, context)
     }
 
     if (Array.isArray(data)) {
-      return Promise.all(
-        data.map((item) => this.resolveData(item as IJSON, context))
-      )
+      return Promise.all(data.map((item) => this.resolveData(item, context)))
     }
 
     if (data !== null && typeof data === "object") {
-      const resolvedObject: Record<string, IJSON> = {}
+      const resolvedObject: Record<string, unknown> = {}
       for (const [key, value] of Object.entries(data)) {
-        resolvedObject[key] = await this.resolveData(value as IJSON, context)
+        resolvedObject[key] = await this.resolveData(value, context)
       }
       return resolvedObject
     }
@@ -143,13 +145,13 @@ export class JexlEngine implements IExpressionEngine {
   private async runParser(
     expression: string,
     flatContext: unknown
-  ): Promise<IJSON> {
+  ): Promise<unknown> {
     try {
-      return (await this.jexl.eval(
+      return await this.jexl.eval(
         expression.trim(),
         // biome-ignore lint/suspicious/noExplicitAny: jexl context
         flatContext as any
-      )) as IJSON
+      )
     } catch (e) {
       console.error(`Jexl Error in [${expression}]:`, e)
       return null
@@ -184,15 +186,18 @@ export class WorkflowEngine<T extends NodesDefinition = NodesDefinition> {
   workflow: Workflow
   nodeDefinitions: T
   private expressionEngine: IExpressionEngine
+  private validate: boolean
 
   constructor({
     workflow,
     nodeDefinitions,
-    expressionEngine = new JexlEngine()
+    expressionEngine = new JexlEngine(),
+    validate = true
   }: {
     workflow: WorkflowDefinition<T>
     nodeDefinitions: T
     expressionEngine?: IExpressionEngine
+    validate?: boolean
   }) {
     this.workflow = {
       nodes: new Map(workflow.nodes.map((node) => [node.id, node as Node])),
@@ -200,6 +205,7 @@ export class WorkflowEngine<T extends NodesDefinition = NodesDefinition> {
     }
     this.nodeDefinitions = nodeDefinitions
     this.expressionEngine = expressionEngine
+    this.validate = validate
   }
 
   async validateWorkflow(): Promise<void> {
@@ -228,13 +234,13 @@ export class WorkflowEngine<T extends NodesDefinition = NodesDefinition> {
 
   async execute(args: {
     snapshot: Snapshot
-    externalPayload?: IJSON
+    externalPayload?: unknown
     stepLimit?: number
   }): Promise<Snapshot>
   async execute(args: {
     initialNodeId: string
     workflowId?: string
-    externalPayload?: IJSON
+    externalPayload?: unknown
     stepLimit?: number
   }): Promise<Snapshot>
   async execute({
@@ -247,7 +253,7 @@ export class WorkflowEngine<T extends NodesDefinition = NodesDefinition> {
     snapshot?: Snapshot
     initialNodeId?: string
     workflowId?: string
-    externalPayload?: IJSON
+    externalPayload?: unknown
     stepLimit?: number
   }): Promise<Snapshot> {
     let currentSnapshot = snapshot
@@ -296,7 +302,7 @@ export class WorkflowEngine<T extends NodesDefinition = NodesDefinition> {
 
   async executeStep(
     snapshot: Snapshot,
-    externalPayload?: IJSON
+    externalPayload?: unknown
   ): Promise<Snapshot> {
     const { currentNodeId, context } = snapshot
 
@@ -324,8 +330,15 @@ export class WorkflowEngine<T extends NodesDefinition = NodesDefinition> {
         contextData
       )
 
-      const result = await definition.executor(
+      const validatedInput = await this.validateData(
+        definition.input,
         resolvedInput,
+        node.id,
+        "input"
+      )
+
+      const result = await definition.executor(
+        validatedInput,
         context,
         externalPayload
       )
@@ -338,6 +351,8 @@ export class WorkflowEngine<T extends NodesDefinition = NodesDefinition> {
           totalExecutionTime
         }
       }
+
+      await this.validateData(definition.output, result.data, node.id, "output")
 
       const currentAttempt =
         snapshot.retryState?.nodeId === node.id
@@ -408,7 +423,10 @@ export class WorkflowEngine<T extends NodesDefinition = NodesDefinition> {
 
     if (policy && currentAttempt <= maxAttempts) {
       const interval = Number(
-        this.expressionEngine.resolve(String(policy.interval), contextData)
+        await this.expressionEngine.resolve(
+          String(policy.interval),
+          contextData
+        )
       )
       const delay =
         policy.backoff === "exponential"
@@ -463,5 +481,25 @@ export class WorkflowEngine<T extends NodesDefinition = NodesDefinition> {
     )
 
     return targetEdge ? targetEdge.target : null
+  }
+
+  private async validateData(
+    schema: StandardSchemaV1 | undefined,
+    data: unknown,
+    nodeId: string,
+    type: string
+  ) {
+    if (!this.validate || !schema || !schema["~standard"]) return data
+    const result = await schema["~standard"].validate(data)
+
+    if (result.issues) {
+      const errorMessage = result.issues.map((i) => i.message).join(", ")
+
+      throw new Error(
+        `Validation failed for node ${nodeId} (${type}): ${errorMessage}`
+      )
+    }
+
+    return result.value
   }
 }
