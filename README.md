@@ -4,6 +4,7 @@
 ![License](https://img.shields.io/github/license/vadolasi/refluxo-engine)
 ![Bundle Size](https://img.shields.io/bundlephobia/minzip/refluxo-engine)
 ![NPM Downloads](https://img.shields.io/npm/dm/refluxo-engine)
+[![Commitizen friendly](https://img.shields.io/badge/commitizen-friendly-brightgreen.svg)](http://commitizen.github.io/cz-cli/)
 
 A stateless, snapshot‑based, and serverless‑ready workflow engine for JavaScript.
 
