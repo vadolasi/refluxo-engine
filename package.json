@@ -1,6 +1,6 @@
 {
 	"name": "refluxo-engine",
-	"version": "1.0.0-beta.2",
+	"version": "1.0.0",
 	"description": "Stateless, snapshot-based workflow engine",
 	"main": "./dist/index.js",
 	"module": "./dist/index.mjs",
