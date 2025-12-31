@@ -8,23 +8,31 @@ Qualquer classe que implemente a interface `ITransformEngine` pode ser injetada 
 
 ```typescript
 export interface ITransformEngine {
-  prepare?(context: Context, globals?: unknown): Promise<unknown>
-  transformInput?(data: unknown, context: unknown, metadata?: unknown): Promise<unknown>
-  transformOutput?(data: unknown, context: unknown, metadata?: unknown): Promise<unknown>
+  transformInput?(
+    data: unknown,
+    context: unknown,
+    globals?: unknown,
+    metadata?: unknown
+  ): Promise<unknown>
+  transformOutput?(
+    data: unknown,
+    context: unknown,
+    globals?: unknown,
+    metadata?: unknown
+  ): Promise<unknown>
 }
 ```
 
 ### Ganchos do Ciclo de Vida (Hooks)
 
-1.  **`prepare`**: Executa uma vez antes do início de um passo. Útil para "achatar" o contexto ou injetar funções auxiliares globais.
-2.  **`transformInput`**: Executa antes da função `executor` do nó ser chamada. Usado para resolver expressões (como Jexl) ou descriptografar dados de entrada.
-3.  **`transformOutput`**: Executa após a função `executor` do nó terminar. Usado para filtrar resultados, criptografar dados ou otimizar o armazenamento.
+1.  **`transformInput`**: Executa antes da função `executor` do nó ser chamada. Usado para resolver expressões (como Jexl) ou descriptografar dados de entrada.
+2.  **`transformOutput`**: Executa após a função `executor` do nó terminar. Usado para filtrar resultados, criptografar dados ou otimizar o armazenamento.
 
 ## Acessando Globais e Segredos
 
 O construtor do `WorkflowEngine` aceita um objeto `globals`. Este é um contêiner somente leitura para dados que devem estar disponíveis para o motor, mas **não persistidos no snapshot**. Este é o lugar ideal para segredos, chaves de API ou configurações específicas do ambiente.
 
-Os Transformadores podem acessar esse objeto `globals` no método `prepare` para injetá-lo no contexto de execução, ou usá-lo diretamente para resolver valores.
+Os Transformadores recebem esse objeto `globals` diretamente nos métodos `transformInput` e `transformOutput`, permitindo resolver valores de forma segura.
 
 ### Exemplo: Resolução Segura de Segredos
 
@@ -33,12 +41,12 @@ Em vez de passar um segredo diretamente para um nó (o que o exporia no snapshot
 ```typescript
 // 1. Defina um transformador que procura por um prefixo específico
 class SecretResolver implements ITransformEngine {
-  async transformInput(data: unknown, context: unknown): Promise<unknown> {
+  async transformInput(data: unknown, context: unknown, globals: unknown): Promise<unknown> {
     if (typeof data === 'string' && data.startsWith('SECRET:')) {
       const secretName = data.replace('SECRET:', '');
-      // Acessa os segredos do contexto (injetado via prepare) ou de um armazenamento global
-      // Idealmente, 'globals' deve ser mesclado ao 'context' por um transformador anterior ou pelo motor
-      return process.env[secretName]; 
+      // Acessa os segredos diretamente do objeto globals
+      const secrets = (globals as any)?.secrets || {};
+      return secrets[secretName]; 
     }
     return data;
   }
@@ -58,8 +66,6 @@ const workflow = {
   edges: []
 };
 ```
-
-*Nota: O objeto `globals` passado para `engine.execute({ globals })` está disponível para o método `prepare` dos transformadores. Você pode usar o `prepare` para mesclar esses globais no contexto para que fiquem disponíveis para expressões Jexl ou outros transformadores.*
 
 ## Caso de Uso: Otimização de Snapshot
 

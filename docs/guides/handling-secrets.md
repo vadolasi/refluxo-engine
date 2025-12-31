@@ -28,50 +28,68 @@ await engine.execute({
 
 ## Accessing Secrets with Transformers
 
-To access these secrets within your workflow (e.g., in expressions), you need to expose them to the context. You can do this using a custom **Transformer**.
+To access these secrets within your workflow, you can use a custom **Transformer** that reads from the `globals` object passed to `transformInput`.
 
-### 1. Injecting Globals into Context
+### Example: Secret Resolution Transformer
 
-The simplest approach is to merge the `globals` into the execution context using the `prepare` hook.
+This transformer looks for strings starting with `SECRET:` and resolves them using the `globals` object.
 
 ```typescript
 import { ITransformEngine } from "refluxo-engine";
 
-class GlobalsInjector implements ITransformEngine {
-  async prepare(context: any, globals: any) {
-    // Return a new context that includes the globals
-    // Be careful not to overwrite existing context keys
-    return { ...context, $env: globals };
+class SecretResolver implements ITransformEngine {
+  async transformInput(data: unknown, context: unknown, globals: unknown) {
+    if (typeof data === 'string' && data.startsWith('SECRET:')) {
+      const secretName = data.replace('SECRET:', '');
+      const secrets = (globals as any)?.secrets || {};
+      return secrets[secretName];
+    }
+    return data;
   }
 }
 
 const engine = new WorkflowEngine({
   workflow,
   nodeDefinitions,
-  transformers: [new GlobalsInjector(), new JexlEngine()]
+  transformers: [new SecretResolver(), new JexlEngine()]
 });
 ```
 
-Now, you can access secrets in your Jexl expressions using the `$env` variable:
+Now, you can reference secrets in your node data:
 
 ```typescript
 // Node data
 {
-  apiKey: "{{ $env.secrets.STRIPE_KEY }}"
+  apiKey: "SECRET:STRIPE_KEY"
 }
 ```
 
-### 2. Advanced: Dynamic Secret Resolution
+### Advanced: Dynamic Secret Resolution
 
 For more complex scenarios, you might want to resolve secrets dynamically without exposing them all to the context. For example, you might want to fetch a secret from a vault (like AWS Secrets Manager) only when requested.
 
 ```typescript
-class VaultSecretResolver implements ITransformEngine {
-  async transformInput(data: unknown, context: unknown) {
+class VaultSecretResolver implemexport interface ITransformEngine {
+  transformInput?(
+    data: unknown,
+    context: unknown,
+    globals?: unknown,
+    metadata?: unknown
+  ): Promise<unknown>
+  transformOutput?(
+    data: unknown,
+    context: unknown,
+    globals?: unknown,
+    metadata?: unknown
+  ): Promise<unknown>
+}ents ITransformEngine {
+  async transformInput(data: unknown, context: unknown, globals: unknown) {
     if (typeof data === 'string' && data.startsWith('VAULT:')) {
       const secretId = data.replace('VAULT:', '');
+      // You can use globals to pass configuration for the vault client
+      const vaultConfig = (globals as any)?.vaultConfig;
       // Assume fetchSecretFromVault is a function available in your environment
-      return await fetchSecretFromVault(secretId);
+      return await fetchSecretFromVault(secretId, vaultConfig);
     }
     return data;
   }
@@ -87,27 +105,3 @@ In your workflow, you would use the prefix:
 ```
 
 This approach is highly secure because the actual secret value is never present in the `WorkflowDefinition` and is only resolved momentarily during execution.
-
-Now you can use the `getSecret` transform in your workflow expressions to securely access the secret.
-
-Here is an example of a node that uses the `MY_API_KEY` secret:
-
-```json
-{
-  "id": "fetch-data",
-  "type": "api:fetch",
-  "data": {
-    "url": "https://api.example.com/data",
-    "headers": {
-      "Authorization": "Bearer {{ getSecret('MY_API_KEY', globals) }}"
-    }
-  }
-}
-```
-
-In this example:
-- `getSecret('MY_API_KEY', globals)` calls the custom transform.
-- The transform retrieves the `MY_API_KEY` from the `globals` object.
-- The secret is used in the `Authorization` header of the API request.
-
-Because the secret is stored in `globals` and accessed via a transform, it will never be part of the workflow snapshot, keeping your sensitive data secure.

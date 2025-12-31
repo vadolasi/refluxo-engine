@@ -209,4 +209,47 @@ describe("Refluxo Workflow Engine", () => {
     const snapshot = await engine.execute({ initialNodeId: "n1" })
     expect(snapshot.context.n1[0].output).toEqual({ val: "ABC" })
   })
+  it("should pass globals to transformers", async () => {
+    const globalTransformer: ITransformEngine = {
+      transformInput: async (data, _context, globals) => {
+        if (typeof data === "object" && data !== null) {
+          const result: Record<string, unknown> = {}
+          for (const key in data) {
+            const value = (data as Record<string, unknown>)[key]
+            if (
+              typeof value === "string" &&
+              value.startsWith("global:") &&
+              typeof globals === "object" &&
+              globals !== null
+            ) {
+              const secretKey = value.replace("global:", "")
+              result[key] = (globals as Record<string, unknown>)[secretKey]
+            } else {
+              result[key] = value
+            }
+          }
+          return result
+        }
+        return data
+      }
+    }
+
+    const workflow: WorkflowDefinition = {
+      nodes: [{ id: "n1", type: "test:input", data: { val: "global:secret" } }],
+      edges: []
+    }
+
+    const engine = new WorkflowEngine({
+      workflow,
+      nodeDefinitions: definitions,
+      transformers: [globalTransformer]
+    })
+
+    const snapshot = await engine.execute({
+      initialNodeId: "n1",
+      globals: { secret: "super-secret-value" }
+    })
+
+    expect(snapshot.context.n1[0].output).toEqual({ val: "super-secret-value" })
+  })
 })

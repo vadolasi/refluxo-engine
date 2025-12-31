@@ -44,7 +44,7 @@ let resumedSnapshot = await engine.execute({
 
 ### The `globals` Object
 
-The `execute` method also accepts an optional `globals` object. This data is passed to the `prepare` method of all transformers but is **not** stored in the `Snapshot`. This is the mechanism for injecting sensitive data (secrets) or environment-specific configuration into the workflow execution without persisting it.
+The `execute` method also accepts an optional `globals` object. This data is passed directly to the `transformInput` and `transformOutput` methods of all transformers but is **not** stored in the `Snapshot`. This is the mechanism for injecting sensitive data (secrets) or environment-specific configuration into the workflow execution without persisting it.
 
 ```typescript
 await engine.execute({
@@ -76,10 +76,9 @@ const engine = new WorkflowEngine({
 
 ### The `ITransformEngine` Interface
 
-A transformer implements the `ITransformEngine` interface, which has three optional methods:
+A transformer implements the `ITransformEngine` interface, which has two optional methods:
 
-1.  **`prepare(context, globals)`**: Called before any step execution. It allows you to modify or augment the execution context.
-2.  **`transformInput(data, context, metadata)`**: Called before a node is executed. It processes the node's input data (e.g., resolving `{{ expressions }}`).
-3.  **`transformOutput(data, context, metadata)`**: Called after a node is executed. It processes the node's output data.
+1.  **`transformInput(data, context, globals, metadata)`**: Called before a node is executed. It processes the node's input data (e.g., resolving `{{ expressions }}`).
+2.  **`transformOutput(data, context, globals, metadata)`**: Called after a node is executed. It processes the node's output data.
 
 By default, the engine includes the `JexlEngine`, which handles expression resolution. You can add your own transformers to extend the engine's capabilities.

@@ -44,7 +44,7 @@ let resumedSnapshot = await engine.execute({
 
 ### O Objeto `globals`
 
-O método `execute` também aceita um objeto opcional `globals`. Esses dados são passados para o método `prepare` de todos os transformadores, mas **não** são armazenados no `Snapshot`. Este é o mecanismo para injetar dados sensíveis (segredos) ou configurações específicas do ambiente na execução do workflow sem persisti-los.
+O método `execute` também aceita um objeto opcional `globals`. Esses dados são passados diretamente para os métodos `transformInput` e `transformOutput` de todos os transformadores, mas **não** são armazenados no `Snapshot`. Este é o mecanismo para injetar dados sensíveis (segredos) ou configurações específicas do ambiente na execução do workflow sem persisti-los.
 
 ```typescript
 await engine.execute({
@@ -76,10 +76,9 @@ const engine = new WorkflowEngine({
 
 ### A Interface `ITransformEngine`
 
-Um transformador implementa a interface `ITransformEngine`, que possui três métodos opcionais:
+Um transformador implementa a interface `ITransformEngine`, que possui dois métodos opcionais:
 
-1.  **`prepare(context, globals)`**: Chamado antes da execução de qualquer passo. Permite modificar ou aumentar o contexto de execução.
-2.  **`transformInput(data, context, metadata)`**: Chamado antes de um nó ser executado. Processa os dados de entrada do nó (ex: resolvendo `{{ expressoes }}`).
-3.  **`transformOutput(data, context, metadata)`**: Chamado após a execução de um nó. Processa os dados de saída do nó.
+1.  **`transformInput(data, context, globals, metadata)`**: Chamado antes de um nó ser executado. Processa os dados de entrada do nó (ex: resolvendo `{{ expressoes }}`).
+2.  **`transformOutput(data, context, globals, metadata)`**: Chamado após a execução de um nó. Processa os dados de saída do nó.
 
 Por padrão, o motor inclui o `JexlEngine`, que lida com a resolução de expressões. Você pode adicionar seus próprios transformadores para estender as capacidades do motor.

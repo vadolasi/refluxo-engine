@@ -28,50 +28,55 @@ await engine.execute({
 
 ## Acessando Segredos com Transformadores
 
-Para acessar esses segredos dentro do seu workflow (ex: em expressões), você precisa expô-los ao contexto. Você pode fazer isso usando um **Transformador** customizado.
+Para acessar esses segredos dentro do seu workflow, você pode usar um **Transformador** customizado que lê do objeto `globals` passado para `transformInput`.
 
-### 1. Injetando Globais no Contexto
+### Exemplo: Transformador de Resolução de Segredos
 
-A abordagem mais simples é mesclar os `globals` no contexto de execução usando o gancho `prepare`.
+Este transformador procura por strings começando com `SECRET:` e as resolve usando o objeto `globals`.
 
 ```typescript
 import { ITransformEngine } from "refluxo-engine";
 
-class GlobalsInjector implements ITransformEngine {
-  async prepare(context: any, globals: any) {
-    // Retorna um novo contexto que inclui os globais
-    // Tenha cuidado para não sobrescrever chaves de contexto existentes
-    return { ...context, $env: globals };
+class SecretResolver implements ITransformEngine {
+  async transformInput(data: unknown, context: unknown, globals: unknown) {
+    if (typeof data === 'string' && data.startsWith('SECRET:')) {
+      const secretName = data.replace('SECRET:', '');
+      const secrets = (globals as any)?.secrets || {};
+      return secrets[secretName];
+    }
+    return data;
   }
 }
 
 const engine = new WorkflowEngine({
   workflow,
   nodeDefinitions,
-  transformers: [new GlobalsInjector(), new JexlEngine()]
+  transformers: [new SecretResolver(), new JexlEngine()]
 });
 ```
 
-Agora, você pode acessar segredos em suas expressões Jexl usando a variável `$env`:
+Agora, você pode referenciar segredos nos dados do seu nó:
 
 ```typescript
 // Dados do nó
 {
-  apiKey: "{{ $env.secrets.STRIPE_KEY }}"
+  apiKey: "SECRET:STRIPE_KEY"
 }
 ```
 
-### 2. Avançado: Resolução Dinâmica de Segredos
+### Avançado: Resolução Dinâmica de Segredos
 
 Para cenários mais complexos, você pode querer resolver segredos dinamicamente sem expor todos eles ao contexto. Por exemplo, você pode querer buscar um segredo de um cofre (como AWS Secrets Manager) apenas quando solicitado.
 
 ```typescript
 class VaultSecretResolver implements ITransformEngine {
-  async transformInput(data: unknown, context: unknown) {
+  async transformInput(data: unknown, context: unknown, globals: unknown) {
     if (typeof data === 'string' && data.startsWith('VAULT:')) {
       const secretId = data.replace('VAULT:', '');
+      // Você pode usar globals para passar configurações para o cliente do cofre
+      const vaultConfig = (globals as any)?.vaultConfig;
       // Assuma que fetchSecretFromVault é uma função disponível no seu ambiente
-      return await fetchSecretFromVault(secretId);
+      return await fetchSecretFromVault(secretId, vaultConfig);
     }
     return data;
   }
