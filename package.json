@@ -23,7 +23,10 @@
 		"test:watch": "vitest",
 		"test:coverage": "vitest run --coverage --coverage.reporter=lcov",
 		"prepare": "husky",
-		"prepublishOnly": "pnpm run build"
+		"prepublishOnly": "pnpm run build",
+		"docs:dev": "pnpm typedoc && vitepress dev",
+		"docs:build": "vitepress build",
+		"docs:preview": "vitepress preview"
 	},
 	"keywords": [
 		"workflow",
@@ -66,6 +69,8 @@
 	],
 	"devDependencies": {
 		"@biomejs/biome": "2.3.10",
+		"@braintree/sanitize-url": "^7.1.1",
+		"@catppuccin/vitepress": "^0.1.2",
 		"@commitlint/cli": "^20.2.0",
 		"@commitlint/config-conventional": "^20.2.0",
 		"@size-limit/preset-small-lib": "^12.0.0",
@@ -74,13 +79,23 @@
 		"@types/json-schema": "^7.0.15",
 		"@vitest/coverage-v8": "^4.0.16",
 		"commitizen": "^4.3.1",
+		"cytoscape": "^3.33.1",
+		"cytoscape-cose-bilkent": "^4.1.0",
 		"cz-conventional-changelog": "^3.3.0",
+		"dayjs": "^1.11.19",
+		"debug": "^4.4.3",
 		"husky": "^9.1.7",
 		"lint-staged": "^16.2.7",
+		"mermaid": "^11.12.2",
 		"size-limit": "^12.0.0",
 		"tsup": "^8.5.1",
+		"typedoc": "^0.28.15",
+		"typedoc-plugin-markdown": "^4.9.0",
+		"typedoc-vitepress-theme": "^1.1.2",
 		"typescript": "^5.9.3",
 		"valibot": "^1.2.0",
+		"vitepress": "2.0.0-alpha.15",
+		"vitepress-plugin-mermaid": "^2.0.17",
 		"vitest": "^4.0.16"
 	},
 	"dependencies": {

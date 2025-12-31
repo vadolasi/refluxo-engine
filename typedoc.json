@@ -1,0 +1,9 @@
+{
+	"entryPoints": ["src/index.ts"],
+	"out": "docs/api",
+	"docsRoot": "./docs",
+	"plugin": ["typedoc-plugin-markdown", "typedoc-vitepress-theme"],
+	"hideBreadcrumbs": true,
+	"hidePageTitle": true,
+	"entryFileName": "index.md"
+}

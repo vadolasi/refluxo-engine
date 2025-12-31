@@ -45,7 +45,6 @@ Built-in support for external triggers and manual approvals via externalPayload.
 
 Define dynamic retry policies (fixed or exponential backoff) using expressions.
 
-
 ## 📦 Installation
 
 ```bash
