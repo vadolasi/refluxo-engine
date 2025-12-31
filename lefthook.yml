@@ -11,6 +11,9 @@ pre-commit:
     test:
       glob: "*.ts"
       run: pnpm vitest related --run --passWithNoTests {staged_files}
+    size-limit:
+      glob: "src/**/*.{ts,mts,cts}"
+      run: pnpm build && pnpm size-limit
 
 prepare-commit-msg:
   commands:

@@ -62,6 +62,12 @@ jobs:
       - name: Install dependencies
         run: pnpm install
 
+      - name: Build
+        run: pnpm build
+
+      - name: Check Size
+        run: pnpm size-limit
+
       - name: Stage all files
         run: git add .
 
