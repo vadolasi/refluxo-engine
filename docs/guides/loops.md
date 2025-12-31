@@ -1,3 +1,6 @@
+---
+description: The Refluxo engine supports loops by simply having an edge point to a node that has already been executed. The engine's design, which stores execution history in the `Context`, is built to handle this scenario gracefully without losing state.
+---
 # Handling Loops
 
 The Refluxo engine supports loops by simply having an edge point to a node that has already been executed. The engine's design, which stores execution history in the `Context`, is built to handle this scenario gracefully without losing state.

@@ -1,3 +1,6 @@
+---
+description: A engine Refluxo oferece uma capacidade fundamental para gerenciar processos de longa duração a habilidade de pausar um workflow e aguardar uma entrada externa. Isso permite que os workflows reajam ao mundo exterior, tornando-os altamente flexíveis para vários cenários assíncronos.
+---
 # Pausas, Triggers e Eventos Externos
 
 A engine Refluxo oferece uma capacidade fundamental para gerenciar processos de longa duração: a habilidade de pausar um workflow e aguardar uma entrada externa. Isso permite que os workflows reajam ao mundo exterior, tornando-os altamente flexíveis para vários cenários assíncronos.

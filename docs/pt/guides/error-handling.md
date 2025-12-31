@@ -1,3 +1,6 @@
+---
+description: Um workflow robusto deve ser capaz de lidar com falhas transitórias, como problemas de rede ou indisponibilidade temporária de uma API. A engine Refluxo fornece uma `RetryPolicy` (Política de Retentativa) poderosa e declarativa que você pode anexar a qualquer `NodeDefinition` para controlar seu comportamento em caso de falha.
+---
 # Tratamento de Erros e Retentativas
 
 Um workflow robusto deve ser capaz de lidar com falhas transitórias, como problemas de rede ou indisponibilidade temporária de uma API. A engine Refluxo fornece uma `RetryPolicy` (Política de Retentativa) poderosa e declarativa que você pode anexar a qualquer `NodeDefinition` para controlar seu comportamento em caso de falha.

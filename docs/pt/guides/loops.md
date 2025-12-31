@@ -1,3 +1,6 @@
+---
+description: A engine Refluxo suporta loops simplesmente permitindo que uma aresta aponte para um nó que já foi executado. O design da engine, que armazena o histórico de execução no `Context`, foi construído para lidar com esse cenário de forma elegante e sem perda de estado.
+---
 # Lidando com Loops
 
 A engine Refluxo suporta loops simplesmente permitindo que uma aresta aponte para um nó que já foi executado. O design da engine, que armazena o histórico de execução no `Context`, foi construído para lidar com esse cenário de forma elegante e sem perda de estado.

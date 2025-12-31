@@ -1,3 +1,6 @@
+---
+description: Este guia irá orientá-lo na configuração e execução do seu primeiro workflow com a engine Refluxo. Criaremos um workflow simples que recebe um nome como entrada, cumprimenta a pessoa e retorna a saudação.
+---
 # Primeiros Passos
 
 Este guia irá orientá-lo na configuração e execução do seu primeiro workflow com a engine Refluxo. Criaremos um workflow simples que recebe um nome como entrada, cumprimenta a pessoa e retorna a saudação.

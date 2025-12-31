@@ -1,3 +1,6 @@
+---
+description: The stateless nature of the Refluxo engine means that it does not manage state persistence itself. Your application is responsible for saving and loading the `Snapshot` object. This design choice gives you complete freedom to choose the persistence strategy that best fits your infrastructure.
+---
 # Deployment: State Management
 
 The stateless nature of the Refluxo engine means that it does not manage state persistence itself. Your application is responsible for saving and loading the `Snapshot` object. This design choice gives you complete freedom to choose the persistence strategy that best fits your infrastructure.

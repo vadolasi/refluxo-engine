@@ -1,3 +1,6 @@
+---
+description: O `WorkflowEngine` é o coração da biblioteca. É uma classe stateless (sem estado) responsável por orquestrar a execução de um workflow com base em uma `WorkflowDefinition` (definição de workflow). Seu objetivo primário é transicionar entre estados, gerando um novo `Snapshot` imutável a cada passo.
+---
 # O Motor
 
 O `WorkflowEngine` é o coração da biblioteca. É uma classe stateless (sem estado) responsável por orquestrar a execução de um workflow com base em uma `WorkflowDefinition` (definição de workflow). Seu objetivo primário é transicionar entre estados, gerando um novo `Snapshot` imutável a cada passo.

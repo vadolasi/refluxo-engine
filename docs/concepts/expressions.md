@@ -1,10 +1,15 @@
+---
+description: To make workflows truly dynamic, the engine includes a powerful expression engine powered by **Jexl**. Expressions allow you to reference and manipulate data from previous nodes, enabling you to pass data between nodes, make dynamic configurations, and implement complex logic without writing custom code for every scenario.
+---
 # Expressions
 
 To make workflows truly dynamic, the engine includes a powerful expression engine powered by **Jexl**. Expressions allow you to reference and manipulate data from previous nodes, enabling you to pass data between nodes, make dynamic configurations, and implement complex logic without writing custom code for every scenario.
 
 ## Syntax
 
-Expressions are embedded within strings in your node's `data` object using the syntax <span v-pre>{{ ... }}</span>.
+::: v-pre
+Expressions are embedded within strings in your node's `data` object using the syntax `{{ ... }}`.
+:::
 
 ```javascript v-pre
 {

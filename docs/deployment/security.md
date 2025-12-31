@@ -1,3 +1,6 @@
+---
+description: When deploying an application built with the Refluxo engine, it's important to consider the security implications of executing workflows, especially if those workflows can be defined by end-users.
+---
 # Deployment: Security Best Practices
 
 When deploying an application built with the Refluxo engine, it's important to consider the security implications of executing workflows, especially if those workflows can be defined by end-users.

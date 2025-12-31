@@ -1,8 +1,11 @@
+---
+description: The `Context` is the memory of your workflow. It's a key-value store within the `Snapshot` that holds the results of every node that has been executed. This allows nodes to access data produced by previous nodes, enabling complex data flows.
+---
 # The Context
 
 The `Context` is the memory of your workflow. It's a key-value store within the `Snapshot` that holds the results of every node that has been executed. This allows nodes to access data produced by previous nodes, enabling complex data flows.
 
-## Structure of the Context
+## Estrutura do Contexto
 
 The `Context` is an object where each key is a `nodeId` and the value is an **array** of `NodeResult` objects.
 
@@ -19,17 +22,17 @@ interface NodeResult {
 }
 ```
 
-### Why an Array?
+### Por que um Array?
 
 Storing results in an array is a crucial design decision to properly support loops and retries. If a node is executed multiple times (e.g., inside a loop), each execution will append a new `NodeResult` to the array. This preserves the complete history of the execution, preventing data from being overwritten and allowing for detailed inspection and debugging.
 
-## Accessing Data from the Context
+## Acessando Dados do Contexto
 
 You don't access the `Context` object directly within your nodes' `executor` functions. Instead, you use the [Expression Engine](./expressions.md) in your `Node.data` configuration to declare what data your node needs.
 
 The engine prepares a simplified, "flattened" version of the context to make expressions clean and intuitive.
 
-### Example
+### Exemplo
 
 Imagine a node with `id: "fetch-user"` that outputs `{ "name": "John Doe" }`.
 

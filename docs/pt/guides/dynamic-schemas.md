@@ -1,3 +1,6 @@
+---
+description: Ao construir uma plataforma sobre a engine Refluxo, você pode querer armazenar os schemas de suas `NodeDefinition`s (`input` e `output`) em uma fonte externa, como um banco de dados. Tipicamente, eles seriam armazenados em um formato padrão como **JSON Schema**.
+---
 # Schemas Dinâmicos de Fontes Externas
 
 Ao construir uma plataforma sobre a engine Refluxo, você pode querer armazenar os schemas de suas `NodeDefinition`s (`input` e `output`) em uma fonte externa, como um banco de dados. Tipicamente, eles seriam armazenados em um formato padrão como **JSON Schema**.

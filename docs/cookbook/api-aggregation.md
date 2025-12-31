@@ -1,3 +1,6 @@
+---
+description: A common use case for a workflow engine is to orchestrate calls to multiple microservices or third-party APIs and then aggregate the results into a single, combined output.
+---
 # Cookbook: API Data Aggregation
 
 A common use case for a workflow engine is to orchestrate calls to multiple microservices or third-party APIs and then aggregate the results into a single, combined output.
@@ -106,11 +109,13 @@ const workflow: WorkflowDefinition = {
 
 ### How it Works
 
+::: v-pre
 When the engine prepares to execute the `combine` node:
 1.  It looks at its `data` definition.
 2.  It finds the expression `{{ fetchProfile.last.data }}`. It looks into the `Context`, finds the last result of the `fetchProfile` node, and gets its output.
 3.  It does the same for `{{ fetchOrders.last.data.orders }}`, getting the output from the `fetchOrders` node.
 4.  It constructs a new object: `{ profile: { ... }, orders: [ ... ] }`.
 5.  This fully resolved object is then passed as the `data` argument to the `combine-data` executor.
+:::
 
 This pattern is incredibly powerful. It allows you to create generic, reusable nodes (`fetch-api`, `combine-data`) and then perform complex, specific business logic declaratively within the workflow definition itself.

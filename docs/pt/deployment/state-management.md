@@ -1,3 +1,6 @@
+---
+description: A natureza stateless da engine Refluxo significa que ela não gerencia a persistência do estado por si só. Sua aplicação é responsável por salvar e carregar o objeto `Snapshot`. Essa escolha de design lhe dá total liberdade para escolher a estratégia de persistência que melhor se adapta à sua infraestrutura.
+---
 # Deployment: Gerenciamento de Estado
 
 A natureza stateless da engine Refluxo significa que ela não gerencia a persistência do estado por si só. Sua aplicação é responsável por salvar e carregar o objeto `Snapshot`. Essa escolha de design lhe dá total liberdade para escolher a estratégia de persistência que melhor se adapta à sua infraestrutura.

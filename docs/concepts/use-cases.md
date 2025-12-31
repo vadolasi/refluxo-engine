@@ -1,3 +1,6 @@
+---
+description: While the Refluxo engine is a powerful tool for orchestrating workflows directly in your code, one of its primary design goals is to serve as a foundational layer for building higher-level platforms, such as
+---
 # Use Cases: Building Platforms with Refluxo
 
 While the Refluxo engine is a powerful tool for orchestrating workflows directly in your code, one of its primary design goals is to serve as a foundational layer for building higher-level platforms, such as:

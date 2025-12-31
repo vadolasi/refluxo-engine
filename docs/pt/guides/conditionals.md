@@ -1,3 +1,6 @@
+---
+description: Workflows frequentemente exigem lógica condicional para executar diferentes ramificações (branches) com base em certos critérios. A engine Refluxo lida com isso não por ter um "nó-if" complexo, mas usando "handles" de saída nos nós e arestas.
+---
 # Condicionais e Ramificação
 
 Workflows frequentemente exigem lógica condicional para executar diferentes ramificações (branches) com base em certos critérios. A engine Refluxo lida com isso não por ter um "nó-if" complexo, mas usando "handles" de saída nos nós e arestas.

@@ -1,3 +1,6 @@
+---
+description: This recipe demonstrates how to build a practical, multi-step content approval workflow. A new blog post is submitted, a manager is notified to approve it, and depending on the decision, the post is either published or sent back to the author.
+---
 # Cookbook: Content Approval Workflow
 
 This recipe demonstrates how to build a practical, multi-step content approval workflow. A new blog post is submitted, a manager is notified to approve it, and depending on the decision, the post is either published or sent back to the author.
@@ -84,7 +87,7 @@ const nodeDefinitions = {
 };
 ```
 
-### 2. Workflow Definition
+### 2. Definição do Workflow
 
 The workflow wires these nodes together, using expressions to pass data between them.
 

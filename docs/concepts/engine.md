@@ -1,3 +1,6 @@
+---
+description: The `WorkflowEngine` is the heart of the library. It is a stateless class responsible for orchestrating the execution of a workflow based on a given `WorkflowDefinition`. Its primary goal is to transition between states, generating a new, immutable `Snapshot` at every step.
+---
 # The Engine
 
 The `WorkflowEngine` is the heart of the library. It is a stateless class responsible for orchestrating the execution of a workflow based on a given `WorkflowDefinition`. Its primary goal is to transition between states, generating a new, immutable `Snapshot` at every step.
@@ -28,7 +31,7 @@ let resumedSnapshot = await engine.execute({
 
 ### How it Works
 
-1.  **Initialization**: The `execute` method receives the initial state. If it's a new execution, it creates a fresh `Snapshot`. If it's resuming, it loads the provided snapshot and sets its status to `active`.
+1.  **Inicialização**: The `execute` method receives the initial state. If it's a new execution, it creates a fresh `Snapshot`. If it's resuming, it loads the provided snapshot and sets its status to `active`.
 2.  **Execution Loop**: It runs a `while` loop that continues as long as the `Snapshot.status` is `"active"`.
 3.  **`executeStep`**: Inside the loop, it calls `executeStep`, which is responsible for executing a single node.
     - It resolves dynamic data in the node's input using the Expression Engine.

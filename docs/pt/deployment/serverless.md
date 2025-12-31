@@ -1,3 +1,6 @@
+---
+description: O modelo de execução "passo a passo" e stateless da engine Refluxo é uma combinação perfeita para ambientes serverless como AWS Lambda, Google Cloud Functions ou Cloudflare Workers. Essas plataformas são projetadas para computações de curta duração e orientadas a eventos, que é exatamente como a engine opera.
+---
 # Deployment: Padrões Serverless
 
 O modelo de execução "passo a passo" e stateless da engine Refluxo é uma combinação perfeita para ambientes serverless como AWS Lambda, Google Cloud Functions ou Cloudflare Workers. Essas plataformas são projetadas para computações de curta duração e orientadas a eventos, que é exatamente como a engine opera.

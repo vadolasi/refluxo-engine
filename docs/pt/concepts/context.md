@@ -1,3 +1,6 @@
+---
+description: O `Context` (contexto) é a memória do seu workflow. É um armazenamento de chave-valor dentro do `Snapshot` que guarda os resultados de cada nó que foi executado. Isso permite que nós acessem dados produzidos por nós anteriores, possibilitando fluxos de dados complexos.
+---
 # O Contexto
 
 O `Context` (contexto) é a memória do seu workflow. É um armazenamento de chave-valor dentro do `Snapshot` que guarda os resultados de cada nó que foi executado. Isso permite que nós acessem dados produzidos por nós anteriores, possibilitando fluxos de dados complexos.

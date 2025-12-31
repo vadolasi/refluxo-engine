@@ -1,3 +1,6 @@
+---
+description: Workflows often require conditional logic to execute different branches based on certain criteria. The Refluxo engine handles this not by having a complex "if-node", but by using output handles on nodes and edges.
+---
 # Conditionals and Branching
 
 Workflows often require conditional logic to execute different branches based on certain criteria. The Refluxo engine handles this not by having a complex "if-node", but by using output handles on nodes and edges.

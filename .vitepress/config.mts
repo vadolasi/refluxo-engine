@@ -1,4 +1,5 @@
 import { defineConfig } from "vitepress"
+import llmstxt, { copyOrDownloadAsMarkdownButtons } from "vitepress-plugin-llms"
 import { withMermaid } from "vitepress-plugin-mermaid"
 import typedocSidebar from "../docs/api/typedoc-sidebar.json"
 
@@ -14,6 +15,9 @@ export default withMermaid(
       theme: {
         light: "catppuccin-latte",
         dark: "catppuccin-mocha"
+      },
+      config(md) {
+        md.use(copyOrDownloadAsMarkdownButtons)
       }
     },
 
@@ -40,7 +44,14 @@ export default withMermaid(
                 { text: "Cookbook", link: "/cookbook/content-approval" }
               ]
             },
-            { text: "API Reference", link: "/api/" }
+            { text: "API Reference", link: "/api/" },
+            {
+              text: "LLMs",
+              items: [
+                { text: "llms.txt", link: "/llms.txt" },
+                { text: "llms-full.txt", link: "/llms-full.txt" },
+              ]
+            }
           ],
           sidebar: {
             "/": [
@@ -139,7 +150,14 @@ export default withMermaid(
                 }
               ]
             },
-            { text: "Referência da API", link: "/api/" }
+            { text: "Referência da API", link: "/api/" },
+            {
+              text: "LLMs",
+              items: [
+                { text: "llms.txt", link: "/llms.txt" },
+                { text: "llms-full.txt", link: "/llms-full.txt" }
+              ]
+            }
           ],
           sidebar: {
             "/pt/": [
@@ -211,6 +229,10 @@ export default withMermaid(
           }
         }
       }
+    },
+
+    vite: {
+      plugins: [llmstxt()]
     },
 
     sitemap: {

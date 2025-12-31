@@ -1,3 +1,6 @@
+---
+description: O poder da engine Refluxo vem de sua extensibilidade. Você pode definir seus próprios nós customizados para realizar qualquer ação que precisar, desde chamar uma API até processar dados ou interagir com um banco de dados. Isso é feito criando uma `NodeDefinition` (Definição de Nó).
+---
 # Nós Customizados
 
 O poder da engine Refluxo vem de sua extensibilidade. Você pode definir seus próprios nós customizados para realizar qualquer ação que precisar, desde chamar uma API até processar dados ou interagir com um banco de dados. Isso é feito criando uma `NodeDefinition` (Definição de Nó).
@@ -81,4 +84,4 @@ Esta é a lógica principal do seu nó. É uma função `async` com três parâm
 O executor deve retornar um objeto. Este objeto pode conter:
 - `data`: (Obrigatório) A saída do nó. Isso será armazenado no contexto e disponibilizado para os nós subsequentes.
 - `nextHandle`: (Opcional) Uma string para especificar qual "handle" de saída seguir, permitindo [lógica condicional](./conditionals.md).
-- `__pause`: (Opcional) Uma flag booleana. Se `true`, a engine pausará o workflow. Veja o guia [Human in the Loop](./human-in-the-loop.md) para mais detalhes.
+- `__pause`: (Opcional) Uma flag booleana. Se `true`, a engine pausará o workflow. Veja o guia [Human in the Loop](./external-events.md) para mais detalhes.

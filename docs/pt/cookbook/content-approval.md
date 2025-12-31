@@ -1,3 +1,6 @@
+---
+description: Esta receita demonstra como construir um workflow de aprovação de conteúdo prático e com múltiplos passos. Uma nova postagem de blog é enviada, um gerente é notificado para aprová-la e, dependendo da decisão, a postagem é publicada ou enviada de volta ao autor.
+---
 # Receita: Workflow de Aprovação de Conteúdo
 
 Esta receita demonstra como construir um workflow de aprovação de conteúdo prático e com múltiplos passos. Uma nova postagem de blog é enviada, um gerente é notificado para aprová-la e, dependendo da decisão, a postagem é publicada ou enviada de volta ao autor.

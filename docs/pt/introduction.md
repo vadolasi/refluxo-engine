@@ -1,3 +1,6 @@
+---
+description: Bem-vindo à documentação do Refluxo, uma engine de workflow (fluxo de trabalho) stateless e serverless-first para JavaScript e TypeScript.
+---
 # Introdução
 
 Bem-vindo à documentação do Refluxo, uma engine de workflow (fluxo de trabalho) stateless e serverless-first para JavaScript e TypeScript.

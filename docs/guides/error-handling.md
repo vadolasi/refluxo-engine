@@ -1,3 +1,6 @@
+---
+description: A robust workflow must be able to handle transient failures, such as network issues or temporary API unavailability. The Refluxo engine provides a powerful, declarative `RetryPolicy` that you can attach to any `NodeDefinition` to control its behavior on failure.
+---
 # Error Handling and Retries
 
 A robust workflow must be able to handle transient failures, such as network issues or temporary API unavailability. The Refluxo engine provides a powerful, declarative `RetryPolicy` that you can attach to any `NodeDefinition` to control its behavior on failure.

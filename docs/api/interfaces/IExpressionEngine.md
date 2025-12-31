@@ -1,4 +1,4 @@
-Defined in: [index.ts:88](https://github.com/vadolasi/refluxo-engine/blob/012fc2ddc7fa8747964237d500983b7952c8d6d9/src/index.ts#L88)
+Defined in: [index.ts:88](https://github.com/vadolasi/refluxo-engine/blob/56d0348710f249b839625fe5f89c28a6190a09d7/src/index.ts#L88)
 
 ## Methods
 
@@ -6,7 +6,7 @@ Defined in: [index.ts:88](https://github.com/vadolasi/refluxo-engine/blob/012fc2
 
 > **prepareContext**(`context`): `Promise`\<`unknown`\>
 
-Defined in: [index.ts:89](https://github.com/vadolasi/refluxo-engine/blob/012fc2ddc7fa8747964237d500983b7952c8d6d9/src/index.ts#L89)
+Defined in: [index.ts:89](https://github.com/vadolasi/refluxo-engine/blob/56d0348710f249b839625fe5f89c28a6190a09d7/src/index.ts#L89)
 
 #### Parameters
 
@@ -24,7 +24,7 @@ Defined in: [index.ts:89](https://github.com/vadolasi/refluxo-engine/blob/012fc2
 
 > **resolve**(`value`, `context`): `Promise`\<`unknown`\>
 
-Defined in: [index.ts:90](https://github.com/vadolasi/refluxo-engine/blob/012fc2ddc7fa8747964237d500983b7952c8d6d9/src/index.ts#L90)
+Defined in: [index.ts:90](https://github.com/vadolasi/refluxo-engine/blob/56d0348710f249b839625fe5f89c28a6190a09d7/src/index.ts#L90)
 
 #### Parameters
 
@@ -46,7 +46,7 @@ Defined in: [index.ts:90](https://github.com/vadolasi/refluxo-engine/blob/012fc2
 
 > **resolveData**(`data`, `context`): `Promise`\<`unknown`\>
 
-Defined in: [index.ts:91](https://github.com/vadolasi/refluxo-engine/blob/012fc2ddc7fa8747964237d500983b7952c8d6d9/src/index.ts#L91)
+Defined in: [index.ts:91](https://github.com/vadolasi/refluxo-engine/blob/56d0348710f249b839625fe5f89c28a6190a09d7/src/index.ts#L91)
 
 #### Parameters
 

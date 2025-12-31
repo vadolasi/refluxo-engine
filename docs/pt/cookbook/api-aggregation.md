@@ -1,3 +1,6 @@
+---
+description: Um caso de uso comum para um motor de workflow é orquestrar chamadas para múltiplos microsserviços ou APIs de terceiros e, em seguida, agregar os resultados em uma única saída combinada.
+---
 # Receita: Agregação de Dados de APIs
 
 Um caso de uso comum para um motor de workflow é orquestrar chamadas para múltiplos microsserviços ou APIs de terceiros e, em seguida, agregar os resultados em uma única saída combinada.
@@ -106,11 +109,13 @@ const workflow: WorkflowDefinition = {
 
 ### Como Funciona
 
+::: v-pre
 Quando a engine se prepara para executar o nó `combine`:
 1.  Ela olha para a definição de seus `data`.
 2.  Encontra a expressão `{{ fetchProfile.last.data }}`. Procura no `Context`, encontra o último resultado do nó `fetchProfile` e obtém sua saída.
 3.  Faz o mesmo para `{{ fetchOrders.last.data.orders }}`, obtendo a saída do nó `fetchOrders`.
 4.  Constrói um novo objeto: `{ profile: { ... }, orders: [ ... ] }`.
 5.  Este objeto totalmente resolvido é então passado como o argumento `data` para o executor `combine-data`.
+:::
 
 Este padrão é incrivelmente poderoso. Ele permite que você crie nós genéricos e reutilizáveis (`fetch-api`, `combine-data`) e, em seguida, realize lógicas de negócio complexas e específicas de forma declarativa, dentro da própria definição do workflow.

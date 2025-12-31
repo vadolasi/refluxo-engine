@@ -1,3 +1,6 @@
+---
+description: O `Snapshot` é o componente mais crítico para alcançar a statelessness (ausência de estado). É um objeto JSON serializável que captura todo o estado de uma execução de workflow a qualquer momento. Ao salvar e reidratar este objeto, você pode pausar, retomar e repetir workflows, mesmo entre processos ou máquinas diferentes.
+---
 # O Snapshot
 
 O `Snapshot` é o componente mais crítico para alcançar a statelessness (ausência de estado). É um objeto JSON serializável que captura todo o estado de uma execução de workflow a qualquer momento. Ao salvar e reidratar este objeto, você pode pausar, retomar e repetir workflows, mesmo entre processos ou máquinas diferentes.

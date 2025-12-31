@@ -1,3 +1,6 @@
+---
+description: When building a platform on top of the Refluxo engine, you might want to store your `NodeDefinition` schemas (`input` and `output`) in an external source, like a database. Typically, these would be stored in a standard format like **JSON Schema**.
+---
 # Dynamic Schemas from External Sources
 
 When building a platform on top of the Refluxo engine, you might want to store your `NodeDefinition` schemas (`input` and `output`) in an external source, like a database. Typically, these would be stored in a standard format like **JSON Schema**.

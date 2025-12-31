@@ -1,10 +1,15 @@
+---
+description: Para tornar os workflows verdadeiramente dinâmicos, o motor inclui uma poderosa engine de expressões baseada em **Jexl**. As expressões permitem que você referencie e manipule dados de nós anteriores, possibilitando a passagem de dados entre nós, a criação de configurações dinâmicas e a implementação de lógica complexa sem a necessidade de escrever código customizado para cada cenário.
+---
 # Expressões
 
 Para tornar os workflows verdadeiramente dinâmicos, o motor inclui uma poderosa engine de expressões baseada em **Jexl**. As expressões permitem que você referencie e manipule dados de nós anteriores, possibilitando a passagem de dados entre nós, a criação de configurações dinâmicas e a implementação de lógica complexa sem a necessidade de escrever código customizado para cada cenário.
 
 ## Sintaxe
 
-As expressões são embutidas em strings no objeto `data` do seu nó usando a sintaxe <span v-pre>{{ ... }}</span>.
+::: v-pre
+As expressões são embutidas em strings no objeto `data` do seu nó usando a sintaxe `{{ ... }}`.
+:::
 
 ```javascript v-pre
 {

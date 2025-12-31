@@ -1,3 +1,6 @@
+---
+description: Welcome to the documentation for Refluxo, a stateless, serverless-first workflow engine for JavaScript and TypeScript.
+---
 # Introduction
 
 Welcome to the documentation for Refluxo, a stateless, serverless-first workflow engine for JavaScript and TypeScript.

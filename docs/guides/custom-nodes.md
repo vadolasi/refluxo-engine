@@ -1,3 +1,6 @@
+---
+description: The power of the Refluxo engine comes from its extensibility. You can define your own custom nodes to perform any action you need, from calling an API to processing data or interacting with a database. This is done by creating a `NodeDefinition`.
+---
 # Custom Nodes
 
 The power of the Refluxo engine comes from its extensibility. You can define your own custom nodes to perform any action you need, from calling an API to processing data or interacting with a database. This is done by creating a `NodeDefinition`.
@@ -81,4 +84,4 @@ This is the core logic of your node. It's an `async` function with three paramet
 The executor must return an object. This object can contain:
 - `data`: (Required) The output of the node. This will be stored in the context and made available to subsequent nodes.
 - `nextHandle`: (Optional) A string to specify which output handle to follow, enabling [conditional logic](./conditionals.md).
-- `__pause`: (Optional) A boolean flag. If `true`, the engine will pause the workflow. See the [Human in the Loop guide](./human-in-the-loop.md) for more.
+- `__pause`: (Optional) A boolean flag. If `true`, the engine will pause the workflow. See the [Human in the Loop guide](./external-events.md) for more.

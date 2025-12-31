@@ -1,4 +1,4 @@
-Defined in: [index.ts:11](https://github.com/vadolasi/refluxo-engine/blob/012fc2ddc7fa8747964237d500983b7952c8d6d9/src/index.ts#L11)
+Defined in: [index.ts:11](https://github.com/vadolasi/refluxo-engine/blob/56d0348710f249b839625fe5f89c28a6190a09d7/src/index.ts#L11)
 
 ## Properties
 
@@ -6,7 +6,7 @@ Defined in: [index.ts:11](https://github.com/vadolasi/refluxo-engine/blob/012fc2
 
 > **backoff**: `string`
 
-Defined in: [index.ts:14](https://github.com/vadolasi/refluxo-engine/blob/012fc2ddc7fa8747964237d500983b7952c8d6d9/src/index.ts#L14)
+Defined in: [index.ts:14](https://github.com/vadolasi/refluxo-engine/blob/56d0348710f249b839625fe5f89c28a6190a09d7/src/index.ts#L14)
 
 ***
 
@@ -14,7 +14,7 @@ Defined in: [index.ts:14](https://github.com/vadolasi/refluxo-engine/blob/012fc2
 
 > **interval**: `string` \| `number`
 
-Defined in: [index.ts:13](https://github.com/vadolasi/refluxo-engine/blob/012fc2ddc7fa8747964237d500983b7952c8d6d9/src/index.ts#L13)
+Defined in: [index.ts:13](https://github.com/vadolasi/refluxo-engine/blob/56d0348710f249b839625fe5f89c28a6190a09d7/src/index.ts#L13)
 
 ***
 
@@ -22,4 +22,4 @@ Defined in: [index.ts:13](https://github.com/vadolasi/refluxo-engine/blob/012fc2
 
 > **maxAttempts**: `string` \| `number`
 
-Defined in: [index.ts:12](https://github.com/vadolasi/refluxo-engine/blob/012fc2ddc7fa8747964237d500983b7952c8d6d9/src/index.ts#L12)
+Defined in: [index.ts:12](https://github.com/vadolasi/refluxo-engine/blob/56d0348710f249b839625fe5f89c28a6190a09d7/src/index.ts#L12)

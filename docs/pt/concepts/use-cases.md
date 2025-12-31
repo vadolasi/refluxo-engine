@@ -1,3 +1,6 @@
+---
+description: Embora a engine Refluxo seja uma ferramenta poderosa para orquestrar workflows diretamente no seu código, um de seus principais objetivos de design é servir como uma camada fundamental para a construção de plataformas de nível superior, tais como
+---
 # Casos de Uso: Construindo Plataformas com o Refluxo
 
 Embora a engine Refluxo seja uma ferramenta poderosa para orquestrar workflows diretamente no seu código, um de seus principais objetivos de design é servir como uma camada fundamental para a construção de plataformas de nível superior, tais como:

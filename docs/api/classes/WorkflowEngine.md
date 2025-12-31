@@ -1,4 +1,4 @@
-Defined in: [index.ts:185](https://github.com/vadolasi/refluxo-engine/blob/012fc2ddc7fa8747964237d500983b7952c8d6d9/src/index.ts#L185)
+Defined in: [index.ts:185](https://github.com/vadolasi/refluxo-engine/blob/56d0348710f249b839625fe5f89c28a6190a09d7/src/index.ts#L185)
 
 ## Type Parameters
 
@@ -12,7 +12,7 @@ Defined in: [index.ts:185](https://github.com/vadolasi/refluxo-engine/blob/012fc
 
 > **new WorkflowEngine**\<`T`\>(`__namedParameters`): `WorkflowEngine`\<`T`\>
 
-Defined in: [index.ts:191](https://github.com/vadolasi/refluxo-engine/blob/012fc2ddc7fa8747964237d500983b7952c8d6d9/src/index.ts#L191)
+Defined in: [index.ts:191](https://github.com/vadolasi/refluxo-engine/blob/56d0348710f249b839625fe5f89c28a6190a09d7/src/index.ts#L191)
 
 #### Parameters
 
@@ -44,7 +44,7 @@ Defined in: [index.ts:191](https://github.com/vadolasi/refluxo-engine/blob/012fc
 
 > **nodeDefinitions**: `T`
 
-Defined in: [index.ts:187](https://github.com/vadolasi/refluxo-engine/blob/012fc2ddc7fa8747964237d500983b7952c8d6d9/src/index.ts#L187)
+Defined in: [index.ts:187](https://github.com/vadolasi/refluxo-engine/blob/56d0348710f249b839625fe5f89c28a6190a09d7/src/index.ts#L187)
 
 ***
 
@@ -52,7 +52,7 @@ Defined in: [index.ts:187](https://github.com/vadolasi/refluxo-engine/blob/012fc
 
 > **workflow**: `Workflow`
 
-Defined in: [index.ts:186](https://github.com/vadolasi/refluxo-engine/blob/012fc2ddc7fa8747964237d500983b7952c8d6d9/src/index.ts#L186)
+Defined in: [index.ts:186](https://github.com/vadolasi/refluxo-engine/blob/56d0348710f249b839625fe5f89c28a6190a09d7/src/index.ts#L186)
 
 ## Methods
 
@@ -62,7 +62,7 @@ Defined in: [index.ts:186](https://github.com/vadolasi/refluxo-engine/blob/012fc
 
 > **execute**(`args`): `Promise`\<`Snapshot`\>
 
-Defined in: [index.ts:235](https://github.com/vadolasi/refluxo-engine/blob/012fc2ddc7fa8747964237d500983b7952c8d6d9/src/index.ts#L235)
+Defined in: [index.ts:235](https://github.com/vadolasi/refluxo-engine/blob/56d0348710f249b839625fe5f89c28a6190a09d7/src/index.ts#L235)
 
 ##### Parameters
 
@@ -88,7 +88,7 @@ Defined in: [index.ts:235](https://github.com/vadolasi/refluxo-engine/blob/012fc
 
 > **execute**(`args`): `Promise`\<`Snapshot`\>
 
-Defined in: [index.ts:240](https://github.com/vadolasi/refluxo-engine/blob/012fc2ddc7fa8747964237d500983b7952c8d6d9/src/index.ts#L240)
+Defined in: [index.ts:240](https://github.com/vadolasi/refluxo-engine/blob/56d0348710f249b839625fe5f89c28a6190a09d7/src/index.ts#L240)
 
 ##### Parameters
 
@@ -120,7 +120,7 @@ Defined in: [index.ts:240](https://github.com/vadolasi/refluxo-engine/blob/012fc
 
 > **executeStep**(`snapshot`, `externalPayload?`): `Promise`\<`Snapshot`\>
 
-Defined in: [index.ts:303](https://github.com/vadolasi/refluxo-engine/blob/012fc2ddc7fa8747964237d500983b7952c8d6d9/src/index.ts#L303)
+Defined in: [index.ts:303](https://github.com/vadolasi/refluxo-engine/blob/56d0348710f249b839625fe5f89c28a6190a09d7/src/index.ts#L303)
 
 #### Parameters
 
@@ -142,7 +142,7 @@ Defined in: [index.ts:303](https://github.com/vadolasi/refluxo-engine/blob/012fc
 
 > **validateWorkflow**(): `Promise`\<`void`\>
 
-Defined in: [index.ts:211](https://github.com/vadolasi/refluxo-engine/blob/012fc2ddc7fa8747964237d500983b7952c8d6d9/src/index.ts#L211)
+Defined in: [index.ts:211](https://github.com/vadolasi/refluxo-engine/blob/56d0348710f249b839625fe5f89c28a6190a09d7/src/index.ts#L211)
 
 #### Returns
 

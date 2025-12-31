@@ -1,8 +1,11 @@
+---
+description: This guide will walk you through setting up and running your first workflow with the Refluxo engine. We'll create a simple workflow that takes a name as input, greets the person, and outputs the greeting.
+---
 # Getting Started
 
 This guide will walk you through setting up and running your first workflow with the Refluxo engine. We'll create a simple workflow that takes a name as input, greets the person, and outputs the greeting.
 
-## 1. Installation
+## 1. Instalação
 
 First, add the engine to your project:
 
@@ -79,9 +82,9 @@ const workflow: WorkflowDefinition = {
   ],
 };
 ```
-*Note: We are using a special node id `trigger` in the expression. The engine doesn't have a real node with this ID; we will provide its data via `externalPayload` when we call `execute`.*
+*Nota: We are using a special node id `trigger` in the expression. The engine doesn't have a real node with this ID; we will provide its data via `externalPayload` when we call `execute`.*
 
-## 4. Running the Engine
+## 4. Executing the Engine
 
 Finally, let's instantiate the `WorkflowEngine` and run our workflow.
 

@@ -1,3 +1,6 @@
+---
+description: A workflow is the blueprint for an execution. It's a declarative JSON structure that defines the tasks (Nodes) and the connections between them (Edges).
+---
 # Workflow & Node Definition
 
 A workflow is the blueprint for an execution. It's a declarative JSON structure that defines the tasks (Nodes) and the connections between them (Edges).

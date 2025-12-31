@@ -1,3 +1,6 @@
+---
+description: Um workflow (fluxo de trabalho) é o blueprint para uma execução. É uma estrutura JSON declarativa que define as tarefas (Nós) e as conexões entre eles (Arestas ou `Edges`).
+---
 # Workflow & Node Definition
 
 Um workflow (fluxo de trabalho) é o blueprint para uma execução. É uma estrutura JSON declarativa que define as tarefas (Nós) e as conexões entre eles (Arestas ou `Edges`).

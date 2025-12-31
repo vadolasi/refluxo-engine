@@ -1,3 +1,6 @@
+---
+description: The Refluxo engine offers a fundamental capability for managing long-running processes the ability to pause a workflow and wait for external input. This allows workflows to react to the outside world, making them highly flexible for various asynchronous scenarios.
+---
 # Pausing, Resuming, and Triggers
 
 The Refluxo engine offers a fundamental capability for managing long-running processes: the ability to pause a workflow and wait for external input. This allows workflows to react to the outside world, making them highly flexible for various asynchronous scenarios.
