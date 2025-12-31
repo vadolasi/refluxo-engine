@@ -3,7 +3,7 @@ description: To make workflows truly dynamic, the engine includes a powerful exp
 ---
 # Expressions
 
-To make workflows truly dynamic, the engine includes a powerful expression engine powered by **Jexl**. Expressions allow you to reference and manipulate data from previous nodes, enabling you to pass data between nodes, make dynamic configurations, and implement complex logic without writing custom code for every scenario.
+To make workflows truly dynamic, the engine includes a powerful expression engine powered by **[Jexl](https://github.com/TomFrost/jexl)**. This is implemented as a default **Transformer** within the engine. Expressions allow you to reference and manipulate data from previous nodes, enabling you to pass data between nodes, make dynamic configurations, and implement complex logic without writing custom code for every scenario.
 
 ## Syntax
 

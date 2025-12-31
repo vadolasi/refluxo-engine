@@ -1,3 +1,3 @@
 > **NodesDefinition** = `Record`\<`string`, [`NodeDefinition`](../interfaces/NodeDefinition.md)\>
 
-Defined in: [index.ts:39](https://github.com/vadolasi/refluxo-engine/blob/56d0348710f249b839625fe5f89c28a6190a09d7/src/index.ts#L39)
+Defined in: [index.ts:40](https://github.com/vadolasi/refluxo-engine/blob/dcc7f3bf46aabbf2ced47e0ebe3db11815c34ca2/src/index.ts#L40)

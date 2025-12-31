@@ -1,5 +1,6 @@
 import { describe, expect, it } from "vitest"
 import {
+  type ITransformEngine,
   type NodesDefinition,
   type WorkflowDefinition,
   WorkflowEngine
@@ -100,5 +101,112 @@ describe("Refluxo Workflow Engine", () => {
     const snapshot = await engine.execute({ initialNodeId: "n1" })
     expect(snapshot.status).toBe("failed")
     expect(snapshot.context.n1[0].error).toContain("Validation failed")
+  })
+
+  it("should handle retry policy with expressions", async () => {
+    const workflow: WorkflowDefinition = {
+      nodes: [
+        { id: "config", type: "test:input", data: { retries: 3 } },
+        { id: "fail", type: "test:fail", data: {} }
+      ],
+      edges: [{ id: "e1", source: "config", target: "fail" }]
+    }
+    const engine = new WorkflowEngine({
+      workflow,
+      nodeDefinitions: definitions
+    })
+
+    let snapshot = await engine.execute({ initialNodeId: "config" })
+
+    expect(snapshot.status).toBe("error")
+    expect(snapshot.retryState).toBeDefined()
+    expect(snapshot.retryState?.nodeId).toBe("fail")
+    expect(snapshot.retryState?.attempts).toBe(1)
+
+    snapshot = await engine.execute({ snapshot })
+    expect(snapshot.status).toBe("error")
+    expect(snapshot.retryState?.attempts).toBe(2)
+
+    snapshot = await engine.execute({ snapshot })
+    expect(snapshot.status).toBe("error")
+    expect(snapshot.retryState?.attempts).toBe(3)
+
+    snapshot = await engine.execute({ snapshot })
+    expect(snapshot.status).toBe("failed")
+    expect(snapshot.retryState).toBeUndefined()
+    expect(snapshot.context.fail).toHaveLength(4)
+  })
+
+  it("should support custom transformers", async () => {
+    const customTransformer: ITransformEngine = {
+      transformInput: async (data: unknown) => {
+        if (typeof data === "object" && data !== null) {
+          const result: Record<string, unknown> = {}
+          for (const key in data) {
+            const value = (data as Record<string, unknown>)[key]
+            if (typeof value === "string" && value.startsWith("upper:")) {
+              result[key] = value.replace("upper:", "").toUpperCase()
+            } else {
+              result[key] = value
+            }
+          }
+          return result
+        }
+        return data
+      }
+    }
+
+    const workflow: WorkflowDefinition = {
+      nodes: [{ id: "n1", type: "test:input", data: { val: "upper:hello" } }],
+      edges: []
+    }
+
+    const engine = new WorkflowEngine({
+      workflow,
+      nodeDefinitions: definitions,
+      transformers: [customTransformer]
+    })
+
+    const snapshot = await engine.execute({ initialNodeId: "n1" })
+    expect(snapshot.context.n1[0].output).toEqual({ val: "HELLO" })
+  })
+
+  it("should chain multiple transformers", async () => {
+    const t1: ITransformEngine = {
+      transformInput: async (data) => {
+        if (typeof data === "object" && data !== null && "val" in data) {
+          return {
+            ...data,
+            val: (data as Record<string, unknown>).val + "B"
+          }
+        }
+        return data
+      }
+    }
+    const t2: ITransformEngine = {
+      transformInput: async (data) => {
+        if (typeof data === "object" && data !== null && "val" in data) {
+          return {
+            ...data,
+            val: (data as Record<string, unknown>).val + "C"
+          }
+        }
+        return data
+      }
+    }
+
+    const workflow: WorkflowDefinition = {
+      nodes: [{ id: "n1", type: "test:input", data: { val: "A" } }],
+      edges: []
+    }
+
+    const engine = new WorkflowEngine({
+      workflow,
+      nodeDefinitions: definitions,
+      transformers: [t1, t2]
+    })
+
+    const snapshot = await engine.execute({ initialNodeId: "n1" })
+    expect(snapshot.context.n1[0].output).toEqual({ val: "ABC" })
   })
 })

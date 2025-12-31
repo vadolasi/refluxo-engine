@@ -1,4 +1,4 @@
-Defined in: [index.ts:52](https://github.com/vadolasi/refluxo-engine/blob/56d0348710f249b839625fe5f89c28a6190a09d7/src/index.ts#L52)
+Defined in: [index.ts:54](https://github.com/vadolasi/refluxo-engine/blob/dcc7f3bf46aabbf2ced47e0ebe3db11815c34ca2/src/index.ts#L54)
 
 ## Type Parameters
 
@@ -12,7 +12,7 @@ Defined in: [index.ts:52](https://github.com/vadolasi/refluxo-engine/blob/56d034
 
 > **edges**: [`Edge`](Edge.md)[]
 
-Defined in: [index.ts:56](https://github.com/vadolasi/refluxo-engine/blob/56d0348710f249b839625fe5f89c28a6190a09d7/src/index.ts#L56)
+Defined in: [index.ts:58](https://github.com/vadolasi/refluxo-engine/blob/dcc7f3bf46aabbf2ced47e0ebe3db11815c34ca2/src/index.ts#L58)
 
 ***
 
@@ -20,4 +20,4 @@ Defined in: [index.ts:56](https://github.com/vadolasi/refluxo-engine/blob/56d034
 
 > **nodes**: [`Node`](Node.md)\<keyof `T` & `string`\>[]
 
-Defined in: [index.ts:55](https://github.com/vadolasi/refluxo-engine/blob/56d0348710f249b839625fe5f89c28a6190a09d7/src/index.ts#L55)
+Defined in: [index.ts:57](https://github.com/vadolasi/refluxo-engine/blob/dcc7f3bf46aabbf2ced47e0ebe3db11815c34ca2/src/index.ts#L57)

@@ -34,12 +34,52 @@ let resumedSnapshot = await engine.execute({
 1.  **Inicialização**: O método `execute` recebe o estado inicial. Se for uma nova execução, ele cria um `Snapshot` novo. Se estiver retomando, ele carrega o snapshot fornecido e define seu status para `active`.
 2.  **Loop de Execução**: Ele executa um loop `while` que continua enquanto o `Snapshot.status` for `"active"`.
 3.  **`executeStep`**: Dentro do loop, ele chama `executeStep`, que é responsável por executar um único nó.
-    - Resolve os dados dinâmicos na entrada do nó usando a Engine de Expressões.
+    - Processa os dados de entrada através dos **Transformadores** configurados (ex: resolvendo expressões).
     - Valida a entrada (input) com base no schema do nó.
     - Chama a função `executor` do nó.
     - Valida a saída (output).
+    - Processa os dados de saída através dos **Transformadores** configurados.
     - Determina o próximo nó a ser executado.
     - Retorna um novo `Snapshot` com o estado atualizado.
+
+### O Objeto `globals`
+
+O método `execute` também aceita um objeto opcional `globals`. Esses dados são passados para o método `prepare` de todos os transformadores, mas **não** são armazenados no `Snapshot`. Este é o mecanismo para injetar dados sensíveis (segredos) ou configurações específicas do ambiente na execução do workflow sem persisti-los.
+
+```typescript
+await engine.execute({
+  snapshot,
+  globals: {
+    API_KEY: process.env.API_KEY,
+    DB_CONNECTION: dbConnection
+  }
+});
+```
+
 4.  **Finalização**: O loop termina quando o `status` muda para `paused`, `completed`, `failed` ou `error`. O `Snapshot` final é então retornado.
 
 Este modelo garante que cada passo seja uma transação atômica, tornando todo o processo altamente resiliente e observável.
+
+## Transformadores (Transformers)
+
+O motor utiliza um pipeline de **Transformadores** para processar dados antes e depois da execução de um nó. Isso permite comportamentos dinâmicos, como substituição de variáveis, criptografia/descriptografia ou manipulação de dados personalizada.
+
+O `WorkflowEngine` aceita um array de transformadores em seu construtor:
+
+```typescript
+const engine = new WorkflowEngine({
+  workflow,
+  nodeDefinitions,
+  transformers: [new JexlEngine(), meuTransformadorCustomizado]
+});
+```
+
+### A Interface `ITransformEngine`
+
+Um transformador implementa a interface `ITransformEngine`, que possui três métodos opcionais:
+
+1.  **`prepare(context, globals)`**: Chamado antes da execução de qualquer passo. Permite modificar ou aumentar o contexto de execução.
+2.  **`transformInput(data, context, metadata)`**: Chamado antes de um nó ser executado. Processa os dados de entrada do nó (ex: resolvendo `{{ expressoes }}`).
+3.  **`transformOutput(data, context, metadata)`**: Chamado após a execução de um nó. Processa os dados de saída do nó.
+
+Por padrão, o motor inclui o `JexlEngine`, que lida com a resolução de expressões. Você pode adicionar seus próprios transformadores para estender as capacidades do motor.

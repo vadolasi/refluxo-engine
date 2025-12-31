@@ -26,7 +26,8 @@ export interface NodeDefinition<
       ? StandardSchemaV1.InferOutput<TInput>
       : unknown,
     context: Context,
-    externalPayload?: unknown
+    externalPayload?: unknown,
+    globals?: unknown
   ) => Promise<{
     data: TOutput extends StandardSchemaV1
       ? StandardSchemaV1.InferInput<TOutput>
@@ -42,6 +43,7 @@ export interface Node<TType = string> {
   id: string
   type: TType
   data: unknown
+  metadata?: unknown
 }
 
 interface Workflow {
@@ -85,16 +87,50 @@ interface Snapshot {
   }
 }
 
-export interface IExpressionEngine {
-  prepareContext(context: Context): Promise<unknown>
-  resolve(value: string, context: unknown): Promise<unknown>
-  resolveData(data: unknown, context: unknown): Promise<unknown>
+export interface ITransformEngine {
+  prepare?(context: Context, globals?: unknown): Promise<unknown>
+  transformInput?(
+    data: unknown,
+    context: unknown,
+    metadata?: unknown
+  ): Promise<unknown>
+  transformOutput?(
+    data: unknown,
+    context: unknown,
+    metadata?: unknown
+  ): Promise<unknown>
 }
-export class JexlEngine implements IExpressionEngine {
-  private jexl = new jexl.Jexl()
 
-  async prepareContext(context: Context): Promise<Record<string, unknown>> {
-    return this.flattenContext(context)
+export class JexlEngine implements ITransformEngine {
+  private jexl: InstanceType<typeof jexl.Jexl>
+
+  constructor(customInstance?: InstanceType<typeof jexl.Jexl>) {
+    this.jexl = customInstance || new jexl.Jexl()
+  }
+
+  async prepare(context: Context, globals: unknown = {}): Promise<unknown> {
+    const nodes = this.flattenContext(context)
+    return { ...nodes, globals }
+  }
+
+  async transformInput(data: unknown, context: unknown): Promise<unknown> {
+    if (typeof data === "string") {
+      return this.resolve(data, context)
+    }
+
+    if (Array.isArray(data)) {
+      return Promise.all(data.map((item) => this.transformInput(item, context)))
+    }
+
+    if (data !== null && typeof data === "object") {
+      const resolvedObject: Record<string, unknown> = {}
+      for (const [key, value] of Object.entries(data)) {
+        resolvedObject[key] = await this.transformInput(value, context)
+      }
+      return resolvedObject
+    }
+
+    return data
   }
 
   async resolve(value: string, context: unknown): Promise<unknown> {
@@ -120,26 +156,6 @@ export class JexlEngine implements IExpressionEngine {
     )
 
     return resolvedParts.join("")
-  }
-
-  async resolveData(data: unknown, context: unknown): Promise<unknown> {
-    if (typeof data === "string") {
-      return this.resolve(data, context)
-    }
-
-    if (Array.isArray(data)) {
-      return Promise.all(data.map((item) => this.resolveData(item, context)))
-    }
-
-    if (data !== null && typeof data === "object") {
-      const resolvedObject: Record<string, unknown> = {}
-      for (const [key, value] of Object.entries(data)) {
-        resolvedObject[key] = await this.resolveData(value, context)
-      }
-      return resolvedObject
-    }
-
-    return data
   }
 
   private async runParser(
@@ -185,18 +201,18 @@ export class JexlEngine implements IExpressionEngine {
 export class WorkflowEngine<T extends NodesDefinition = NodesDefinition> {
   workflow: Workflow
   nodeDefinitions: T
-  private expressionEngine: IExpressionEngine
+  private transformers: ITransformEngine[]
   private validate: boolean
 
   constructor({
     workflow,
     nodeDefinitions,
-    expressionEngine = new JexlEngine(),
+    transformers = [new JexlEngine()],
     validate = true
   }: {
     workflow: WorkflowDefinition<T>
     nodeDefinitions: T
-    expressionEngine?: IExpressionEngine
+    transformers?: ITransformEngine[]
     validate?: boolean
   }) {
     this.workflow = {
@@ -204,7 +220,7 @@ export class WorkflowEngine<T extends NodesDefinition = NodesDefinition> {
       edges: workflow.edges
     }
     this.nodeDefinitions = nodeDefinitions
-    this.expressionEngine = expressionEngine
+    this.transformers = transformers
     this.validate = validate
   }
 
@@ -236,25 +252,29 @@ export class WorkflowEngine<T extends NodesDefinition = NodesDefinition> {
     snapshot: Snapshot
     externalPayload?: unknown
     stepLimit?: number
+    globals?: unknown
   }): Promise<Snapshot>
   async execute(args: {
     initialNodeId: string
     workflowId?: string
     externalPayload?: unknown
     stepLimit?: number
+    globals?: unknown
   }): Promise<Snapshot>
   async execute({
     snapshot,
     initialNodeId,
     workflowId,
     externalPayload,
-    stepLimit = 100
+    stepLimit = 100,
+    globals
   }: {
     snapshot?: Snapshot
     initialNodeId?: string
     workflowId?: string
     externalPayload?: unknown
     stepLimit?: number
+    globals?: unknown
   }): Promise<Snapshot> {
     let currentSnapshot = snapshot
 
@@ -292,7 +312,8 @@ export class WorkflowEngine<T extends NodesDefinition = NodesDefinition> {
       }
       currentSnapshot = await this.executeStep(
         currentSnapshot,
-        currentExternalPayload
+        currentExternalPayload,
+        globals
       )
       currentStep++
     }
@@ -302,7 +323,8 @@ export class WorkflowEngine<T extends NodesDefinition = NodesDefinition> {
 
   async executeStep(
     snapshot: Snapshot,
-    externalPayload?: unknown
+    externalPayload?: unknown,
+    globals?: unknown
   ): Promise<Snapshot> {
     const { currentNodeId, context } = snapshot
 
@@ -324,11 +346,20 @@ export class WorkflowEngine<T extends NodesDefinition = NodesDefinition> {
     if (!definition) throw new Error("Node definition not found")
 
     try {
-      const contextData = await this.expressionEngine.prepareContext(context)
-      const resolvedInput = await this.expressionEngine.resolveData(
-        node.data,
-        contextData
-      )
+      let contextData: unknown = context
+      for (const transformer of this.transformers) {
+        contextData =
+          (await transformer.prepare?.(context, globals)) || contextData
+      }
+      let resolvedInput = node.data
+      for (const transformer of this.transformers) {
+        resolvedInput =
+          (await transformer.transformInput?.(
+            resolvedInput,
+            contextData,
+            node.metadata
+          )) || resolvedInput
+      }
 
       const validatedInput = await this.validateData(
         definition.input,
@@ -340,7 +371,8 @@ export class WorkflowEngine<T extends NodesDefinition = NodesDefinition> {
       const result = await definition.executor(
         validatedInput,
         context,
-        externalPayload
+        externalPayload,
+        globals
       )
 
       if (result.__pause) {
@@ -352,7 +384,17 @@ export class WorkflowEngine<T extends NodesDefinition = NodesDefinition> {
         }
       }
 
-      await this.validateData(definition.output, result.data, node.id, "output")
+      let finalOutput = result.data
+      for (const transformer of this.transformers) {
+        finalOutput =
+          (await transformer.transformOutput?.(
+            finalOutput,
+            contextData,
+            node.metadata
+          )) || finalOutput
+      }
+
+      await this.validateData(definition.output, finalOutput, node.id, "output")
 
       const currentAttempt =
         snapshot.retryState?.nodeId === node.id
@@ -364,7 +406,7 @@ export class WorkflowEngine<T extends NodesDefinition = NodesDefinition> {
         [node.id]: [
           ...(context[node.id] || []),
           {
-            output: result.data,
+            output: finalOutput,
             timestamp: Date.now(),
             attempt: currentAttempt
           }
@@ -384,14 +426,14 @@ export class WorkflowEngine<T extends NodesDefinition = NodesDefinition> {
         totalExecutionTime
       }
     } catch (error: unknown) {
-      return this.handleError(snapshot, node.id, error)
+      return this.handleError(snapshot, node.id, error, globals)
     }
   }
-
   private async handleError(
     snapshot: Snapshot,
     nodeId: string,
-    error: unknown
+    error: unknown,
+    globals?: unknown
   ): Promise<Snapshot> {
     const now = Date.now()
     const timeDiff = now - (snapshot.lastStartedAt || now)
@@ -403,18 +445,25 @@ export class WorkflowEngine<T extends NodesDefinition = NodesDefinition> {
     const definition = this.nodeDefinitions[node.type]
     const policy = definition?.retryPolicy
 
-    const contextData = await this.expressionEngine.prepareContext(
-      snapshot.context
-    )
+    let contextData: unknown = snapshot.context
+    for (const transformer of this.transformers) {
+      contextData =
+        (await transformer.prepare?.(snapshot.context, globals)) || contextData
+    }
 
-    const maxAttempts = policy
-      ? Number(
-          await this.expressionEngine.resolve(
-            String(policy.maxAttempts),
-            contextData
-          )
-        )
-      : 0
+    let maxAttempts = 0
+    if (policy) {
+      let resolvedMaxAttempts: unknown = policy.maxAttempts
+      for (const transformer of this.transformers) {
+        resolvedMaxAttempts =
+          (await transformer.transformInput?.(
+            resolvedMaxAttempts,
+            contextData,
+            node.metadata
+          )) || resolvedMaxAttempts
+      }
+      maxAttempts = Number(resolvedMaxAttempts)
+    }
 
     const currentAttempt =
       snapshot.retryState?.nodeId === nodeId
@@ -422,12 +471,17 @@ export class WorkflowEngine<T extends NodesDefinition = NodesDefinition> {
         : 1
 
     if (policy && currentAttempt <= maxAttempts) {
-      const interval = Number(
-        await this.expressionEngine.resolve(
-          String(policy.interval),
-          contextData
-        )
-      )
+      let resolvedInterval: unknown = policy.interval
+      for (const transformer of this.transformers) {
+        resolvedInterval =
+          (await transformer.transformInput?.(
+            resolvedInterval,
+            contextData,
+            node.metadata
+          )) || resolvedInterval
+      }
+      const interval = Number(resolvedInterval)
+
       const delay =
         policy.backoff === "exponential"
           ? interval * 2 ** (currentAttempt - 1)
@@ -440,6 +494,18 @@ export class WorkflowEngine<T extends NodesDefinition = NodesDefinition> {
           nodeId,
           attempts: currentAttempt,
           nextRetryAt: Date.now() + delay
+        },
+        context: {
+          ...snapshot.context,
+          [nodeId]: [
+            ...(snapshot.context[nodeId] || []),
+            {
+              output: null,
+              error: String(error),
+              timestamp: Date.now(),
+              attempt: currentAttempt
+            }
+          ]
         },
         metadata: {
           ...snapshot.metadata,

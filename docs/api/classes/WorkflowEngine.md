@@ -1,4 +1,4 @@
-Defined in: [index.ts:185](https://github.com/vadolasi/refluxo-engine/blob/56d0348710f249b839625fe5f89c28a6190a09d7/src/index.ts#L185)
+Defined in: [index.ts:201](https://github.com/vadolasi/refluxo-engine/blob/dcc7f3bf46aabbf2ced47e0ebe3db11815c34ca2/src/index.ts#L201)
 
 ## Type Parameters
 
@@ -12,19 +12,19 @@ Defined in: [index.ts:185](https://github.com/vadolasi/refluxo-engine/blob/56d03
 
 > **new WorkflowEngine**\<`T`\>(`__namedParameters`): `WorkflowEngine`\<`T`\>
 
-Defined in: [index.ts:191](https://github.com/vadolasi/refluxo-engine/blob/56d0348710f249b839625fe5f89c28a6190a09d7/src/index.ts#L191)
+Defined in: [index.ts:207](https://github.com/vadolasi/refluxo-engine/blob/dcc7f3bf46aabbf2ced47e0ebe3db11815c34ca2/src/index.ts#L207)
 
 #### Parameters
 
 ##### \_\_namedParameters
 
-###### expressionEngine?
-
-[`IExpressionEngine`](../interfaces/IExpressionEngine.md) = `...`
-
 ###### nodeDefinitions
 
 `T`
+
+###### transformers?
+
+[`ITransformEngine`](../interfaces/ITransformEngine.md)[] = `...`
 
 ###### validate?
 
@@ -44,7 +44,7 @@ Defined in: [index.ts:191](https://github.com/vadolasi/refluxo-engine/blob/56d03
 
 > **nodeDefinitions**: `T`
 
-Defined in: [index.ts:187](https://github.com/vadolasi/refluxo-engine/blob/56d0348710f249b839625fe5f89c28a6190a09d7/src/index.ts#L187)
+Defined in: [index.ts:203](https://github.com/vadolasi/refluxo-engine/blob/dcc7f3bf46aabbf2ced47e0ebe3db11815c34ca2/src/index.ts#L203)
 
 ***
 
@@ -52,7 +52,7 @@ Defined in: [index.ts:187](https://github.com/vadolasi/refluxo-engine/blob/56d03
 
 > **workflow**: `Workflow`
 
-Defined in: [index.ts:186](https://github.com/vadolasi/refluxo-engine/blob/56d0348710f249b839625fe5f89c28a6190a09d7/src/index.ts#L186)
+Defined in: [index.ts:202](https://github.com/vadolasi/refluxo-engine/blob/dcc7f3bf46aabbf2ced47e0ebe3db11815c34ca2/src/index.ts#L202)
 
 ## Methods
 
@@ -62,13 +62,17 @@ Defined in: [index.ts:186](https://github.com/vadolasi/refluxo-engine/blob/56d03
 
 > **execute**(`args`): `Promise`\<`Snapshot`\>
 
-Defined in: [index.ts:235](https://github.com/vadolasi/refluxo-engine/blob/56d0348710f249b839625fe5f89c28a6190a09d7/src/index.ts#L235)
+Defined in: [index.ts:251](https://github.com/vadolasi/refluxo-engine/blob/dcc7f3bf46aabbf2ced47e0ebe3db11815c34ca2/src/index.ts#L251)
 
 ##### Parameters
 
 ###### args
 
 ###### externalPayload?
+
+`unknown`
+
+###### globals?
 
 `unknown`
 
@@ -88,13 +92,17 @@ Defined in: [index.ts:235](https://github.com/vadolasi/refluxo-engine/blob/56d03
 
 > **execute**(`args`): `Promise`\<`Snapshot`\>
 
-Defined in: [index.ts:240](https://github.com/vadolasi/refluxo-engine/blob/56d0348710f249b839625fe5f89c28a6190a09d7/src/index.ts#L240)
+Defined in: [index.ts:257](https://github.com/vadolasi/refluxo-engine/blob/dcc7f3bf46aabbf2ced47e0ebe3db11815c34ca2/src/index.ts#L257)
 
 ##### Parameters
 
 ###### args
 
 ###### externalPayload?
+
+`unknown`
+
+###### globals?
 
 `unknown`
 
@@ -118,9 +126,9 @@ Defined in: [index.ts:240](https://github.com/vadolasi/refluxo-engine/blob/56d03
 
 ### executeStep()
 
-> **executeStep**(`snapshot`, `externalPayload?`): `Promise`\<`Snapshot`\>
+> **executeStep**(`snapshot`, `externalPayload?`, `globals?`): `Promise`\<`Snapshot`\>
 
-Defined in: [index.ts:303](https://github.com/vadolasi/refluxo-engine/blob/56d0348710f249b839625fe5f89c28a6190a09d7/src/index.ts#L303)
+Defined in: [index.ts:324](https://github.com/vadolasi/refluxo-engine/blob/dcc7f3bf46aabbf2ced47e0ebe3db11815c34ca2/src/index.ts#L324)
 
 #### Parameters
 
@@ -129,6 +137,10 @@ Defined in: [index.ts:303](https://github.com/vadolasi/refluxo-engine/blob/56d03
 `Snapshot`
 
 ##### externalPayload?
+
+`unknown`
+
+##### globals?
 
 `unknown`
 
@@ -142,7 +154,7 @@ Defined in: [index.ts:303](https://github.com/vadolasi/refluxo-engine/blob/56d03
 
 > **validateWorkflow**(): `Promise`\<`void`\>
 
-Defined in: [index.ts:211](https://github.com/vadolasi/refluxo-engine/blob/56d0348710f249b839625fe5f89c28a6190a09d7/src/index.ts#L211)
+Defined in: [index.ts:227](https://github.com/vadolasi/refluxo-engine/blob/dcc7f3bf46aabbf2ced47e0ebe3db11815c34ca2/src/index.ts#L227)
 
 #### Returns
 

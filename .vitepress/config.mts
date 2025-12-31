@@ -49,7 +49,7 @@ export default withMermaid(
               text: "LLMs",
               items: [
                 { text: "llms.txt", link: "/llms.txt" },
-                { text: "llms-full.txt", link: "/llms-full.txt" },
+                { text: "llms-full.txt", link: "/llms-full.txt" }
               ]
             }
           ],
@@ -74,6 +74,10 @@ export default withMermaid(
                   { text: "Custom Nodes", link: "/guides/custom-nodes" },
                   { text: "Conditionals", link: "/guides/conditionals" },
                   { text: "Handling Loops", link: "/guides/loops" },
+                  {
+                    text: "Handling Secrets",
+                    link: "/guides/handling-secrets"
+                  },
                   {
                     text: "Error Handling",
                     link: "/guides/error-handling"

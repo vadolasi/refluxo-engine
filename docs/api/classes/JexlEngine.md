@@ -1,14 +1,22 @@
-Defined in: [index.ts:93](https://github.com/vadolasi/refluxo-engine/blob/56d0348710f249b839625fe5f89c28a6190a09d7/src/index.ts#L93)
+Defined in: [index.ts:104](https://github.com/vadolasi/refluxo-engine/blob/dcc7f3bf46aabbf2ced47e0ebe3db11815c34ca2/src/index.ts#L104)
 
 ## Implements
 
-- [`IExpressionEngine`](../interfaces/IExpressionEngine.md)
+- [`ITransformEngine`](../interfaces/ITransformEngine.md)
 
 ## Constructors
 
 ### Constructor
 
-> **new JexlEngine**(): `JexlEngine`
+> **new JexlEngine**(`customInstance?`): `JexlEngine`
+
+Defined in: [index.ts:107](https://github.com/vadolasi/refluxo-engine/blob/dcc7f3bf46aabbf2ced47e0ebe3db11815c34ca2/src/index.ts#L107)
+
+#### Parameters
+
+##### customInstance?
+
+`Jexl`
 
 #### Returns
 
@@ -16,11 +24,11 @@ Defined in: [index.ts:93](https://github.com/vadolasi/refluxo-engine/blob/56d034
 
 ## Methods
 
-### prepareContext()
+### prepare()
 
-> **prepareContext**(`context`): `Promise`\<`Record`\<`string`, `unknown`\>\>
+> **prepare**(`context`, `globals`): `Promise`\<`unknown`\>
 
-Defined in: [index.ts:96](https://github.com/vadolasi/refluxo-engine/blob/56d0348710f249b839625fe5f89c28a6190a09d7/src/index.ts#L96)
+Defined in: [index.ts:111](https://github.com/vadolasi/refluxo-engine/blob/dcc7f3bf46aabbf2ced47e0ebe3db11815c34ca2/src/index.ts#L111)
 
 #### Parameters
 
@@ -28,13 +36,17 @@ Defined in: [index.ts:96](https://github.com/vadolasi/refluxo-engine/blob/56d034
 
 `Context`
 
+##### globals
+
+`unknown` = `{}`
+
 #### Returns
 
-`Promise`\<`Record`\<`string`, `unknown`\>\>
+`Promise`\<`unknown`\>
 
 #### Implementation of
 
-[`IExpressionEngine`](../interfaces/IExpressionEngine.md).[`prepareContext`](../interfaces/IExpressionEngine.md#preparecontext)
+[`ITransformEngine`](../interfaces/ITransformEngine.md).[`prepare`](../interfaces/ITransformEngine.md#prepare)
 
 ***
 
@@ -42,7 +54,7 @@ Defined in: [index.ts:96](https://github.com/vadolasi/refluxo-engine/blob/56d034
 
 > **resolve**(`value`, `context`): `Promise`\<`unknown`\>
 
-Defined in: [index.ts:100](https://github.com/vadolasi/refluxo-engine/blob/56d0348710f249b839625fe5f89c28a6190a09d7/src/index.ts#L100)
+Defined in: [index.ts:136](https://github.com/vadolasi/refluxo-engine/blob/dcc7f3bf46aabbf2ced47e0ebe3db11815c34ca2/src/index.ts#L136)
 
 #### Parameters
 
@@ -58,17 +70,13 @@ Defined in: [index.ts:100](https://github.com/vadolasi/refluxo-engine/blob/56d03
 
 `Promise`\<`unknown`\>
 
-#### Implementation of
-
-[`IExpressionEngine`](../interfaces/IExpressionEngine.md).[`resolve`](../interfaces/IExpressionEngine.md#resolve)
-
 ***
 
-### resolveData()
+### transformInput()
 
-> **resolveData**(`data`, `context`): `Promise`\<`unknown`\>
+> **transformInput**(`data`, `context`): `Promise`\<`unknown`\>
 
-Defined in: [index.ts:125](https://github.com/vadolasi/refluxo-engine/blob/56d0348710f249b839625fe5f89c28a6190a09d7/src/index.ts#L125)
+Defined in: [index.ts:116](https://github.com/vadolasi/refluxo-engine/blob/dcc7f3bf46aabbf2ced47e0ebe3db11815c34ca2/src/index.ts#L116)
 
 #### Parameters
 
@@ -86,4 +94,4 @@ Defined in: [index.ts:125](https://github.com/vadolasi/refluxo-engine/blob/56d03
 
 #### Implementation of
 
-[`IExpressionEngine`](../interfaces/IExpressionEngine.md).[`resolveData`](../interfaces/IExpressionEngine.md#resolvedata)
+[`ITransformEngine`](../interfaces/ITransformEngine.md).[`transformInput`](../interfaces/ITransformEngine.md#transforminput)

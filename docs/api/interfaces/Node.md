@@ -1,4 +1,4 @@
-Defined in: [index.ts:41](https://github.com/vadolasi/refluxo-engine/blob/56d0348710f249b839625fe5f89c28a6190a09d7/src/index.ts#L41)
+Defined in: [index.ts:42](https://github.com/vadolasi/refluxo-engine/blob/dcc7f3bf46aabbf2ced47e0ebe3db11815c34ca2/src/index.ts#L42)
 
 ## Type Parameters
 
@@ -12,7 +12,7 @@ Defined in: [index.ts:41](https://github.com/vadolasi/refluxo-engine/blob/56d034
 
 > **data**: `unknown`
 
-Defined in: [index.ts:44](https://github.com/vadolasi/refluxo-engine/blob/56d0348710f249b839625fe5f89c28a6190a09d7/src/index.ts#L44)
+Defined in: [index.ts:45](https://github.com/vadolasi/refluxo-engine/blob/dcc7f3bf46aabbf2ced47e0ebe3db11815c34ca2/src/index.ts#L45)
 
 ***
 
@@ -20,7 +20,15 @@ Defined in: [index.ts:44](https://github.com/vadolasi/refluxo-engine/blob/56d034
 
 > **id**: `string`
 
-Defined in: [index.ts:42](https://github.com/vadolasi/refluxo-engine/blob/56d0348710f249b839625fe5f89c28a6190a09d7/src/index.ts#L42)
+Defined in: [index.ts:43](https://github.com/vadolasi/refluxo-engine/blob/dcc7f3bf46aabbf2ced47e0ebe3db11815c34ca2/src/index.ts#L43)
+
+***
+
+### metadata?
+
+> `optional` **metadata**: `unknown`
+
+Defined in: [index.ts:46](https://github.com/vadolasi/refluxo-engine/blob/dcc7f3bf46aabbf2ced47e0ebe3db11815c34ca2/src/index.ts#L46)
 
 ***
 
@@ -28,4 +36,4 @@ Defined in: [index.ts:42](https://github.com/vadolasi/refluxo-engine/blob/56d034
 
 > **type**: `TType`
 
-Defined in: [index.ts:43](https://github.com/vadolasi/refluxo-engine/blob/56d0348710f249b839625fe5f89c28a6190a09d7/src/index.ts#L43)
+Defined in: [index.ts:44](https://github.com/vadolasi/refluxo-engine/blob/dcc7f3bf46aabbf2ced47e0ebe3db11815c34ca2/src/index.ts#L44)
