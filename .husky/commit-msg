@@ -1,2 +1,0 @@
-#!/bin/bash
-pnpm dlx commitlint --edit $1
