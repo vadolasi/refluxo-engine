@@ -2,8 +2,12 @@
 	"entryPoints": ["src/index.ts"],
 	"out": "docs/en/api",
 	"docsRoot": "./docs",
-	"plugin": ["typedoc-plugin-markdown", "typedoc-vitepress-theme"],
+	"plugin": [
+		"typedoc-plugin-markdown",
+		"typedoc-plugin-frontmatter",
+		"typedoc-vitepress-theme"
+	],
 	"hideBreadcrumbs": true,
-	"hidePageTitle": true,
-	"entryFileName": "index.md"
+	"entryFileName": "index.md",
+	"frontmatterCommentTags": ["description"]
 }

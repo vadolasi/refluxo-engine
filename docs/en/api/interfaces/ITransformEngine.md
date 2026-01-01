@@ -1,4 +1,10 @@
-Defined in: [index.ts:90](https://github.com/vadolasi/refluxo-engine/blob/b9c48253291c306dab53387c2bc9c3782038fcb3/src/index.ts#L90)
+---
+description: Allows for dynamic behavior like expression resolution or data encryption.
+---
+
+# Interface: ITransformEngine
+
+Defined in: [index.ts:148](https://github.com/vadolasi/refluxo-engine/blob/aec39b77df1049c08143ce957c859e71231062c5/src/index.ts#L148)
 
 ## Methods
 
@@ -6,7 +12,7 @@ Defined in: [index.ts:90](https://github.com/vadolasi/refluxo-engine/blob/b9c482
 
 > `optional` **transformInput**(`data`, `context`, `globals?`, `metadata?`): `Promise`\<`unknown`\>
 
-Defined in: [index.ts:91](https://github.com/vadolasi/refluxo-engine/blob/b9c48253291c306dab53387c2bc9c3782038fcb3/src/index.ts#L91)
+Defined in: [index.ts:158](https://github.com/vadolasi/refluxo-engine/blob/aec39b77df1049c08143ce957c859e71231062c5/src/index.ts#L158)
 
 #### Parameters
 
@@ -14,21 +20,33 @@ Defined in: [index.ts:91](https://github.com/vadolasi/refluxo-engine/blob/b9c482
 
 `unknown`
 
+The raw input data.
+
 ##### context
 
 `unknown`
+
+The execution context.
 
 ##### globals?
 
 `unknown`
 
+Global variables.
+
 ##### metadata?
 
 `unknown`
 
+Node metadata.
+
 #### Returns
 
 `Promise`\<`unknown`\>
+
+#### Description
+
+Useful for resolving expressions in the input data.
 
 ***
 
@@ -36,7 +54,7 @@ Defined in: [index.ts:91](https://github.com/vadolasi/refluxo-engine/blob/b9c482
 
 > `optional` **transformOutput**(`data`, `context`, `globals?`, `metadata?`): `Promise`\<`unknown`\>
 
-Defined in: [index.ts:97](https://github.com/vadolasi/refluxo-engine/blob/b9c48253291c306dab53387c2bc9c3782038fcb3/src/index.ts#L97)
+Defined in: [index.ts:173](https://github.com/vadolasi/refluxo-engine/blob/aec39b77df1049c08143ce957c859e71231062c5/src/index.ts#L173)
 
 #### Parameters
 
@@ -44,18 +62,30 @@ Defined in: [index.ts:97](https://github.com/vadolasi/refluxo-engine/blob/b9c482
 
 `unknown`
 
+The raw output data.
+
 ##### context
 
 `unknown`
+
+The execution context.
 
 ##### globals?
 
 `unknown`
 
+Global variables.
+
 ##### metadata?
 
 `unknown`
 
+Node metadata.
+
 #### Returns
 
 `Promise`\<`unknown`\>
+
+#### Description
+
+Useful for filtering or transforming the output data.

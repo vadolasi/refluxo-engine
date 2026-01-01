@@ -1,4 +1,10 @@
-Defined in: [index.ts:54](https://github.com/vadolasi/refluxo-engine/blob/b9c48253291c306dab53387c2bc9c3782038fcb3/src/index.ts#L54)
+---
+description: Contains the nodes and edges that define the process.
+---
+
+# Interface: WorkflowDefinition\<T\>
+
+Defined in: [index.ts:106](https://github.com/vadolasi/refluxo-engine/blob/aec39b77df1049c08143ce957c859e71231062c5/src/index.ts#L106)
 
 ## Type Parameters
 
@@ -6,13 +12,19 @@ Defined in: [index.ts:54](https://github.com/vadolasi/refluxo-engine/blob/b9c482
 
 `T` *extends* [`NodesDefinition`](../type-aliases/NodesDefinition.md) = [`NodesDefinition`](../type-aliases/NodesDefinition.md)
 
+The type of NodesDefinition used in this workflow.
+
 ## Properties
 
 ### edges
 
 > **edges**: [`Edge`](Edge.md)[]
 
-Defined in: [index.ts:58](https://github.com/vadolasi/refluxo-engine/blob/b9c48253291c306dab53387c2bc9c3782038fcb3/src/index.ts#L58)
+Defined in: [index.ts:112](https://github.com/vadolasi/refluxo-engine/blob/aec39b77df1049c08143ce957c859e71231062c5/src/index.ts#L112)
+
+#### Description
+
+Array of edges connecting the nodes.
 
 ***
 
@@ -20,4 +32,8 @@ Defined in: [index.ts:58](https://github.com/vadolasi/refluxo-engine/blob/b9c482
 
 > **nodes**: [`Node`](Node.md)\<keyof `T` & `string`\>[]
 
-Defined in: [index.ts:57](https://github.com/vadolasi/refluxo-engine/blob/b9c48253291c306dab53387c2bc9c3782038fcb3/src/index.ts#L57)
+Defined in: [index.ts:110](https://github.com/vadolasi/refluxo-engine/blob/aec39b77df1049c08143ce957c859e71231062c5/src/index.ts#L110)
+
+#### Description
+
+Array of nodes in the workflow.

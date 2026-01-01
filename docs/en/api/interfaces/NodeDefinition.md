@@ -1,4 +1,6 @@
-Defined in: [index.ts:17](https://github.com/vadolasi/refluxo-engine/blob/b9c48253291c306dab53387c2bc9c3782038fcb3/src/index.ts#L17)
+# Interface: NodeDefinition\<TInput, TOutput\>
+
+Defined in: [index.ts:37](https://github.com/vadolasi/refluxo-engine/blob/aec39b77df1049c08143ce957c859e71231062c5/src/index.ts#L37)
 
 ## Type Parameters
 
@@ -6,9 +8,13 @@ Defined in: [index.ts:17](https://github.com/vadolasi/refluxo-engine/blob/b9c482
 
 `TInput` *extends* `StandardSchemaV1` = `StandardSchemaV1`
 
+The Standard Schema for the input data.
+
 ### TOutput
 
 `TOutput` *extends* `StandardSchemaV1` = `StandardSchemaV1`
+
+The Standard Schema for the output data.
 
 ## Properties
 
@@ -16,7 +22,7 @@ Defined in: [index.ts:17](https://github.com/vadolasi/refluxo-engine/blob/b9c482
 
 > **executor**: (`data`, `context`, `externalPayload?`, `globals?`) => `Promise`\<\{ `__pause?`: `true`; `data`: `TOutput` *extends* `StandardSchemaV1`\<`unknown`, `unknown`\> ? `InferInput`\<`TOutput`\<`TOutput`\>\> : `unknown`; `nextHandle?`: `string`; \}\>
 
-Defined in: [index.ts:24](https://github.com/vadolasi/refluxo-engine/blob/b9c48253291c306dab53387c2bc9c3782038fcb3/src/index.ts#L24)
+Defined in: [index.ts:56](https://github.com/vadolasi/refluxo-engine/blob/aec39b77df1049c08143ce957c859e71231062c5/src/index.ts#L56)
 
 #### Parameters
 
@@ -24,21 +30,31 @@ Defined in: [index.ts:24](https://github.com/vadolasi/refluxo-engine/blob/b9c482
 
 `TInput` *extends* `StandardSchemaV1`\<`unknown`, `unknown`\> ? `InferOutput`\<`TInput`\<`TInput`\>\> : `unknown`
 
+The validated input data.
+
 ##### context
 
 `Context`
+
+The execution context containing results from previous nodes.
 
 ##### externalPayload?
 
 `unknown`
 
+Optional payload passed to the execution.
+
 ##### globals?
 
 `unknown`
 
+Global variables passed to the execution (e.g., secrets).
+
 #### Returns
 
 `Promise`\<\{ `__pause?`: `true`; `data`: `TOutput` *extends* `StandardSchemaV1`\<`unknown`, `unknown`\> ? `InferInput`\<`TOutput`\<`TOutput`\>\> : `unknown`; `nextHandle?`: `string`; \}\>
+
+A promise resolving to the node's result, including data and optional control flags.
 
 ***
 
@@ -46,7 +62,11 @@ Defined in: [index.ts:24](https://github.com/vadolasi/refluxo-engine/blob/b9c482
 
 > `optional` **input**: `TInput`
 
-Defined in: [index.ts:21](https://github.com/vadolasi/refluxo-engine/blob/b9c48253291c306dab53387c2bc9c3782038fcb3/src/index.ts#L21)
+Defined in: [index.ts:42](https://github.com/vadolasi/refluxo-engine/blob/aec39b77df1049c08143ce957c859e71231062c5/src/index.ts#L42)
+
+#### Description
+
+Schema to validate the resolved input data.
 
 ***
 
@@ -54,7 +74,11 @@ Defined in: [index.ts:21](https://github.com/vadolasi/refluxo-engine/blob/b9c482
 
 > `optional` **output**: `TOutput`
 
-Defined in: [index.ts:22](https://github.com/vadolasi/refluxo-engine/blob/b9c48253291c306dab53387c2bc9c3782038fcb3/src/index.ts#L22)
+Defined in: [index.ts:44](https://github.com/vadolasi/refluxo-engine/blob/aec39b77df1049c08143ce957c859e71231062c5/src/index.ts#L44)
+
+#### Description
+
+Schema to validate the output data returned by the executor.
 
 ***
 
@@ -62,4 +86,8 @@ Defined in: [index.ts:22](https://github.com/vadolasi/refluxo-engine/blob/b9c482
 
 > `optional` **retryPolicy**: [`RetryPolicy`](RetryPolicy.md)
 
-Defined in: [index.ts:23](https://github.com/vadolasi/refluxo-engine/blob/b9c48253291c306dab53387c2bc9c3782038fcb3/src/index.ts#L23)
+Defined in: [index.ts:46](https://github.com/vadolasi/refluxo-engine/blob/aec39b77df1049c08143ce957c859e71231062c5/src/index.ts#L46)
+
+#### Description
+
+Policy for handling errors and retrying execution.

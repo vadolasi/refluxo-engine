@@ -1,4 +1,6 @@
-Defined in: [index.ts:42](https://github.com/vadolasi/refluxo-engine/blob/b9c48253291c306dab53387c2bc9c3782038fcb3/src/index.ts#L42)
+# Interface: Node\<TType\>
+
+Defined in: [index.ts:84](https://github.com/vadolasi/refluxo-engine/blob/aec39b77df1049c08143ce957c859e71231062c5/src/index.ts#L84)
 
 ## Type Parameters
 
@@ -6,13 +8,19 @@ Defined in: [index.ts:42](https://github.com/vadolasi/refluxo-engine/blob/b9c482
 
 `TType` = `string`
 
+The type identifier of the node.
+
 ## Properties
 
 ### data
 
 > **data**: `unknown`
 
-Defined in: [index.ts:45](https://github.com/vadolasi/refluxo-engine/blob/b9c48253291c306dab53387c2bc9c3782038fcb3/src/index.ts#L45)
+Defined in: [index.ts:90](https://github.com/vadolasi/refluxo-engine/blob/aec39b77df1049c08143ce957c859e71231062c5/src/index.ts#L90)
+
+#### Description
+
+Static configuration data for the node. Can contain expressions.
 
 ***
 
@@ -20,7 +28,11 @@ Defined in: [index.ts:45](https://github.com/vadolasi/refluxo-engine/blob/b9c482
 
 > **id**: `string`
 
-Defined in: [index.ts:43](https://github.com/vadolasi/refluxo-engine/blob/b9c48253291c306dab53387c2bc9c3782038fcb3/src/index.ts#L43)
+Defined in: [index.ts:86](https://github.com/vadolasi/refluxo-engine/blob/aec39b77df1049c08143ce957c859e71231062c5/src/index.ts#L86)
+
+#### Description
+
+Unique identifier for the node within the workflow.
 
 ***
 
@@ -28,7 +40,11 @@ Defined in: [index.ts:43](https://github.com/vadolasi/refluxo-engine/blob/b9c482
 
 > `optional` **metadata**: `unknown`
 
-Defined in: [index.ts:46](https://github.com/vadolasi/refluxo-engine/blob/b9c48253291c306dab53387c2bc9c3782038fcb3/src/index.ts#L46)
+Defined in: [index.ts:92](https://github.com/vadolasi/refluxo-engine/blob/aec39b77df1049c08143ce957c859e71231062c5/src/index.ts#L92)
+
+#### Description
+
+Metadata for the node, useful for transformers or UI.
 
 ***
 
@@ -36,4 +52,8 @@ Defined in: [index.ts:46](https://github.com/vadolasi/refluxo-engine/blob/b9c482
 
 > **type**: `TType`
 
-Defined in: [index.ts:44](https://github.com/vadolasi/refluxo-engine/blob/b9c48253291c306dab53387c2bc9c3782038fcb3/src/index.ts#L44)
+Defined in: [index.ts:88](https://github.com/vadolasi/refluxo-engine/blob/aec39b77df1049c08143ce957c859e71231062c5/src/index.ts#L88)
+
+#### Description
+
+The type of the node, corresponding to a key in NodesDefinition.

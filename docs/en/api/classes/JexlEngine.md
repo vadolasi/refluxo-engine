@@ -1,4 +1,12 @@
-Defined in: [index.ts:105](https://github.com/vadolasi/refluxo-engine/blob/b9c48253291c306dab53387c2bc9c3782038fcb3/src/index.ts#L105)
+---
+description: |-
+  Handles 
+   syntax.
+---
+
+# Class: JexlEngine
+
+Defined in: [index.ts:185](https://github.com/vadolasi/refluxo-engine/blob/aec39b77df1049c08143ce957c859e71231062c5/src/index.ts#L185)
 
 ## Implements
 
@@ -10,7 +18,7 @@ Defined in: [index.ts:105](https://github.com/vadolasi/refluxo-engine/blob/b9c48
 
 > **new JexlEngine**(`customInstance?`): `JexlEngine`
 
-Defined in: [index.ts:108](https://github.com/vadolasi/refluxo-engine/blob/b9c48253291c306dab53387c2bc9c3782038fcb3/src/index.ts#L108)
+Defined in: [index.ts:188](https://github.com/vadolasi/refluxo-engine/blob/aec39b77df1049c08143ce957c859e71231062c5/src/index.ts#L188)
 
 #### Parameters
 
@@ -28,7 +36,7 @@ Defined in: [index.ts:108](https://github.com/vadolasi/refluxo-engine/blob/b9c48
 
 > **resolve**(`value`, `context`): `Promise`\<`unknown`\>
 
-Defined in: [index.ts:138](https://github.com/vadolasi/refluxo-engine/blob/b9c48253291c306dab53387c2bc9c3782038fcb3/src/index.ts#L138)
+Defined in: [index.ts:239](https://github.com/vadolasi/refluxo-engine/blob/aec39b77df1049c08143ce957c859e71231062c5/src/index.ts#L239)
 
 #### Parameters
 
@@ -36,13 +44,19 @@ Defined in: [index.ts:138](https://github.com/vadolasi/refluxo-engine/blob/b9c48
 
 `string`
 
+The string value to resolve.
+
 ##### context
 
 `unknown`
 
+The context for evaluation.
+
 #### Returns
 
 `Promise`\<`unknown`\>
+
+The resolved value.
 
 ***
 
@@ -50,7 +64,7 @@ Defined in: [index.ts:138](https://github.com/vadolasi/refluxo-engine/blob/b9c48
 
 > **resolveData**(`data`, `context`): `Promise`\<`unknown`\>
 
-Defined in: [index.ts:118](https://github.com/vadolasi/refluxo-engine/blob/b9c48253291c306dab53387c2bc9c3782038fcb3/src/index.ts#L118)
+Defined in: [index.ts:212](https://github.com/vadolasi/refluxo-engine/blob/aec39b77df1049c08143ce957c859e71231062c5/src/index.ts#L212)
 
 #### Parameters
 
@@ -58,13 +72,19 @@ Defined in: [index.ts:118](https://github.com/vadolasi/refluxo-engine/blob/b9c48
 
 `unknown`
 
+The data to resolve.
+
 ##### context
 
 `unknown`
 
+The flattened context for expression evaluation.
+
 #### Returns
 
 `Promise`\<`unknown`\>
+
+The resolved data.
 
 ***
 
@@ -72,7 +92,7 @@ Defined in: [index.ts:118](https://github.com/vadolasi/refluxo-engine/blob/b9c48
 
 > **transformInput**(`data`, `context`): `Promise`\<`unknown`\>
 
-Defined in: [index.ts:112](https://github.com/vadolasi/refluxo-engine/blob/b9c48253291c306dab53387c2bc9c3782038fcb3/src/index.ts#L112)
+Defined in: [index.ts:199](https://github.com/vadolasi/refluxo-engine/blob/aec39b77df1049c08143ce957c859e71231062c5/src/index.ts#L199)
 
 #### Parameters
 
@@ -80,13 +100,19 @@ Defined in: [index.ts:112](https://github.com/vadolasi/refluxo-engine/blob/b9c48
 
 `unknown`
 
+The data to transform.
+
 ##### context
 
 `Context`
 
+The execution context.
+
 #### Returns
 
 `Promise`\<`unknown`\>
+
+The data with expressions resolved.
 
 #### Implementation of
 

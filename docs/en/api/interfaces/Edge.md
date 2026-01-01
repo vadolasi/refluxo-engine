@@ -1,4 +1,10 @@
-Defined in: [index.ts:4](https://github.com/vadolasi/refluxo-engine/blob/b9c48253291c306dab53387c2bc9c3782038fcb3/src/index.ts#L4)
+---
+description: Defines the flow of execution.
+---
+
+# Interface: Edge
+
+Defined in: [index.ts:8](https://github.com/vadolasi/refluxo-engine/blob/aec39b77df1049c08143ce957c859e71231062c5/src/index.ts#L8)
 
 ## Properties
 
@@ -6,7 +12,11 @@ Defined in: [index.ts:4](https://github.com/vadolasi/refluxo-engine/blob/b9c4825
 
 > **id**: `string`
 
-Defined in: [index.ts:5](https://github.com/vadolasi/refluxo-engine/blob/b9c48253291c306dab53387c2bc9c3782038fcb3/src/index.ts#L5)
+Defined in: [index.ts:10](https://github.com/vadolasi/refluxo-engine/blob/aec39b77df1049c08143ce957c859e71231062c5/src/index.ts#L10)
+
+#### Description
+
+Unique identifier for the edge.
 
 ***
 
@@ -14,7 +24,11 @@ Defined in: [index.ts:5](https://github.com/vadolasi/refluxo-engine/blob/b9c4825
 
 > **source**: `string`
 
-Defined in: [index.ts:6](https://github.com/vadolasi/refluxo-engine/blob/b9c48253291c306dab53387c2bc9c3782038fcb3/src/index.ts#L6)
+Defined in: [index.ts:12](https://github.com/vadolasi/refluxo-engine/blob/aec39b77df1049c08143ce957c859e71231062c5/src/index.ts#L12)
+
+#### Description
+
+The ID of the source node where the edge originates.
 
 ***
 
@@ -22,7 +36,11 @@ Defined in: [index.ts:6](https://github.com/vadolasi/refluxo-engine/blob/b9c4825
 
 > `optional` **sourceHandle**: `string`
 
-Defined in: [index.ts:8](https://github.com/vadolasi/refluxo-engine/blob/b9c48253291c306dab53387c2bc9c3782038fcb3/src/index.ts#L8)
+Defined in: [index.ts:16](https://github.com/vadolasi/refluxo-engine/blob/aec39b77df1049c08143ce957c859e71231062c5/src/index.ts#L16)
+
+#### Description
+
+Optional handle ID on the source node, used for conditional branching.
 
 ***
 
@@ -30,4 +48,8 @@ Defined in: [index.ts:8](https://github.com/vadolasi/refluxo-engine/blob/b9c4825
 
 > **target**: `string`
 
-Defined in: [index.ts:7](https://github.com/vadolasi/refluxo-engine/blob/b9c48253291c306dab53387c2bc9c3782038fcb3/src/index.ts#L7)
+Defined in: [index.ts:14](https://github.com/vadolasi/refluxo-engine/blob/aec39b77df1049c08143ce957c859e71231062c5/src/index.ts#L14)
+
+#### Description
+
+The ID of the target node where the edge ends.
