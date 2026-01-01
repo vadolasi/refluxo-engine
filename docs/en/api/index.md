@@ -31,7 +31,7 @@ Every execution step is serializable. Pause a flow, save it to a database, and r
 
 Refluxo supports any validation library that implements [Standard Schema](https://standardschema.dev). You can use the popular [Zod](https://zod.dev), [Valibot](https://valibot.dev) for a small bundle size, [TypeBox](https://github.com/sinclairzx81/typebox) or [ArkType](https://arktype.io) for better peformance, or any other.
 
-If you store your schema outside code, like in a database, you can write a logic to convert it to a Standard Schema object, for a example, [read the docs](https://vadolasi.github.io/refluxo-engine/guides/dynamic-schemas.html)
+If you store your schema outside code, like in a database, you can write a logic to convert it to a Standard Schema object, for a example, [read the docs](https://refluxo-engine.vitor036daniel.workers.dev/guides/dynamic-schemas)
 
 ### 🧠 Powerful Expressions
 

@@ -1,7 +1,7 @@
 import { defineConfig } from "vitepress"
 import llmstxt, { copyOrDownloadAsMarkdownButtons } from "vitepress-plugin-llms"
 import { withMermaid } from "vitepress-plugin-mermaid"
-import typedocSidebar from "../docs/api/typedoc-sidebar.json"
+import typedocSidebar from "../docs/en/api/typedoc-sidebar.json"
 
 // https://vitepress.dev/reference/site-config
 export default withMermaid(
@@ -25,6 +25,7 @@ export default withMermaid(
       root: {
         label: "English",
         lang: "en",
+        link: "/en/",
         themeConfig: {
           socialLinks: [
             {
@@ -44,7 +45,7 @@ export default withMermaid(
                 { text: "Cookbook", link: "/cookbook/content-approval" }
               ]
             },
-            { text: "API Reference", link: "/api/" },
+            { text: "API Reference", link: "/en/api/" },
             {
               text: "LLMs",
               items: [
@@ -117,7 +118,7 @@ export default withMermaid(
                 ]
               }
             ],
-            "/api/": [{ text: "API Reference", items: typedocSidebar }]
+            "/en/api/": [{ text: "API Reference", items: typedocSidebar }]
           }
         }
       },
@@ -154,7 +155,7 @@ export default withMermaid(
                 }
               ]
             },
-            { text: "Referência da API", link: "/api/" },
+            { text: "Referência da API", link: "/en/api/" },
             {
               text: "LLMs",
               items: [
@@ -229,18 +230,18 @@ export default withMermaid(
                 ]
               }
             ],
-            "/api/": [{ text: "API Reference", items: typedocSidebar }]
+            "/en/api/": [{ text: "API Reference", items: typedocSidebar }]
           }
         }
       }
     },
 
     vite: {
-      plugins: [llmstxt()]
+      plugins: [llmstxt({ workDir: "en", domain: "https://refluxo-engine.vitor036daniel.workers.dev" })]
     },
 
     sitemap: {
-      hostname: "https://vadolasi.github.io/refluxo-engine"
+      hostname: "https://refluxo-engine.vitor036daniel.workers.dev"
     }
   })
 )

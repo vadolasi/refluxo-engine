@@ -8,7 +8,7 @@ hero:
   actions:
     - theme: brand
       text: Get Started
-      link: /introduction
+      link: /en/introduction
     - theme: alt
       text: View on GitHub
       link: https://github.com/vadolasi/refluxo-engine

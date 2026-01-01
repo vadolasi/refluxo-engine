@@ -18,4 +18,4 @@ Esta biblioteca nasceu da necessidade de uma ferramenta de orquestração modern
 
 -   **Conceitos Fundamentais**: Se você quer um mergulho profundo na arquitetura, comece pela seção [Conceitos Fundamentais](./concepts/engine.md) para entender os fundamentos como a Engine, o Snapshot e o Contexto.
 -   **Guias Práticos**: Para ver exemplos práticos e aprender como implementar padrões específicos, confira os [Guias Práticos](./guides/getting-started.md).
--   **Referência da API**: Para uma visão detalhada das classes, tipos e interfaces disponíveis, acesse a [Referência da API](../api/).
+-   **Referência da API**: Para uma visão detalhada das classes, tipos e interfaces disponíveis, acesse a [Referência da API](../en/api/).

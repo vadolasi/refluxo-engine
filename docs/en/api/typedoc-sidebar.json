@@ -1,0 +1,41 @@
+[
+	{
+		"text": "Classes",
+		"collapsed": true,
+		"items": [
+			{ "text": "JexlEngine", "link": "/en/api/classes/JexlEngine.md" },
+			{ "text": "WorkflowEngine", "link": "/en/api/classes/WorkflowEngine.md" }
+		]
+	},
+	{
+		"text": "Interfaces",
+		"collapsed": true,
+		"items": [
+			{ "text": "Edge", "link": "/en/api/interfaces/Edge.md" },
+			{
+				"text": "ITransformEngine",
+				"link": "/en/api/interfaces/ITransformEngine.md"
+			},
+			{ "text": "Node", "link": "/en/api/interfaces/Node.md" },
+			{
+				"text": "NodeDefinition",
+				"link": "/en/api/interfaces/NodeDefinition.md"
+			},
+			{ "text": "RetryPolicy", "link": "/en/api/interfaces/RetryPolicy.md" },
+			{
+				"text": "WorkflowDefinition",
+				"link": "/en/api/interfaces/WorkflowDefinition.md"
+			}
+		]
+	},
+	{
+		"text": "Type Aliases",
+		"collapsed": true,
+		"items": [
+			{
+				"text": "NodesDefinition",
+				"link": "/en/api/type-aliases/NodesDefinition.md"
+			}
+		]
+	}
+]
