@@ -34,15 +34,15 @@ export default withMermaid(
             }
           ],
           nav: [
-            { text: "Home", link: "/" },
+            { text: "Home", link: "/en/" },
             {
               text: "Documentation",
               items: [
-                { text: "Introduction", link: "/introduction" },
-                { text: "Core Concepts", link: "/concepts/engine" },
-                { text: "Guides", link: "/guides/getting-started" },
-                { text: "Deployment", link: "/deployment/state-management" },
-                { text: "Cookbook", link: "/cookbook/content-approval" }
+                { text: "Introduction", link: "/en/introduction" },
+                { text: "Core Concepts", link: "/en/concepts/engine" },
+                { text: "Guides", link: "/en/guides/getting-started" },
+                { text: "Deployment", link: "/en/deployment/state-management" },
+                { text: "Cookbook", link: "/en/cookbook/content-approval" }
               ]
             },
             { text: "API Reference", link: "/en/api/" },
@@ -56,38 +56,38 @@ export default withMermaid(
           ],
           sidebar: {
             "/": [
-              { text: "Introduction", link: "/introduction" },
+              { text: "Introduction", link: "/en/introduction" },
               {
                 text: "Core Concepts",
                 items: [
-                  { text: "The Engine", link: "/concepts/engine" },
-                  { text: "Workflow", link: "/concepts/workflow" },
-                  { text: "Snapshot", link: "/concepts/snapshot" },
-                  { text: "Context", link: "/concepts/context" },
-                  { text: "Expressions", link: "/concepts/expressions" },
-                  { text: "Use Cases", link: "/concepts/use-cases" }
+                  { text: "The Engine", link: "/en/concepts/engine" },
+                  { text: "Workflow", link: "/en/concepts/workflow" },
+                  { text: "Snapshot", link: "/en/concepts/snapshot" },
+                  { text: "Context", link: "/en/concepts/context" },
+                  { text: "Expressions", link: "/en/concepts/expressions" },
+                  { text: "Use Cases", link: "/en/concepts/use-cases" }
                 ]
               },
               {
                 text: "Guides",
                 items: [
-                  { text: "Getting Started", link: "/guides/getting-started" },
-                  { text: "Custom Nodes", link: "/guides/custom-nodes" },
-                  { text: "Conditionals", link: "/guides/conditionals" },
-                  { text: "Handling Loops", link: "/guides/loops" },
+                  { text: "Getting Started", link: "/en/guides/getting-started" },
+                  { text: "Custom Nodes", link: "/en/guides/custom-nodes" },
+                  { text: "Conditionals", link: "/en/guides/conditionals" },
+                  { text: "Handling Loops", link: "/en/guides/loops" },
                   {
                     text: "Handling Secrets",
-                    link: "/guides/handling-secrets"
+                    link: "/en/guides/handling-secrets"
                   },
                   {
                     text: "Error Handling",
-                    link: "/guides/error-handling"
+                    link: "/en/guides/error-handling"
                   },
                   {
                     text: "External Events & Pausing",
-                    link: "/guides/external-events"
+                    link: "/en/guides/external-events"
                   },
-                  { text: "Dynamic Schemas", link: "/guides/dynamic-schemas" }
+                  { text: "Dynamic Schemas", link: "/en/guiconceptsdes/dynamic-schemas" }
                 ]
               },
               {
@@ -95,13 +95,13 @@ export default withMermaid(
                 items: [
                   {
                     text: "State Management",
-                    link: "/deployment/state-management"
+                    link: "/en/deployment/state-management"
                   },
                   {
                     text: "Serverless Patterns",
-                    link: "/deployment/serverless"
+                    link: "/en/deployment/serverless"
                   },
-                  { text: "Security", link: "/deployment/security" }
+                  { text: "Security", link: "/en/deployment/security" }
                 ]
               },
               {
@@ -109,11 +109,11 @@ export default withMermaid(
                 items: [
                   {
                     text: "Content Approval Workflow",
-                    link: "/cookbook/content-approval"
+                    link: "/en/cookbook/content-approval"
                   },
                   {
                     text: "API Data Aggregation",
-                    link: "/cookbook/api-aggregation"
+                    link: "/en/cookbook/api-aggregation"
                   }
                 ]
               }
