@@ -47,7 +47,7 @@
 	],
 	"author": "Vitor Daniel <vitor036daniel@gmail.com>",
 	"license": "MIT",
-	"homepage": "https://github.com/vadolasi/refluxo-engine#readme",
+	"homepage": "https://refluxo-engine.vitor036daniel.workers.dev",
 	"repository": {
 		"type": "git",
 		"url": "git+https://github.com/vadolasi/refluxo-engine.git"
