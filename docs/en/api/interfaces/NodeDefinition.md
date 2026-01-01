@@ -1,4 +1,4 @@
-Defined in: [index.ts:17](https://github.com/vadolasi/refluxo-engine/blob/94586112a3b77d8d7cbddc132e7f0f676590cb26/src/index.ts#L17)
+Defined in: [index.ts:17](https://github.com/vadolasi/refluxo-engine/blob/b9c48253291c306dab53387c2bc9c3782038fcb3/src/index.ts#L17)
 
 ## Type Parameters
 
@@ -16,7 +16,7 @@ Defined in: [index.ts:17](https://github.com/vadolasi/refluxo-engine/blob/945861
 
 > **executor**: (`data`, `context`, `externalPayload?`, `globals?`) => `Promise`\<\{ `__pause?`: `true`; `data`: `TOutput` *extends* `StandardSchemaV1`\<`unknown`, `unknown`\> ? `InferInput`\<`TOutput`\<`TOutput`\>\> : `unknown`; `nextHandle?`: `string`; \}\>
 
-Defined in: [index.ts:24](https://github.com/vadolasi/refluxo-engine/blob/94586112a3b77d8d7cbddc132e7f0f676590cb26/src/index.ts#L24)
+Defined in: [index.ts:24](https://github.com/vadolasi/refluxo-engine/blob/b9c48253291c306dab53387c2bc9c3782038fcb3/src/index.ts#L24)
 
 #### Parameters
 
@@ -46,7 +46,7 @@ Defined in: [index.ts:24](https://github.com/vadolasi/refluxo-engine/blob/945861
 
 > `optional` **input**: `TInput`
 
-Defined in: [index.ts:21](https://github.com/vadolasi/refluxo-engine/blob/94586112a3b77d8d7cbddc132e7f0f676590cb26/src/index.ts#L21)
+Defined in: [index.ts:21](https://github.com/vadolasi/refluxo-engine/blob/b9c48253291c306dab53387c2bc9c3782038fcb3/src/index.ts#L21)
 
 ***
 
@@ -54,7 +54,7 @@ Defined in: [index.ts:21](https://github.com/vadolasi/refluxo-engine/blob/945861
 
 > `optional` **output**: `TOutput`
 
-Defined in: [index.ts:22](https://github.com/vadolasi/refluxo-engine/blob/94586112a3b77d8d7cbddc132e7f0f676590cb26/src/index.ts#L22)
+Defined in: [index.ts:22](https://github.com/vadolasi/refluxo-engine/blob/b9c48253291c306dab53387c2bc9c3782038fcb3/src/index.ts#L22)
 
 ***
 
@@ -62,4 +62,4 @@ Defined in: [index.ts:22](https://github.com/vadolasi/refluxo-engine/blob/945861
 
 > `optional` **retryPolicy**: [`RetryPolicy`](RetryPolicy.md)
 
-Defined in: [index.ts:23](https://github.com/vadolasi/refluxo-engine/blob/94586112a3b77d8d7cbddc132e7f0f676590cb26/src/index.ts#L23)
+Defined in: [index.ts:23](https://github.com/vadolasi/refluxo-engine/blob/b9c48253291c306dab53387c2bc9c3782038fcb3/src/index.ts#L23)

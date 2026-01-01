@@ -1,4 +1,4 @@
-Defined in: [index.ts:90](https://github.com/vadolasi/refluxo-engine/blob/94586112a3b77d8d7cbddc132e7f0f676590cb26/src/index.ts#L90)
+Defined in: [index.ts:90](https://github.com/vadolasi/refluxo-engine/blob/b9c48253291c306dab53387c2bc9c3782038fcb3/src/index.ts#L90)
 
 ## Methods
 
@@ -6,7 +6,7 @@ Defined in: [index.ts:90](https://github.com/vadolasi/refluxo-engine/blob/945861
 
 > `optional` **transformInput**(`data`, `context`, `globals?`, `metadata?`): `Promise`\<`unknown`\>
 
-Defined in: [index.ts:91](https://github.com/vadolasi/refluxo-engine/blob/94586112a3b77d8d7cbddc132e7f0f676590cb26/src/index.ts#L91)
+Defined in: [index.ts:91](https://github.com/vadolasi/refluxo-engine/blob/b9c48253291c306dab53387c2bc9c3782038fcb3/src/index.ts#L91)
 
 #### Parameters
 
@@ -36,7 +36,7 @@ Defined in: [index.ts:91](https://github.com/vadolasi/refluxo-engine/blob/945861
 
 > `optional` **transformOutput**(`data`, `context`, `globals?`, `metadata?`): `Promise`\<`unknown`\>
 
-Defined in: [index.ts:97](https://github.com/vadolasi/refluxo-engine/blob/94586112a3b77d8d7cbddc132e7f0f676590cb26/src/index.ts#L97)
+Defined in: [index.ts:97](https://github.com/vadolasi/refluxo-engine/blob/b9c48253291c306dab53387c2bc9c3782038fcb3/src/index.ts#L97)
 
 #### Parameters
 

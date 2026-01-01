@@ -1,4 +1,4 @@
-Defined in: [index.ts:105](https://github.com/vadolasi/refluxo-engine/blob/94586112a3b77d8d7cbddc132e7f0f676590cb26/src/index.ts#L105)
+Defined in: [index.ts:105](https://github.com/vadolasi/refluxo-engine/blob/b9c48253291c306dab53387c2bc9c3782038fcb3/src/index.ts#L105)
 
 ## Implements
 
@@ -10,7 +10,7 @@ Defined in: [index.ts:105](https://github.com/vadolasi/refluxo-engine/blob/94586
 
 > **new JexlEngine**(`customInstance?`): `JexlEngine`
 
-Defined in: [index.ts:108](https://github.com/vadolasi/refluxo-engine/blob/94586112a3b77d8d7cbddc132e7f0f676590cb26/src/index.ts#L108)
+Defined in: [index.ts:108](https://github.com/vadolasi/refluxo-engine/blob/b9c48253291c306dab53387c2bc9c3782038fcb3/src/index.ts#L108)
 
 #### Parameters
 
@@ -28,7 +28,7 @@ Defined in: [index.ts:108](https://github.com/vadolasi/refluxo-engine/blob/94586
 
 > **resolve**(`value`, `context`): `Promise`\<`unknown`\>
 
-Defined in: [index.ts:138](https://github.com/vadolasi/refluxo-engine/blob/94586112a3b77d8d7cbddc132e7f0f676590cb26/src/index.ts#L138)
+Defined in: [index.ts:138](https://github.com/vadolasi/refluxo-engine/blob/b9c48253291c306dab53387c2bc9c3782038fcb3/src/index.ts#L138)
 
 #### Parameters
 
@@ -50,7 +50,7 @@ Defined in: [index.ts:138](https://github.com/vadolasi/refluxo-engine/blob/94586
 
 > **resolveData**(`data`, `context`): `Promise`\<`unknown`\>
 
-Defined in: [index.ts:118](https://github.com/vadolasi/refluxo-engine/blob/94586112a3b77d8d7cbddc132e7f0f676590cb26/src/index.ts#L118)
+Defined in: [index.ts:118](https://github.com/vadolasi/refluxo-engine/blob/b9c48253291c306dab53387c2bc9c3782038fcb3/src/index.ts#L118)
 
 #### Parameters
 
@@ -72,7 +72,7 @@ Defined in: [index.ts:118](https://github.com/vadolasi/refluxo-engine/blob/94586
 
 > **transformInput**(`data`, `context`): `Promise`\<`unknown`\>
 
-Defined in: [index.ts:112](https://github.com/vadolasi/refluxo-engine/blob/94586112a3b77d8d7cbddc132e7f0f676590cb26/src/index.ts#L112)
+Defined in: [index.ts:112](https://github.com/vadolasi/refluxo-engine/blob/b9c48253291c306dab53387c2bc9c3782038fcb3/src/index.ts#L112)
 
 #### Parameters
 
