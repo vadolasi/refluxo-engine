@@ -1,11 +1,65 @@
 import { describe, expect, it } from "vitest"
 import {
-  type ITransformEngine,
+  type Middleware,
   type NodesDefinition,
+  type RetryPolicy,
   type WorkflowDefinition,
   WorkflowEngine
 } from "../src"
-import definitions from "./definitions"
+
+const definitions: NodesDefinition = {
+  "test:input": {
+    executor: async (data, _ctx, payload) => ({ data: payload || data })
+  },
+  "test:condition": {
+    executor: async (data) => ({
+      data: {},
+      nextHandle: (data as { check: boolean }).check ? "true" : "false"
+    })
+  },
+  "test:fail": {
+    retryPolicy: {
+      maxAttempts: "{{ nodes.config.last.data.retries }}",
+      interval: 10,
+      backoff: "fixed"
+    },
+    executor: async () => {
+      throw new Error("Fail")
+    }
+  },
+  "test:log": {
+    executor: async (data) => ({ data })
+  }
+}
+
+const simpleMiddleware: Middleware = async (context, next) => {
+  const resolve = (val: unknown) => {
+    if (typeof val === "string" && val.startsWith("{{")) {
+      if (val.includes("age >= 18")) {
+        const startNode = context.snapshot.context["start"]?.[0]
+        return (startNode?.output as { age: number })?.age >= 18
+      }
+      if (val.includes("retries")) {
+        const configNode = context.snapshot.context["config"]?.[0]
+        return (configNode?.output as { retries: number })?.retries
+      }
+    }
+    return val
+  }
+
+  context.input = resolve(context.input)
+  if (context.definition.retryPolicy) {
+    const policy = context.definition.retryPolicy
+    context.state.retryPolicy = {
+      ...policy,
+      maxAttempts: resolve(policy.maxAttempts)
+    } as RetryPolicy
+  }
+
+  await next()
+}
+
+const defaultMiddlewares = [simpleMiddleware]
 
 describe("Refluxo Workflow Engine", () => {
   it("should execute a simple linear workflow with validation", async () => {
@@ -15,7 +69,8 @@ describe("Refluxo Workflow Engine", () => {
     }
     const engine = new WorkflowEngine({
       workflow,
-      nodeDefinitions: definitions
+      nodeDefinitions: definitions,
+      middlewares: defaultMiddlewares
     })
 
     const snapshot = await engine.execute({ initialNodeId: "n1" })
@@ -44,7 +99,8 @@ describe("Refluxo Workflow Engine", () => {
     }
     const engine = new WorkflowEngine({
       workflow,
-      nodeDefinitions: definitions
+      nodeDefinitions: definitions,
+      middlewares: defaultMiddlewares
     })
 
     const snapshot = await engine.execute({
@@ -72,7 +128,8 @@ describe("Refluxo Workflow Engine", () => {
     }
     const engine = new WorkflowEngine({
       workflow,
-      nodeDefinitions: definitionsWithWait
+      nodeDefinitions: definitionsWithWait,
+      middlewares: defaultMiddlewares
     })
 
     let snapshot = await engine.execute({ initialNodeId: "wait_node" })
@@ -87,6 +144,16 @@ describe("Refluxo Workflow Engine", () => {
   })
 
   it("should fail validation if input is incorrect", async () => {
+    const validationMiddleware: Middleware = async (ctx, next) => {
+      if (ctx.node.type === "test:condition") {
+        const data = ctx.input as { check: unknown }
+        if (typeof data.check !== "boolean") {
+          throw new Error("Validation failed: check must be a boolean")
+        }
+      }
+      await next()
+    }
+
     const workflow: WorkflowDefinition = {
       nodes: [
         { id: "n1", type: "test:condition", data: { check: "not-a-boolean" } }
@@ -95,7 +162,8 @@ describe("Refluxo Workflow Engine", () => {
     }
     const engine = new WorkflowEngine({
       workflow,
-      nodeDefinitions: definitions
+      nodeDefinitions: definitions,
+      middlewares: [validationMiddleware, ...defaultMiddlewares]
     })
 
     const snapshot = await engine.execute({ initialNodeId: "n1" })
@@ -113,7 +181,8 @@ describe("Refluxo Workflow Engine", () => {
     }
     const engine = new WorkflowEngine({
       workflow,
-      nodeDefinitions: definitions
+      nodeDefinitions: definitions,
+      middlewares: defaultMiddlewares
     })
 
     let snapshot = await engine.execute({ initialNodeId: "config" })
@@ -138,22 +207,21 @@ describe("Refluxo Workflow Engine", () => {
   })
 
   it("should support custom transformers", async () => {
-    const customTransformer: ITransformEngine = {
-      transformInput: async (data: unknown) => {
-        if (typeof data === "object" && data !== null) {
-          const result: Record<string, unknown> = {}
-          for (const key in data) {
-            const value = (data as Record<string, unknown>)[key]
-            if (typeof value === "string" && value.startsWith("upper:")) {
-              result[key] = value.replace("upper:", "").toUpperCase()
-            } else {
-              result[key] = value
-            }
+    const customMiddleware: Middleware = async (ctx, next) => {
+      const data = ctx.input
+      if (typeof data === "object" && data !== null) {
+        const result: Record<string, unknown> = {}
+        for (const key in data) {
+          const value = (data as Record<string, unknown>)[key]
+          if (typeof value === "string" && value.startsWith("upper:")) {
+            result[key] = value.replace("upper:", "").toUpperCase()
+          } else {
+            result[key] = value
           }
-          return result
         }
-        return data
+        ctx.input = result
       }
+      await next()
     }
 
     const workflow: WorkflowDefinition = {
@@ -164,7 +232,7 @@ describe("Refluxo Workflow Engine", () => {
     const engine = new WorkflowEngine({
       workflow,
       nodeDefinitions: definitions,
-      transformers: [customTransformer]
+      middlewares: [customMiddleware, ...defaultMiddlewares]
     })
 
     const snapshot = await engine.execute({ initialNodeId: "n1" })
@@ -172,27 +240,25 @@ describe("Refluxo Workflow Engine", () => {
   })
 
   it("should chain multiple transformers", async () => {
-    const t1: ITransformEngine = {
-      transformInput: async (data) => {
-        if (typeof data === "object" && data !== null && "val" in data) {
-          return {
-            ...data,
-            val: (data as Record<string, unknown>).val + "B"
-          }
+    const t1: Middleware = async (ctx, next) => {
+      const data = ctx.input
+      if (typeof data === "object" && data !== null && "val" in data) {
+        ctx.input = {
+          ...data,
+          val: (data as Record<string, unknown>).val + "B"
         }
-        return data
       }
+      await next()
     }
-    const t2: ITransformEngine = {
-      transformInput: async (data) => {
-        if (typeof data === "object" && data !== null && "val" in data) {
-          return {
-            ...data,
-            val: (data as Record<string, unknown>).val + "C"
-          }
+    const t2: Middleware = async (ctx, next) => {
+      const data = ctx.input
+      if (typeof data === "object" && data !== null && "val" in data) {
+        ctx.input = {
+          ...data,
+          val: (data as Record<string, unknown>).val + "C"
         }
-        return data
       }
+      await next()
     }
 
     const workflow: WorkflowDefinition = {
@@ -203,35 +269,35 @@ describe("Refluxo Workflow Engine", () => {
     const engine = new WorkflowEngine({
       workflow,
       nodeDefinitions: definitions,
-      transformers: [t1, t2]
+      middlewares: [t1, t2, ...defaultMiddlewares]
     })
 
     const snapshot = await engine.execute({ initialNodeId: "n1" })
     expect(snapshot.context.n1[0].output).toEqual({ val: "ABC" })
   })
   it("should pass globals to transformers", async () => {
-    const globalTransformer: ITransformEngine = {
-      transformInput: async (data, _context, globals) => {
-        if (typeof data === "object" && data !== null) {
-          const result: Record<string, unknown> = {}
-          for (const key in data) {
-            const value = (data as Record<string, unknown>)[key]
-            if (
-              typeof value === "string" &&
-              value.startsWith("global:") &&
-              typeof globals === "object" &&
-              globals !== null
-            ) {
-              const secretKey = value.replace("global:", "")
-              result[key] = (globals as Record<string, unknown>)[secretKey]
-            } else {
-              result[key] = value
-            }
+    const globalMiddleware: Middleware = async (ctx, next) => {
+      const data = ctx.input
+      const globals = ctx.globals
+      if (typeof data === "object" && data !== null) {
+        const result: Record<string, unknown> = {}
+        for (const key in data) {
+          const value = (data as Record<string, unknown>)[key]
+          if (
+            typeof value === "string" &&
+            value.startsWith("global:") &&
+            typeof globals === "object" &&
+            globals !== null
+          ) {
+            const secretKey = value.replace("global:", "")
+            result[key] = (globals as Record<string, unknown>)[secretKey]
+          } else {
+            result[key] = value
           }
-          return result
         }
-        return data
+        ctx.input = result
       }
+      await next()
     }
 
     const workflow: WorkflowDefinition = {
@@ -242,7 +308,7 @@ describe("Refluxo Workflow Engine", () => {
     const engine = new WorkflowEngine({
       workflow,
       nodeDefinitions: definitions,
-      transformers: [globalTransformer]
+      middlewares: [globalMiddleware, ...defaultMiddlewares]
     })
 
     const snapshot = await engine.execute({

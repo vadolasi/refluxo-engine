@@ -1,0 +1,36 @@
+{
+	"name": "@refluxo/core",
+	"version": "1.0.0",
+	"description": "Core engine for Refluxo workflow system",
+	"main": "./dist/index.js",
+	"module": "./dist/index.mjs",
+	"types": "./dist/index.d.ts",
+	"exports": {
+		".": {
+			"types": "./dist/index.d.ts",
+			"import": "./dist/index.mjs",
+			"require": "./dist/index.js"
+		}
+	},
+	"files": [
+		"dist"
+	],
+	"scripts": {
+		"build": "tsup src/index.ts --format cjs,esm --dts --clean",
+		"dev": "tsup src/index.ts --format cjs,esm --watch --dts",
+		"lint": "tsc --noEmit"
+	},
+	"keywords": [
+		"workflow",
+		"engine",
+		"stateless",
+		"serverless",
+		"snapshot"
+	],
+	"author": "Vitor Daniel <vitor036daniel@gmail.com>",
+	"license": "MIT",
+	"devDependencies": {
+		"tsup": "^8.0.0",
+		"typescript": "^5.0.0"
+	}
+}

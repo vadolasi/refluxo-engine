@@ -1,0 +1,42 @@
+{
+	"name": "@refluxo/jexl-middleware",
+	"version": "1.3.1",
+	"description": "Jexl expression middleware for Refluxo",
+	"main": "./dist/index.js",
+	"module": "./dist/index.mjs",
+	"types": "./dist/index.d.ts",
+	"exports": {
+		".": {
+			"types": "./dist/index.d.ts",
+			"import": "./dist/index.mjs",
+			"require": "./dist/index.js"
+		}
+	},
+	"files": [
+		"dist"
+	],
+	"scripts": {
+		"build": "tsup src/index.ts --format cjs,esm --dts --clean",
+		"dev": "tsup src/index.ts --format cjs,esm --watch --dts",
+		"lint": "tsc --noEmit"
+	},
+	"keywords": [
+		"workflow",
+		"middleware",
+		"jexl",
+		"expression"
+	],
+	"author": "Vitor Daniel <vitor036daniel@gmail.com>",
+	"license": "MIT",
+	"dependencies": {
+		"jexl": "^2.3.0"
+	},
+	"peerDependencies": {
+		"@refluxo/core": "workspace:*"
+	},
+	"devDependencies": {
+		"@refluxo/core": "workspace:*",
+		"tsup": "^8.0.0",
+		"typescript": "^5.0.0"
+	}
+}

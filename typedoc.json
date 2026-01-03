@@ -1,5 +1,6 @@
 {
-	"entryPoints": ["src/index.ts"],
+	"entryPointStrategy": "packages",
+	"entryPoints": ["packages/*"],
 	"out": "docs/en/api",
 	"docsRoot": "./docs",
 	"plugin": [

@@ -1,6 +1,37 @@
+import {
+  type NodesDefinition,
+  type WorkflowDefinition,
+  WorkflowEngine
+} from "@refluxo/core"
 import { describe, expect, it } from "vitest"
-import { type WorkflowDefinition, WorkflowEngine } from "../src"
-import definitions from "./definitions"
+import { createJexlMiddleware } from "../src"
+
+const definitions: NodesDefinition = {
+  "test:input": {
+    executor: async (data, _ctx, payload) => ({ data: payload || data })
+  },
+  "test:condition": {
+    executor: async (data) => ({
+      data: {},
+      nextHandle: (data as { check: boolean }).check ? "true" : "false"
+    })
+  },
+  "test:fail": {
+    retryPolicy: {
+      maxAttempts: "{{ nodes.config.last.data.retries }}",
+      interval: 10,
+      backoff: "fixed"
+    },
+    executor: async () => {
+      throw new Error("Fail")
+    }
+  },
+  "test:log": {
+    executor: async (data) => ({ data })
+  }
+}
+
+const defaultMiddlewares = [createJexlMiddleware()]
 
 describe("Refluxo Jexl Integration", () => {
   it("should interpolate complex strings and preserve types", async () => {
@@ -20,7 +51,8 @@ describe("Refluxo Jexl Integration", () => {
     }
     const engine = new WorkflowEngine({
       workflow,
-      nodeDefinitions: definitions
+      nodeDefinitions: definitions,
+      middlewares: defaultMiddlewares
     })
     const snapshot = await engine.execute({ initialNodeId: "n1" })
 
@@ -49,7 +81,8 @@ describe("Refluxo Jexl Integration", () => {
     }
     const engine = new WorkflowEngine({
       workflow,
-      nodeDefinitions: definitions
+      nodeDefinitions: definitions,
+      middlewares: defaultMiddlewares
     })
     const snapshot = await engine.execute({ initialNodeId: "n1" })
 
@@ -63,7 +96,8 @@ describe("Refluxo Jexl Integration", () => {
     }
     const engine = new WorkflowEngine({
       workflow,
-      nodeDefinitions: definitions
+      nodeDefinitions: definitions,
+      middlewares: defaultMiddlewares
     })
     const original = await engine.execute({ initialNodeId: "n1" })
 
