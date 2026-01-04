@@ -1,7 +1,7 @@
 {
 	"name": "@refluxo/core",
-	"version": "1.0.0",
-	"description": "Core engine for Refluxo workflow system",
+	"version": "0.0.1",
+	"description": "Stateless, snapshot-based workflow engine",
 	"main": "./dist/index.js",
 	"module": "./dist/index.mjs",
 	"types": "./dist/index.d.ts",
@@ -39,7 +39,7 @@
 	"author": "Vitor Daniel <vitor036daniel@gmail.com>",
 	"license": "MIT",
 	"devDependencies": {
-		"tsup": "^8.0.0",
-		"typescript": "^5.0.0"
+		"tsup": "^8.5.1",
+		"typescript": "^5.9.3"
 	}
 }

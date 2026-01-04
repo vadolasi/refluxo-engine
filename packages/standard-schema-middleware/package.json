@@ -1,6 +1,6 @@
 {
 	"name": "@refluxo/standard-schema-middleware",
-	"version": "1.0.0",
+	"version": "0.0.1",
 	"description": "Standard Schema validation middleware for Refluxo",
 	"main": "./dist/index.js",
 	"module": "./dist/index.mjs",
@@ -42,15 +42,15 @@
 		"url": "https://github.com/vadolasi/refluxo/issues"
 	},
 	"dependencies": {
-		"@standard-schema/spec": "^1.0.0"
+		"@standard-schema/spec": "^1.1.0"
 	},
 	"peerDependencies": {
 		"@refluxo/core": "workspace:*"
 	},
 	"devDependencies": {
 		"@refluxo/core": "workspace:*",
-		"tsup": "^8.0.0",
-		"typescript": "^5.0.0",
-		"valibot": "^1.0.0"
+		"tsup": "^8.5.1",
+		"typescript": "^5.9.3",
+		"valibot": "^1.2.0"
 	}
 }

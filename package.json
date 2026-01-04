@@ -10,14 +10,18 @@
 		"prepare": "lefthook install",
 		"docs:dev": "pnpm typedoc && vitepress dev",
 		"docs:build": "vitepress build",
-		"docs:preview": "vitepress preview"
+		"docs:preview": "vitepress preview",
+		"change": "changeset",
+		"version-packages": "changeset version && pnpm install",
+		"release": "pnpm build && changeset publish"
 	},
 	"devDependencies": {
 		"@biomejs/biome": "2.3.10",
 		"@braintree/sanitize-url": "^7.1.1",
 		"@catppuccin/vitepress": "^0.1.2",
-		"@commitlint/cli": "^20.2.0",
-		"@commitlint/config-conventional": "^20.2.0",
+		"@changesets/cli": "^2.29.8",
+		"@commitlint/cli": "^20.3.0",
+		"@commitlint/config-conventional": "^20.3.0",
 		"@vitest/coverage-v8": "^4.0.16",
 		"commitizen": "^4.3.1",
 		"cytoscape": "^3.33.1",

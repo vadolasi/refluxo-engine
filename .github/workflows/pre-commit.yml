@@ -2,12 +2,12 @@ name: CI
 
 on:
   push:
-    branches: [ main ]
+    branches: [main]
   pull_request:
-    branches: [ main ]
+    branches: [main]
 
 jobs:
-  commitlint:
+  quality-check:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -15,66 +15,34 @@ jobs:
           fetch-depth: 0
 
       - name: Install pnpm
-        uses: pnpm/action-setup@v3
+        uses: pnpm/action-setup@v4
         with:
           version: 10
 
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: "24"
-          cache: pnpm
-
-      - name: Install commitlint
-        run: npm install -D @commitlint/cli @commitlint/config-conventional
-
-      - name: Print versions
-        run: |
-          git --version
-          node --version
-          npm --version
-          pnpm dlx commitlint --version
-
-      - name: Validate current commit (last commit) with commitlint
-        if: github.event_name == 'push'
-        run: pnpm dlx commitlint --last --verbose
-
-      - name: Validate PR commits with commitlint
-        if: github.event_name == 'pull_request'
-        run: pnpm dlx commitlint --from ${{ github.event.pull_request.base.sha }} --to ${{ github.event.pull_request.head.sha }} --verbose
-
-  lint-and-test:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-
-      - name: Install pnpm
-        uses: pnpm/action-setup@v3
-        with:
-          version: 10
-
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: 24
+          node-version: 22
           cache: pnpm
 
       - name: Install dependencies
-        run: pnpm install
+        run: pnpm install --frozen-lockfile
+
+      - name: Validate Commits
+        if: github.event_name == 'pull_request'
+        run: pnpm dlx commitlint --from ${{ github.event.pull_request.base.sha }} --to ${{ github.event.pull_request.head.sha }} --verbose
+
+      - name: Lint & Format Check
+        run: pnpm biome check --ci .
 
       - name: Build
         run: pnpm build
 
-      - name: Stage all files
-        run: git add .
-
-      - name: Run lint-staged
-        run: pnpm exec lint-staged
-      
-      - name: Run Tests with Coverage
-        run: pnpm test:coverage
+      - name: Run Tests
+        run: pnpm vitest run --coverage
 
       - name: Upload coverage to Codecov
-        uses: codecov/codecov-action@v4
+        uses: codecov/codecov-action@v5
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
+          fail_ci_if_error: true
