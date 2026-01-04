@@ -83,8 +83,10 @@ const nodeDefinitions = Object.fromEntries(
     def.type,
     {
       // Use o adaptador para converter os JSON schemas
-      input: createJsonValidator(def.input),
-      output: createJsonValidator(def.output),
+      metadata: {
+        input: createJsonValidator(def.input),
+        output: createJsonValidator(def.output),
+      },
       // O executor pode ser armazenado separadamente ou carregado pelo nome
       executor: httpNodeExecutor, 
     }

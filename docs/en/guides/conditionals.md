@@ -39,8 +39,10 @@ We'll create a `check-number` node. Its executor will check the input and return
 ```typescript
 const nodeDefinitions: NodesDefinition = {
   "check-number": {
-    input: { type: "object", properties: { value: { type: "number" } } },
-    output: { type: "object" }, // This node only directs flow, doesn't output much
+    metadata: {
+      input: { type: "object", properties: { value: { type: "number" } } },
+      output: { type: "object" }, // This node only directs flow, doesn't output much
+    },
     executor: async (data) => {
       const { value } = data as { value: number };
       

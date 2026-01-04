@@ -34,12 +34,14 @@ The iterator's logic relies on the `Context` to know which item to process next.
 ```typescript
 const nodeDefinitions: NodesDefinition = {
   "iterator": {
-    input: {
-      type: "object",
-      properties: { items: { type: "array" } },
-      required: ["items"],
+    metadata: {
+      input: {
+        type: "object",
+        properties: { items: { type: "array" } },
+        required: ["items"],
+      },
+      output: { type: "object" },
     },
-    output: { type: "object" },
     executor: async (data, context) => {
       // Get the number of times this node has already run
       const
@@ -69,8 +71,10 @@ const nodeDefinitions: NodesDefinition = {
   },
   "log-item": {
     /* ... executor that receives and logs an item ... */
-    input: { type: "object" },
-    output: { type: "object" },
+    metadata: {
+      input: { type: "object" },
+      output: { type: "object" },
+    },
     executor: async (data) => {
       console.log("Processing Item:", data);
       return { data };

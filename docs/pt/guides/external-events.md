@@ -37,7 +37,7 @@ Este código vive na sua aplicação, não dentro da engine. Ele escuta por requ
 
 ```typescript
 import express from "express";
-import { WorkflowEngine } from "refluxo-engine";
+import { WorkflowEngine } from "@refluxo/core";
 import { workflow, nodeDefinitions } from "./workflow"; // Suas definições
 
 const app = express();
@@ -72,8 +72,10 @@ O nó `github-trigger` em si é extremamente simples. Seu único trabalho é peg
 ```typescript
 const nodeDefinitions: NodesDefinition = {
   "github-trigger": {
-    input: object({}), // Nenhum input estático é necessário
-    output: object({}), // A saída será o corpo dinâmico do webhook
+    metadata: {
+      input: object({}), // Nenhum input estático é necessário
+      output: object({}), // A saída será o corpo dinâmico do webhook
+    },
     executor: async (data, context, externalPayload) => {
       // O principal propósito do nó de trigger é injetar o payload
       // externo no contexto do workflow.

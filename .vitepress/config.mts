@@ -71,7 +71,10 @@ export default withMermaid(
               {
                 text: "Guides",
                 items: [
-                  { text: "Getting Started", link: "/en/guides/getting-started" },
+                  {
+                    text: "Getting Started",
+                    link: "/en/guides/getting-started"
+                  },
                   { text: "Custom Nodes", link: "/en/guides/custom-nodes" },
                   { text: "Conditionals", link: "/en/guides/conditionals" },
                   { text: "Handling Loops", link: "/en/guides/loops" },
@@ -87,7 +90,10 @@ export default withMermaid(
                     text: "External Events & Pausing",
                     link: "/en/guides/external-events"
                   },
-                  { text: "Dynamic Schemas", link: "/en/guiconceptsdes/dynamic-schemas" }
+                  {
+                    text: "Dynamic Schemas",
+                    link: "/en/guiconceptsdes/dynamic-schemas"
+                  }
                 ]
               },
               {
@@ -237,7 +243,12 @@ export default withMermaid(
     },
 
     vite: {
-      plugins: [llmstxt({ workDir: "en", domain: "https://refluxo-engine.vitor036daniel.workers.dev" })]
+      plugins: [
+        llmstxt({
+          workDir: "en",
+          domain: "https://refluxo-engine.vitor036daniel.workers.dev"
+        })
+      ]
     },
 
     sitemap: {

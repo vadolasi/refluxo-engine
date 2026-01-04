@@ -48,7 +48,9 @@ const nodeDefinitions = {
   },
   
   "save-draft": {
-    input: object({ authorId: string(), title: string(), content: string() }),
+    metadata: {
+      input: object({ authorId: string(), title: string(), content: string() }),
+    },
     executor: async (data) => {
       const post = await db.posts.create({ ...data, status: "pending_approval" });
       return { data: { postId: post.id } };
@@ -70,7 +72,9 @@ const nodeDefinitions = {
   },
 
   "publish-post": {
-    input: object({ postId: string() }),
+    metadata: {
+      input: object({ postId: string() }),
+    },
     executor: async (data) => {
       await db.posts.update({ where: { id: data.postId }, data: { status: "published" } });
       return { data: { published: true } };
@@ -78,7 +82,9 @@ const nodeDefinitions = {
   },
 
   "notify-author": {
-    input: object({ authorId: string() }),
+    metadata: {
+      input: object({ authorId: string() }),
+    },
     executor: async (data) => {
       await email.send({ to: data.authorId, message: "Your post was rejected." });
       return { data: { notified: true } };

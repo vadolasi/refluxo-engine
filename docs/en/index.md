@@ -11,7 +11,7 @@ hero:
       link: /en/introduction
     - theme: alt
       text: View on GitHub
-      link: https://github.com/vadolasi/refluxo-engine
+      link: https://github.com/vadolasi/refluxo
 
 features:
   - title: "Stateless by Design"

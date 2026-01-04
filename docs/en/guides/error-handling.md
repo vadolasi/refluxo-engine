@@ -29,8 +29,10 @@ Let's add a `RetryPolicy` to a node that might fail.
 
 ```typescript
 const fallibleNode: NodeDefinition = {
-  input: { type: "object" },
-  output: { type: "object" },
+  metadata: {
+    input: { type: "object" },
+    output: { type: "object" },
+  },
   
   retryPolicy: {
     maxAttempts: 3,
@@ -91,7 +93,7 @@ Here is an HTTP request node that retries on server errors but follows a separat
 
 ```typescript
 const httpRequestNode: NodeDefinition = {
-  // ... input, output schemas ...
+  // ... metadata with input, output schemas ...
   retryPolicy: {
     maxAttempts: 3,
     backoff: "exponential",

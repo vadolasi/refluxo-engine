@@ -10,30 +10,31 @@ O poder da engine Refluxo vem de sua extensibilidade. Você pode definir seus pr
 Uma `NodeDefinition` é um objeto JavaScript que define o comportamento e o contrato de um tipo de nó. Vamos analisar a estrutura de uma `NodeDefinition` para um nó que busca dados de uma API, usando **Valibot** para a definição do schema.
 
 ```typescript
-import { NodeDefinition } from "refluxo-engine";
+import { NodeDefinition } from "@refluxo/core";
 import { object, string, number, union, literal, optional, url, parse } from "valibot";
 
 const fetchApiNode: NodeDefinition = {
-  // 1. Schema de Entrada (opcional)
-  input: object({
-    url: string([url("Por favor, forneça uma URL válida")]),
-    method: optional(union([literal("GET"), literal("POST")]), "GET"),
-  }),
+  // 1. Metadados (opcional)
+  // Schemas de validação são armazenados em metadados e tratados por middleware
+  metadata: {
+    input: object({
+      url: string([url("Por favor, forneça uma URL válida")]),
+      method: optional(union([literal("GET"), literal("POST")]), "GET"),
+    }),
+    output: object({
+      status: number(),
+      body: object({}), // Você pode definir um schema mais específico para o corpo
+    }),
+  },
 
-  // 2. Schema de Saída (opcional)
-  output: object({
-    status: number(),
-    body: object({}), // Você pode definir um schema mais específico para o corpo
-  }),
-
-  // 3. Política de Retentativa (opcional)
+  // 2. Política de Retentativa (opcional)
   retryPolicy: {
     maxAttempts: 3,
     interval: 1000, // 1 segundo
     backoff: "exponential",
   },
 
-  // 4. O Executor
+  // 3. O Executor
   executor: async (data, context, externalPayload) => {
     // O tipo de `data` é inferido a partir do schema de `input`
     const { url, method } = data;
@@ -62,19 +63,15 @@ const fetchApiNode: NodeDefinition = {
 };
 ```
 
-### 1. Schema de Entrada (Input)
+### 1. Metadados (Opcional)
 
-A propriedade `input` define um schema usando uma biblioteca compatível com **Standard Schema**, como o Valibot. A engine usa este schema para validar os `data` resolvidos do nó *antes* de executá-lo. Isso fornece uma camada de segurança e garante que seu nó receba dados no formato correto.
+A propriedade `metadata` é onde você pode armazenar informações adicionais sobre o nó, como schemas de validação. Middlewares (como `@refluxo/standard-schema-middleware`) podem usar `metadata.input` para validar os `data` resolvidos do nó *antes* de executá-lo, e `metadata.output` para validar o valor de retorno.
 
-### 2. Schema de Saída (Output)
-
-Da mesma forma, a propriedade `output` define um schema para os dados que a função `executor` deve retornar. A engine valida o valor de retorno do executor contra este schema, garantindo que o nó produza uma saída consistente e previsível para outros nós consumirem.
-
-### 3. Política de Retentativa (Retry Policy)
+### 2. Política de Retentativa (Retry Policy)
 
 Esta propriedade opcional define como a engine deve lidar com falhas no executor deste nó. Para mais detalhes, veja o [guia de Tratamento de Erros](./error-handling.md).
 
-### 4. O Executor
+### 3. O Executor
 
 Esta é a lógica principal do seu nó. É uma função `async` com três parâmetros:
 - `data`: Os dados de entrada resolvidos para o nó, já validados contra o schema de `input`. Todas as expressões da `WorkflowDefinition` já foram processadas neste ponto.

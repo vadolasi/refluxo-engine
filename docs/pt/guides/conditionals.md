@@ -39,8 +39,10 @@ Criaremos um nó `check-number`. Seu executor verificará a entrada e retornará
 ```typescript
 const nodeDefinitions: NodesDefinition = {
   "check-number": {
-    input: { type: "object", properties: { value: { type: "number" } } },
-    output: { type: "object" }, // Este nó apenas direciona o fluxo, não gera muitos dados
+    metadata: {
+      input: { type: "object", properties: { value: { type: "number" } } },
+      output: { type: "object" }, // Este nó apenas direciona o fluxo, não gera muitos dados
+    },
     executor: async (data) => {
       const { value } = data as { value: number };
       

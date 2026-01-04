@@ -1,41 +1,83 @@
 [
 	{
-		"text": "Classes",
+		"text": "@refluxo/core",
+		"link": "/en/api/@refluxo/core/",
 		"collapsed": true,
 		"items": [
-			{ "text": "JexlEngine", "link": "/en/api/classes/JexlEngine.md" },
-			{ "text": "WorkflowEngine", "link": "/en/api/classes/WorkflowEngine.md" }
-		]
-	},
-	{
-		"text": "Interfaces",
-		"collapsed": true,
-		"items": [
-			{ "text": "Edge", "link": "/en/api/interfaces/Edge.md" },
 			{
-				"text": "ITransformEngine",
-				"link": "/en/api/interfaces/ITransformEngine.md"
+				"text": "Classes",
+				"collapsed": true,
+				"items": [
+					{
+						"text": "WorkflowEngine",
+						"link": "/en/api/@refluxo/core/classes/WorkflowEngine.md"
+					}
+				]
 			},
-			{ "text": "Node", "link": "/en/api/interfaces/Node.md" },
 			{
-				"text": "NodeDefinition",
-				"link": "/en/api/interfaces/NodeDefinition.md"
+				"text": "Interfaces",
+				"collapsed": true,
+				"items": [
+					{
+						"text": "Context",
+						"link": "/en/api/@refluxo/core/interfaces/Context.md"
+					},
+					{
+						"text": "Edge",
+						"link": "/en/api/@refluxo/core/interfaces/Edge.md"
+					},
+					{
+						"text": "MiddlewareContext",
+						"link": "/en/api/@refluxo/core/interfaces/MiddlewareContext.md"
+					},
+					{
+						"text": "Node",
+						"link": "/en/api/@refluxo/core/interfaces/Node.md"
+					},
+					{
+						"text": "NodeDefinition",
+						"link": "/en/api/@refluxo/core/interfaces/NodeDefinition.md"
+					},
+					{
+						"text": "NodeResult",
+						"link": "/en/api/@refluxo/core/interfaces/NodeResult.md"
+					},
+					{
+						"text": "RetryPolicy",
+						"link": "/en/api/@refluxo/core/interfaces/RetryPolicy.md"
+					},
+					{
+						"text": "Snapshot",
+						"link": "/en/api/@refluxo/core/interfaces/Snapshot.md"
+					},
+					{
+						"text": "WorkflowDefinition",
+						"link": "/en/api/@refluxo/core/interfaces/WorkflowDefinition.md"
+					}
+				]
 			},
-			{ "text": "RetryPolicy", "link": "/en/api/interfaces/RetryPolicy.md" },
 			{
-				"text": "WorkflowDefinition",
-				"link": "/en/api/interfaces/WorkflowDefinition.md"
+				"text": "Type Aliases",
+				"collapsed": true,
+				"items": [
+					{
+						"text": "Middleware",
+						"link": "/en/api/@refluxo/core/type-aliases/Middleware.md"
+					},
+					{
+						"text": "NextFunction",
+						"link": "/en/api/@refluxo/core/type-aliases/NextFunction.md"
+					},
+					{
+						"text": "NodesDefinition",
+						"link": "/en/api/@refluxo/core/type-aliases/NodesDefinition.md"
+					}
+				]
 			}
 		]
 	},
 	{
-		"text": "Type Aliases",
-		"collapsed": true,
-		"items": [
-			{
-				"text": "NodesDefinition",
-				"link": "/en/api/type-aliases/NodesDefinition.md"
-			}
-		]
+		"text": "@refluxo/jexl-middleware",
+		"link": "/en/api/@refluxo/jexl-middleware/"
 	}
 ]

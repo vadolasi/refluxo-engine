@@ -29,8 +29,10 @@ Vamos adicionar uma `RetryPolicy` a um nó que pode falhar.
 
 ```typescript
 const fallibleNode: NodeDefinition = {
-  input: { type: "object" },
-  output: { type: "object" },
+  metadata: {
+    input: { type: "object" },
+    output: { type: "object" },
+  },
   
   retryPolicy: {
     maxAttempts: 3,
@@ -91,7 +93,7 @@ Aqui está um nó de requisição HTTP que tenta novamente em caso de erros de s
 
 ```typescript
 const httpRequestNode: NodeDefinition = {
-  // ... schemas de input, output ...
+  // ... metadados com schemas de input, output ...
   retryPolicy: {
     maxAttempts: 3,
     backoff: "exponential",

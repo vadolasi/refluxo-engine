@@ -11,7 +11,7 @@ hero:
       link: /pt/introduction
     - theme: alt
       text: Ver no GitHub
-      link: https://github.com/vadolasi/refluxo-engine
+      link: https://github.com/vadolasi/refluxo
 
 features:
   - title: "Stateless por Natureza"

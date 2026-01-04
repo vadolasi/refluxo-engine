@@ -38,7 +38,9 @@ import { object, string, array } from "valibot";
 
 const nodeDefinitions = {
   "fetch-api": {
-    input: object({ url: string([url()]) }),
+    metadata: {
+      input: object({ url: string([url()]) }),
+    },
     executor: async (data) => {
       // In a real-world scenario, handle errors properly
       const response = await fetch(data.url);
@@ -49,10 +51,12 @@ const nodeDefinitions = {
   "combine-data": {
     // This node's executor doesn't do much.
     // The real work is done by the expression engine on its data property.
-    input: object({
-      profile: object({}),
-      orders: array(object({}))
-    }),
+    metadata: {
+      input: object({
+        profile: object({}),
+        orders: array(object({}))
+      }),
+    },
     executor: async (data) => {
       // The resolved data is simply returned
       return { data };

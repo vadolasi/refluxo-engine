@@ -1,7 +1,7 @@
 <script setup lang="ts">
-import DefaultTheme from 'vitepress/theme'
-import { useData, inBrowser } from 'vitepress'
-import { watchEffect } from 'vue'
+import { inBrowser, useData } from "vitepress"
+import DefaultTheme from "vitepress/theme"
+import { watchEffect } from "vue"
 
 const { lang } = useData()
 watchEffect(() => {

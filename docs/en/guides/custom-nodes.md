@@ -10,30 +10,31 @@ The power of the Refluxo engine comes from its extensibility. You can define you
 A `NodeDefinition` is a JavaScript object that defines the behavior and contract of a node type. Let's look at the structure of a `NodeDefinition` for a node that fetches data from an API, using **Valibot** for schema definition.
 
 ```typescript
-import { NodeDefinition } from "refluxo-engine";
+import { NodeDefinition } from "@refluxo/core";
 import { object, string, number, union, literal, optional, url, parse } from "valibot";
 
 const fetchApiNode: NodeDefinition = {
-  // 1. Input Schema (optional)
-  input: object({
-    url: string([url("Please provide a valid URL")]),
-    method: optional(union([literal("GET"), literal("POST")]), "GET"),
-  }),
+  // 1. Metadata (optional)
+  // Validation schemas are stored in metadata and handled by middleware
+  metadata: {
+    input: object({
+      url: string([url("Please provide a valid URL")]),
+      method: optional(union([literal("GET"), literal("POST")]), "GET"),
+    }),
+    output: object({
+      status: number(),
+      body: object({}), // You can define a more specific schema for the body
+    }),
+  },
 
-  // 2. Output Schema (optional)
-  output: object({
-    status: number(),
-    body: object({}), // You can define a more specific schema for the body
-  }),
-
-  // 3. Retry Policy (optional)
+  // 2. Retry Policy (optional)
   retryPolicy: {
     maxAttempts: 3,
     interval: 1000, // 1 second
     backoff: "exponential",
   },
 
-  // 4. The Executor
+  // 3. The Executor
   executor: async (data, context, externalPayload) => {
     // The `data` type is inferred from the `input` schema
     const { url, method } = data;
@@ -62,19 +63,15 @@ const fetchApiNode: NodeDefinition = {
 };
 ```
 
-### 1. Input Schema
+### 1. Metadata (Optional)
 
-The `input` property defines a schema using a **Standard Schema** compatible library like Valibot. The engine uses this schema to validate the resolved `data` of the node *before* executing it. This provides a safety layer and ensures your node receives data in the correct format.
+The `metadata` property is where you can store additional information about the node, such as validation schemas. Middleware (like `@refluxo/standard-schema-middleware`) can use `metadata.input` to validate the resolved `data` of the node *before* executing it, and `metadata.output` to validate the return value.
 
-### 2. Output Schema
-
-Similarly, the `output` property defines a schema for the data that the `executor` function is expected to return. The engine validates the return value of the executor against this schema, ensuring that the node produces a consistent and predictable output for other nodes to consume.
-
-### 3. Retry Policy
+### 2. Retry Policy
 
 This optional property defines how the engine should handle failures in this node's executor. For more details, see the [Error Handling guide](./error-handling.md).
 
-### 4. The Executor
+### 3. The Executor
 
 This is the core logic of your node. It's an `async` function with three parameters:
 - `data`: The resolved input data for the node, already validated against the `input` schema. All expressions from the `WorkflowDefinition` have been processed at this point.

@@ -4,7 +4,7 @@ description: It is stateless and operates step-by-step, producing immutable snap
 
 # Class: WorkflowEngine\<T\>
 
-Defined in: [index.ts:310](https://github.com/vadolasi/refluxo-engine/blob/aec39b77df1049c08143ce957c859e71231062c5/src/index.ts#L310)
+Defined in: index.ts:154
 
 ## Type Parameters
 
@@ -20,7 +20,7 @@ The type of NodesDefinition used.
 
 > **new WorkflowEngine**\<`T`\>(`options`): `WorkflowEngine`\<`T`\>
 
-Defined in: [index.ts:325](https://github.com/vadolasi/refluxo-engine/blob/aec39b77df1049c08143ce957c859e71231062c5/src/index.ts#L325)
+Defined in: index.ts:171
 
 #### Parameters
 
@@ -28,23 +28,17 @@ Defined in: [index.ts:325](https://github.com/vadolasi/refluxo-engine/blob/aec39
 
 Configuration options.
 
+###### middlewares?
+
+[`Middleware`](../type-aliases/Middleware.md)[] = `[]`
+
+Array of middlewares to use.
+
 ###### nodeDefinitions
 
 `T`
 
 The definitions for the nodes used in the workflow.
-
-###### transformers?
-
-[`ITransformEngine`](../interfaces/ITransformEngine.md)[] = `...`
-
-Array of transformers to use (default: [JexlEngine]).
-
-###### validate?
-
-`boolean` = `true`
-
-Whether to validate inputs and outputs against schemas (default: true).
 
 ###### workflow
 
@@ -62,7 +56,7 @@ The workflow definition.
 
 > **nodeDefinitions**: `T`
 
-Defined in: [index.ts:312](https://github.com/vadolasi/refluxo-engine/blob/aec39b77df1049c08143ce957c859e71231062c5/src/index.ts#L312)
+Defined in: index.ts:156
 
 ***
 
@@ -70,7 +64,7 @@ Defined in: [index.ts:312](https://github.com/vadolasi/refluxo-engine/blob/aec39
 
 > **workflow**: `Workflow`
 
-Defined in: [index.ts:311](https://github.com/vadolasi/refluxo-engine/blob/aec39b77df1049c08143ce957c859e71231062c5/src/index.ts#L311)
+Defined in: index.ts:155
 
 ## Methods
 
@@ -78,9 +72,9 @@ Defined in: [index.ts:311](https://github.com/vadolasi/refluxo-engine/blob/aec39
 
 #### Call Signature
 
-> **execute**(`args`): `Promise`\<`Snapshot`\>
+> **execute**(`args`): `Promise`\<[`Snapshot`](../interfaces/Snapshot.md)\>
 
-Defined in: [index.ts:386](https://github.com/vadolasi/refluxo-engine/blob/aec39b77df1049c08143ce957c859e71231062c5/src/index.ts#L386)
+Defined in: index.ts:241
 
 ##### Parameters
 
@@ -102,7 +96,7 @@ Global variables to pass to transformers and executors.
 
 ###### snapshot
 
-`Snapshot`
+[`Snapshot`](../interfaces/Snapshot.md)
 
 The snapshot to resume from.
 
@@ -114,15 +108,15 @@ Maximum number of steps to execute (default: 100).
 
 ##### Returns
 
-`Promise`\<`Snapshot`\>
+`Promise`\<[`Snapshot`](../interfaces/Snapshot.md)\>
 
 The resulting snapshot after execution.
 
 #### Call Signature
 
-> **execute**(`args`): `Promise`\<`Snapshot`\>
+> **execute**(`args`): `Promise`\<[`Snapshot`](../interfaces/Snapshot.md)\>
 
-Defined in: [index.ts:392](https://github.com/vadolasi/refluxo-engine/blob/aec39b77df1049c08143ce957c859e71231062c5/src/index.ts#L392)
+Defined in: index.ts:247
 
 ##### Parameters
 
@@ -162,7 +156,7 @@ The ID of the workflow (if starting new).
 
 ##### Returns
 
-`Promise`\<`Snapshot`\>
+`Promise`\<[`Snapshot`](../interfaces/Snapshot.md)\>
 
 The resulting snapshot after execution.
 
@@ -170,15 +164,15 @@ The resulting snapshot after execution.
 
 ### executeStep()
 
-> **executeStep**(`snapshot`, `externalPayload?`, `globals?`): `Promise`\<`Snapshot`\>
+> **executeStep**(`snapshot`, `externalPayload?`, `globals?`): `Promise`\<[`Snapshot`](../interfaces/Snapshot.md)\>
 
-Defined in: [index.ts:467](https://github.com/vadolasi/refluxo-engine/blob/aec39b77df1049c08143ce957c859e71231062c5/src/index.ts#L467)
+Defined in: index.ts:348
 
 #### Parameters
 
 ##### snapshot
 
-`Snapshot`
+[`Snapshot`](../interfaces/Snapshot.md)
 
 The current snapshot.
 
@@ -196,9 +190,31 @@ Global variables.
 
 #### Returns
 
-`Promise`\<`Snapshot`\>
+`Promise`\<[`Snapshot`](../interfaces/Snapshot.md)\>
 
 The new snapshot after the step execution.
+
+***
+
+### use()
+
+> **use**(`middleware`): `this`
+
+Defined in: index.ts:194
+
+#### Parameters
+
+##### middleware
+
+[`Middleware`](../type-aliases/Middleware.md)
+
+The middleware function to add.
+
+#### Returns
+
+`this`
+
+The engine instance for chaining.
 
 ***
 
@@ -206,7 +222,7 @@ The new snapshot after the step execution.
 
 > **validateWorkflow**(): `Promise`\<`void`\>
 
-Defined in: [index.ts:350](https://github.com/vadolasi/refluxo-engine/blob/aec39b77df1049c08143ce957c859e71231062c5/src/index.ts#L350)
+Defined in: index.ts:205
 
 #### Returns
 

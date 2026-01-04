@@ -79,7 +79,11 @@ export const createJexlMiddleware = (
   }
 
   return async (context, next) => {
-    const flatContext = flattenContext(context.snapshot.context)
+    const flatContext = {
+      ...flattenContext(context.snapshot.context),
+      input: context.externalPayload,
+      globals: context.globals
+    }
 
     context.input = await resolveData(context.input, flatContext)
 

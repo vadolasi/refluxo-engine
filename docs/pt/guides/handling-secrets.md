@@ -11,7 +11,7 @@ Em muitos workflows, você precisa acessar informações sensíveis como chaves 
 O método `WorkflowEngine.execute` aceita um objeto `globals`. Este objeto é um contêiner seguro e somente leitura para dados que você deseja disponibilizar para o contexto de execução sem persisti-los no snapshot. É o lugar ideal para armazenar segredos.
 
 ```typescript
-import { WorkflowEngine } from "refluxo-engine";
+import { WorkflowEngine } from "@refluxo/core";
 
 const engine = new WorkflowEngine({ workflow, nodeDefinitions });
 
@@ -26,32 +26,38 @@ await engine.execute({
 });
 ```
 
-## Acessando Segredos com Transformadores
+## Acessando Segredos com Middleware
 
-Para acessar esses segredos dentro do seu workflow, você pode usar um **Transformador** customizado que lê do objeto `globals` passado para `transformInput`.
+Para acessar esses segredos dentro do seu workflow, você pode usar um **Middleware** customizado que lê do objeto `globals` passado para o contexto.
 
-### Exemplo: Transformador de Resolução de Segredos
+### Exemplo: Middleware de Resolução de Segredos
 
-Este transformador procura por strings começando com `SECRET:` e as resolve usando o objeto `globals`.
+Este middleware procura por strings começando com `SECRET:` e as resolve usando o objeto `globals`.
 
 ```typescript
-import { ITransformEngine } from "refluxo-engine";
+import { Middleware, WorkflowEngine } from "@refluxo/core";
+import { createJexlMiddleware } from "@refluxo/jexl-middleware";
 
-class SecretResolver implements ITransformEngine {
-  async transformInput(data: unknown, context: unknown, globals: unknown) {
+const secretResolver: Middleware = async (context, next) => {
+  const resolve = (data: any): any => {
     if (typeof data === 'string' && data.startsWith('SECRET:')) {
       const secretName = data.replace('SECRET:', '');
-      const secrets = (globals as any)?.secrets || {};
+      const secrets = (context.globals as any)?.secrets || {};
       return secrets[secretName];
     }
+    // Resolver recursivamente objetos e arrays se necessário
+    // ...
     return data;
-  }
-}
+  };
+
+  context.input = resolve(context.input);
+  await next();
+};
 
 const engine = new WorkflowEngine({
   workflow,
   nodeDefinitions,
-  transformers: [new SecretResolver(), new JexlEngine()]
+  middlewares: [secretResolver, createJexlMiddleware()]
 });
 ```
 
@@ -69,18 +75,21 @@ Agora, você pode referenciar segredos nos dados do seu nó:
 Para cenários mais complexos, você pode querer resolver segredos dinamicamente sem expor todos eles ao contexto. Por exemplo, você pode querer buscar um segredo de um cofre (como AWS Secrets Manager) apenas quando solicitado.
 
 ```typescript
-class VaultSecretResolver implements ITransformEngine {
-  async transformInput(data: unknown, context: unknown, globals: unknown) {
+const vaultSecretResolver: Middleware = async (context, next) => {
+  const resolve = async (data: any): Promise<any> => {
     if (typeof data === 'string' && data.startsWith('VAULT:')) {
       const secretId = data.replace('VAULT:', '');
       // Você pode usar globals para passar configurações para o cliente do cofre
-      const vaultConfig = (globals as any)?.vaultConfig;
+      const vaultConfig = (context.globals as any)?.vaultConfig;
       // Assuma que fetchSecretFromVault é uma função disponível no seu ambiente
       return await fetchSecretFromVault(secretId, vaultConfig);
     }
     return data;
-  }
-}
+  };
+
+  context.input = await resolve(context.input);
+  await next();
+};
 ```
 
 No seu workflow, você usaria o prefixo:

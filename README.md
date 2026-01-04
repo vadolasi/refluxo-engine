@@ -1,11 +1,11 @@
 # Refluxo 🔀⚙️🔁🛠️
 
 [![Commitizen friendly](https://img.shields.io/badge/commitizen-friendly-brightgreen.svg)](http://commitizen.github.io/cz-cli/)
-![NPM Version](https://img.shields.io/npm/v/refluxo-engine)
-![License](https://img.shields.io/github/license/vadolasi/refluxo-engine)
-![Bundle Size](https://img.shields.io/bundlephobia/minzip/refluxo-engine)
-![NPM Downloads](https://img.shields.io/npm/dm/refluxo-engine)
-[![codecov](https://codecov.io/gh/vadolasi/refluxo-engine/graph/badge.svg)](https://codecov.io/gh/vadolasi/refluxo-engine)
+![NPM Version](https://img.shields.io/npm/v/@refluxo/core)
+![License](https://img.shields.io/github/license/vadolasi/refluxo)
+![Bundle Size](https://img.shields.io/bundlephobia/minzip/@refluxo/core)
+![NPM Downloads](https://img.shields.io/npm/dm/@refluxo/core)
+[![codecov](https://codecov.io/gh/vadolasi/refluxo/graph/badge.svg)](https://codecov.io/gh/vadolasi/refluxo)
 
 A stateless, snapshot‑based, and serverless‑ready workflow engine for JavaScript.
 
@@ -29,17 +29,17 @@ Every execution step is serializable. Pause a flow, save it to a database, and r
 
 ### 🛡️ Validation & Strict Schemasype Safety
 
-Refluxo supports any validation library that implements [Standard Schema](https://standardschema.dev). You can use the popular [Zod](https://zod.dev), [Valibot](https://valibot.dev) for a small bundle size, [TypeBox](https://github.com/sinclairzx81/typebox) or [ArkType](https://arktype.io) for better peformance, or any other.
+While not intrinsic to the core, most projects benefit from strict data contracts. We offer the optional `@refluxo/standard-schema-middleware` (coming soon) to integrate with [Standard Schema](https://standardschema.dev) libraries like Zod or Valibot. You are free to implement your own validation logic or skip it entirely.
 
 If you store your schema outside code, like in a database, you can write a logic to convert it to a Standard Schema object, for a example, [read the docs](https://refluxo-engine.vitor036daniel.workers.dev/guides/dynamic-schemas)
 
 ### 🧠 Powerful Expressions
 
-Uses JEXL to allow dynamic data mapping similar to n8n.
+Dynamic data mapping is often essential for complex workflows. We offer `@refluxo/jexl-middleware` to provide JEXL-based expressions (similar to n8n). You are free to implement your own expression engine (e.g., using JavaScript `eval` or another library) or skip it entirely.
 
-### ⏸ Human-in-the-loop 
+### 🧩 Unmatched Flexibility
 
-Built-in support for external triggers and manual approvals via externalPayload.
+Refluxo's core is minimal, providing the primitives to build complex systems. Features like **Human-in-the-loop** (pausing for approval), **Webhooks**, or **Scheduled Tasks** are patterns you implement using the engine's pause/resume capabilities and external payload injection. You have full control over how state is stored and how events trigger workflows.
 
 ### 🔁 Smart Retries
 
@@ -49,7 +49,7 @@ Define dynamic retry policies (fixed or exponential backoff) using expressions.
 ## 📦 Installation
 
 ```bash
-pnpm add refluxo-engine
+pnpm add @refluxo/core @refluxo/jexl-middleware
 ```
 
 ## 💡 Usage Examples
@@ -59,13 +59,14 @@ pnpm add refluxo-engine
 Executors are pure logic. They receive resolved data and return an output.
 
 ```typescript
-import { NodeDefinition } from 'refluxo-engine';
+import { NodeDefinition } from '@refluxo/core';
 import * as v from 'valibot'; // or any other
 
 const httpRequest: NodeDefinition = {
-  input: v.object({
-    url: v.pipe(v.string(), v.url())
-  }),
+  // Validation is optional and can be handled by middleware
+  // metadata: {
+  //   input: v.object({ ... }),
+  // },
   
   async executor(data, context) {
     const response = await fetch(data.url);

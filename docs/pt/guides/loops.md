@@ -34,12 +34,14 @@ A lógica do iterador depende do `Context` para saber qual item processar em seg
 ```typescript
 const nodeDefinitions: NodesDefinition = {
   "iterator": {
-    input: {
-      type: "object",
-      properties: { items: { type: "array" } },
-      required: ["items"],
+    metadata: {
+      input: {
+        type: "object",
+        properties: { items: { type: "array" } },
+        required: ["items"],
+      },
+      output: { type: "object" },
     },
-    output: { type: "object" },
     executor: async (data, context) => {
       // Pega o número de vezes que este nó já foi executado
       const executionCount = context["iteratorNode"]?.length || 0;
@@ -68,8 +70,10 @@ const nodeDefinitions: NodesDefinition = {
   },
   "log-item": {
     /* ... executor que recebe e loga um item ... */
-    input: { type: "object" },
-    output: { type: "object" },
+    metadata: {
+      input: { type: "object" },
+      output: { type: "object" },
+    },
     executor: async (data) => {
       console.log("Processando Item:", data);
       return { data };

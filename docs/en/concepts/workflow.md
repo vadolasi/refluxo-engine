@@ -58,10 +58,11 @@ import { object, string, parse } from "valibot"; // Using valibot syntax
 
 const nodeDefinitions = {
   "my-custom-node": {
-    // Schema for input validation
-    input: object({ message: string() }),
-    // Schema for output validation
-    output: object({ status: string() }),
+    // Metadata containing validation schemas
+    metadata: {
+      input: object({ message: string() }),
+      output: object({ status: string() }),
+    },
     // The execution logic
     executor: async (data) => {
       // The 'data' type is inferred from the 'input' schema
@@ -74,7 +75,6 @@ const nodeDefinitions = {
 ```
 
 A `NodeDefinition` contains:
-- `input`: A Standard Schema to validate the node's resolved input data.
-- `output`: A Standard Schema to validate the data returned by the executor.
+- `metadata`: An optional object to store metadata, such as `input` and `output` schemas for validation middleware.
 - `retryPolicy`: An optional policy for [error handling](../guides/error-handling.md).
 - `executor`: An `async` function that contains the node's business logic. It receives the resolved `data` and the full `context`, and must return an object containing the `data` to be passed on.
