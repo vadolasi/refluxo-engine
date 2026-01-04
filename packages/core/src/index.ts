@@ -455,18 +455,26 @@ export class WorkflowEngine<T extends NodesDefinition = NodesDefinition> {
       if (middlewareContext.error) {
         return this.handleError(
           snapshot,
-          node.id,
+          node,
+          definition,
           middlewareContext.error,
           middlewareContext
         )
       }
-      return this.handleError(snapshot, node.id, error, middlewareContext)
+      return this.handleError(
+        snapshot,
+        node,
+        definition,
+        error,
+        middlewareContext
+      )
     }
   }
 
   private async handleError(
     snapshot: Snapshot,
-    nodeId: string,
+    node: Node,
+    definition: NodeDefinition,
     error: unknown,
     middlewareContext?: MiddlewareContext
   ): Promise<Snapshot> {
@@ -474,10 +482,6 @@ export class WorkflowEngine<T extends NodesDefinition = NodesDefinition> {
     const timeDiff = now - (snapshot.lastStartedAt || now)
     const totalExecutionTime = (snapshot.totalExecutionTime || 0) + timeDiff
 
-    const node = this.workflow.nodes.get(nodeId)
-    if (!node) throw new Error("Node not found")
-
-    const definition = this.nodeDefinitions[node.type]
     const policy = definition?.retryPolicy
 
     // Use resolved policy from middleware state if available, otherwise use definition policy
@@ -490,7 +494,7 @@ export class WorkflowEngine<T extends NodesDefinition = NodesDefinition> {
     }
 
     const currentAttempt =
-      snapshot.retryState?.nodeId === nodeId
+      snapshot.retryState?.nodeId === node.id
         ? snapshot.retryState.attempts + 1
         : 1
 
@@ -506,14 +510,14 @@ export class WorkflowEngine<T extends NodesDefinition = NodesDefinition> {
         ...snapshot,
         status: "error",
         retryState: {
-          nodeId,
+          nodeId: node.id,
           attempts: currentAttempt,
           nextRetryAt: Date.now() + delay
         },
         context: {
           ...snapshot.context,
-          [nodeId]: [
-            ...(snapshot.context[nodeId] || []),
+          [node.id]: [
+            ...(snapshot.context[node.id] || []),
             {
               output: null,
               error: String(error),
@@ -537,8 +541,8 @@ export class WorkflowEngine<T extends NodesDefinition = NodesDefinition> {
       retryState: undefined,
       context: {
         ...snapshot.context,
-        [nodeId]: [
-          ...(snapshot.context[nodeId] || []),
+        [node.id]: [
+          ...(snapshot.context[node.id] || []),
           {
             output: null,
             error: String(error),

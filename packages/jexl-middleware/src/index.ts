@@ -1,6 +1,19 @@
 import type { Context, Middleware } from "@refluxo/core"
 import jexl from "jexl"
 
+export const validateExpression = (
+  expression: string,
+  customInstance?: InstanceType<typeof jexl.Jexl>
+): { valid: true } | { valid: false; error: string } => {
+  const instance = customInstance || new jexl.Jexl()
+  try {
+    instance.createExpression(expression).compile()
+    return { valid: true }
+  } catch (e) {
+    return { valid: false, error: String(e) }
+  }
+}
+
 export const createJexlMiddleware = (
   customInstance?: InstanceType<typeof jexl.Jexl>
 ): Middleware => {
@@ -38,8 +51,7 @@ export const createJexlMiddleware = (
         flatContext as Record<string, unknown>
       )
     } catch (e) {
-      console.error(`Jexl Error in [${expression}]:`, e)
-      return null
+      throw new Error(`Jexl Error in [${expression}]: ${String(e)}`)
     }
   }
 
