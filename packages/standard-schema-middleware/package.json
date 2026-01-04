@@ -1,6 +1,6 @@
 {
 	"name": "@refluxo/standard-schema-middleware",
-	"version": "0.0.1",
+	"version": "1.0.0",
 	"description": "Standard Schema validation middleware for Refluxo",
 	"main": "./dist/index.js",
 	"module": "./dist/index.mjs",

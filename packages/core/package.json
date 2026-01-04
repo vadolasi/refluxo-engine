@@ -1,6 +1,6 @@
 {
 	"name": "@refluxo/core",
-	"version": "0.0.1",
+	"version": "0.1.0",
 	"description": "Stateless, snapshot-based workflow engine",
 	"main": "./dist/index.js",
 	"module": "./dist/index.mjs",
