@@ -9,8 +9,7 @@
 		"skipLibCheck": true,
 		"outDir": "dist",
 		"paths": {
-			"@refluxo/core": ["./packages/core/src/index.ts"],
-			"@refluxo/jexl-middleware": ["./packages/jexl-middleware/src/index.ts"]
+			"@refluxo/core": ["./packages/core/src/index.ts"]
 		}
 	},
 	"include": ["src"]

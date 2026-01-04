@@ -27,6 +27,15 @@
 		"serverless",
 		"snapshot"
 	],
+	"repository": {
+		"type": "git",
+		"url": "git+https://github.com/vadolasi/refluxo.git",
+		"directory": "packages/core"
+	},
+	"homepage": "https://github.com/vadolasi/refluxo/tree/main/packages/core#readme",
+	"bugs": {
+		"url": "https://github.com/vadolasi/refluxo/issues"
+	},
 	"author": "Vitor Daniel <vitor036daniel@gmail.com>",
 	"license": "MIT",
 	"devDependencies": {

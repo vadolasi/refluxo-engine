@@ -1,7 +1,7 @@
 {
-	"name": "@refluxo/jexl-middleware",
+	"name": "@refluxo/standard-schema-middleware",
 	"version": "1.0.0",
-	"description": "Jexl expression middleware for Refluxo",
+	"description": "Standard Schema validation middleware for Refluxo",
 	"main": "./dist/index.js",
 	"module": "./dist/index.mjs",
 	"types": "./dist/index.d.ts",
@@ -23,30 +23,34 @@
 	"keywords": [
 		"workflow",
 		"middleware",
-		"jexl",
-		"expression"
+		"validation",
+		"schema",
+		"standard-schema",
+		"zod",
+		"valibot",
+		"arktype"
 	],
+	"author": "Vitor Daniel <vitor036daniel@gmail.com>",
+	"license": "MIT",
 	"repository": {
 		"type": "git",
 		"url": "git+https://github.com/vadolasi/refluxo.git",
-		"directory": "packages/jexl-middleware"
+		"directory": "packages/standard-schema-middleware"
 	},
-	"homepage": "https://github.com/vadolasi/refluxo/tree/main/packages/jexl-middleware#readme",
+	"homepage": "https://github.com/vadolasi/refluxo/tree/main/packages/standard-schema-middleware#readme",
 	"bugs": {
 		"url": "https://github.com/vadolasi/refluxo/issues"
 	},
-	"author": "Vitor Daniel <vitor036daniel@gmail.com>",
-	"license": "MIT",
 	"dependencies": {
-		"jexl": "^2.3.0"
+		"@standard-schema/spec": "^1.0.0"
 	},
 	"peerDependencies": {
 		"@refluxo/core": "workspace:*"
 	},
 	"devDependencies": {
 		"@refluxo/core": "workspace:*",
-		"@types/jexl": "^2.3.4",
 		"tsup": "^8.0.0",
-		"typescript": "^5.0.0"
+		"typescript": "^5.0.0",
+		"valibot": "^1.0.0"
 	}
 }

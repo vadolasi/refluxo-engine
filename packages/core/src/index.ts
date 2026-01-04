@@ -29,10 +29,15 @@ export interface RetryPolicy {
  *
  * @template TInput - The schema or validator for the input data.
  * @template TOutput - The schema or validator for the output data.
+ * @template TMetadata - The type of the metadata object.
  */
-export interface NodeDefinition<TInput = unknown, TOutput = unknown> {
+export interface NodeDefinition<
+  TInput = unknown,
+  TOutput = unknown,
+  TMetadata = Record<string, unknown>
+> {
   /** @description Optional metadata for the node definition (e.g., validation schemas). */
-  metadata?: Record<string, unknown>
+  metadata?: TMetadata
   /** @description Policy for handling errors and retrying execution. */
   retryPolicy?: RetryPolicy
   /**
