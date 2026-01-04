@@ -31,9 +31,9 @@
 		"url": "git+https://github.com/vadolasi/refluxo.git",
 		"directory": "packages/jexl-middleware"
 	},
-	"homepage": "https://github.com/vadolasi/refluxo/tree/main/packages/jexl-middleware#readme",
+	"homepage": "https://github.com/vadolasi/refluxo-engine/tree/main/packages/jexl-middleware#readme",
 	"bugs": {
-		"url": "https://github.com/vadolasi/refluxo/issues"
+		"url": "https://github.com/vadolasi/refluxo-engine/issues"
 	},
 	"author": "Vitor Daniel <vitor036daniel@gmail.com>",
 	"license": "MIT",

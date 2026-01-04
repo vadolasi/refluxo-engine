@@ -37,9 +37,9 @@
 		"url": "git+https://github.com/vadolasi/refluxo.git",
 		"directory": "packages/standard-schema-middleware"
 	},
-	"homepage": "https://github.com/vadolasi/refluxo/tree/main/packages/standard-schema-middleware#readme",
+	"homepage": "https://github.com/vadolasi/refluxo-engine/tree/main/packages/standard-schema-middleware#readme",
 	"bugs": {
-		"url": "https://github.com/vadolasi/refluxo/issues"
+		"url": "https://github.com/vadolasi/refluxo-engine/issues"
 	},
 	"dependencies": {
 		"@standard-schema/spec": "^1.1.0"
