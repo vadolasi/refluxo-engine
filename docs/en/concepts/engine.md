@@ -67,7 +67,7 @@ The engine uses a pipeline of **Middlewares** to process data before and after n
 The `WorkflowEngine` accepts an array of middlewares in its constructor:
 
 ```typescript
-import { createJexlMiddleware } from "@refluxo/jexl-middleware";
+import { createJexlMiddleware } from "@refluxo/jexl";
 
 const engine = new WorkflowEngine({
   workflow,

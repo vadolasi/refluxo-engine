@@ -1,6 +1,6 @@
 # Interface: RetryPolicy
 
-Defined in: index.ts:18
+Defined in: [index.ts:18](https://github.com/vadolasi/refluxo-engine/blob/e49f985bb3d0b5f8b6d444b2272a6a526eba442f/packages/core/src/index.ts#L18)
 
 ## Properties
 
@@ -8,7 +8,7 @@ Defined in: index.ts:18
 
 > **backoff**: `string`
 
-Defined in: index.ts:24
+Defined in: [index.ts:24](https://github.com/vadolasi/refluxo-engine/blob/e49f985bb3d0b5f8b6d444b2272a6a526eba442f/packages/core/src/index.ts#L24)
 
 #### Description
 
@@ -20,7 +20,7 @@ Backoff strategy: 'fixed' for constant interval, 'exponential' for increasing in
 
 > **interval**: `string` \| `number`
 
-Defined in: index.ts:22
+Defined in: [index.ts:22](https://github.com/vadolasi/refluxo-engine/blob/e49f985bb3d0b5f8b6d444b2272a6a526eba442f/packages/core/src/index.ts#L22)
 
 #### Description
 
@@ -32,7 +32,7 @@ Interval between retries in milliseconds. Can be a number or an expression strin
 
 > **maxAttempts**: `string` \| `number`
 
-Defined in: index.ts:20
+Defined in: [index.ts:20](https://github.com/vadolasi/refluxo-engine/blob/e49f985bb3d0b5f8b6d444b2272a6a526eba442f/packages/core/src/index.ts#L20)
 
 #### Description
 

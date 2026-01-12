@@ -38,12 +38,17 @@ This code lives in your application, not inside the engine. It listens for HTTP 
 ```typescript
 import express from "express";
 import { WorkflowEngine } from "@refluxo/core";
+import { JexlTransformEngine } from "@refluxo/jexl";
 import { workflow, nodeDefinitions } from "./workflow"; // Your definitions
 
 const app = express();
 app.use(express.json());
 
-const engine = new WorkflowEngine({ workflow, nodeDefinitions });
+const engine = new WorkflowEngine({
+  workflow,
+  nodeDefinitions,
+  transformEngines: [new JexlTransformEngine()]
+});
 
 app.post("/webhooks/github", async (req, res) => {
   console.log("GitHub webhook received. Starting workflow...");

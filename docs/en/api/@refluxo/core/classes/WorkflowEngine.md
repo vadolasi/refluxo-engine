@@ -4,7 +4,7 @@ description: It is stateless and operates step-by-step, producing immutable snap
 
 # Class: WorkflowEngine\<T\>
 
-Defined in: index.ts:154
+Defined in: [index.ts:300](https://github.com/vadolasi/refluxo-engine/blob/e49f985bb3d0b5f8b6d444b2272a6a526eba442f/packages/core/src/index.ts#L300)
 
 ## Type Parameters
 
@@ -20,7 +20,7 @@ The type of NodesDefinition used.
 
 > **new WorkflowEngine**\<`T`\>(`options`): `WorkflowEngine`\<`T`\>
 
-Defined in: index.ts:171
+Defined in: [index.ts:319](https://github.com/vadolasi/refluxo-engine/blob/e49f985bb3d0b5f8b6d444b2272a6a526eba442f/packages/core/src/index.ts#L319)
 
 #### Parameters
 
@@ -28,17 +28,35 @@ Defined in: index.ts:171
 
 Configuration options.
 
-###### middlewares?
+###### errorHandler?
 
-[`Middleware`](../type-aliases/Middleware.md)[] = `[]`
+[`ErrorHandler`](../interfaces/ErrorHandler.md)
 
-Array of middlewares to use.
+Optional error handler. Uses DefaultErrorHandler if not provided.
 
 ###### nodeDefinitions
 
 `T`
 
 The definitions for the nodes used in the workflow.
+
+###### plugins?
+
+[`Plugin`](../interfaces/Plugin.md)[] = `[]`
+
+Optional array of plugins for lifecycle hooks.
+
+###### transformEngines?
+
+[`TransformEngine`](../interfaces/TransformEngine.md)[]
+
+Optional array of transform engines (executed in pipeline).
+
+###### validator?
+
+[`Validator`](../interfaces/Validator.md)
+
+Optional validator for input/output validation.
 
 ###### workflow
 
@@ -56,7 +74,7 @@ The workflow definition.
 
 > **nodeDefinitions**: `T`
 
-Defined in: index.ts:156
+Defined in: [index.ts:302](https://github.com/vadolasi/refluxo-engine/blob/e49f985bb3d0b5f8b6d444b2272a6a526eba442f/packages/core/src/index.ts#L302)
 
 ***
 
@@ -64,7 +82,7 @@ Defined in: index.ts:156
 
 > **workflow**: `Workflow`
 
-Defined in: index.ts:155
+Defined in: [index.ts:301](https://github.com/vadolasi/refluxo-engine/blob/e49f985bb3d0b5f8b6d444b2272a6a526eba442f/packages/core/src/index.ts#L301)
 
 ## Methods
 
@@ -74,7 +92,7 @@ Defined in: index.ts:155
 
 > **execute**(`args`): `Promise`\<[`Snapshot`](../interfaces/Snapshot.md)\>
 
-Defined in: index.ts:241
+Defined in: [index.ts:409](https://github.com/vadolasi/refluxo-engine/blob/e49f985bb3d0b5f8b6d444b2272a6a526eba442f/packages/core/src/index.ts#L409)
 
 ##### Parameters
 
@@ -116,7 +134,7 @@ The resulting snapshot after execution.
 
 > **execute**(`args`): `Promise`\<[`Snapshot`](../interfaces/Snapshot.md)\>
 
-Defined in: index.ts:247
+Defined in: [index.ts:415](https://github.com/vadolasi/refluxo-engine/blob/e49f985bb3d0b5f8b6d444b2272a6a526eba442f/packages/core/src/index.ts#L415)
 
 ##### Parameters
 
@@ -166,7 +184,7 @@ The resulting snapshot after execution.
 
 > **executeStep**(`snapshot`, `externalPayload?`, `globals?`): `Promise`\<[`Snapshot`](../interfaces/Snapshot.md)\>
 
-Defined in: index.ts:348
+Defined in: [index.ts:498](https://github.com/vadolasi/refluxo-engine/blob/e49f985bb3d0b5f8b6d444b2272a6a526eba442f/packages/core/src/index.ts#L498)
 
 #### Parameters
 
@@ -196,33 +214,11 @@ The new snapshot after the step execution.
 
 ***
 
-### use()
-
-> **use**(`middleware`): `this`
-
-Defined in: index.ts:194
-
-#### Parameters
-
-##### middleware
-
-[`Middleware`](../type-aliases/Middleware.md)
-
-The middleware function to add.
-
-#### Returns
-
-`this`
-
-The engine instance for chaining.
-
-***
-
 ### validateWorkflow()
 
 > **validateWorkflow**(): `Promise`\<`void`\>
 
-Defined in: index.ts:205
+Defined in: [index.ts:350](https://github.com/vadolasi/refluxo-engine/blob/e49f985bb3d0b5f8b6d444b2272a6a526eba442f/packages/core/src/index.ts#L350)
 
 #### Returns
 

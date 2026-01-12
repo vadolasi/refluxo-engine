@@ -133,24 +133,163 @@ export interface Snapshot {
   }
 }
 
-export type NextFunction = () => Promise<void>
-
-export interface MiddlewareContext {
-  node: Node
-  definition: NodeDefinition
-  snapshot: Snapshot
-  globals?: unknown
-  externalPayload?: unknown
-  input: unknown
-  output?: unknown
-  error?: unknown
-  state: Record<string, unknown>
+/**
+ * @summary Interface for validating data against a schema.
+ */
+export interface Validator {
+  /**
+   * @summary Validates data against a schema.
+   * @param data - The data to validate.
+   * @param schema - The schema to validate against.
+   * @returns Validation result with valid flag, transformed data, and optional errors.
+   */
+  validate(
+    data: unknown,
+    schema: unknown
+  ): Promise<{
+    valid: boolean
+    data?: unknown
+    errors?: Array<{ path: string; message: string }>
+  }>
 }
 
-export type Middleware = (
-  context: MiddlewareContext,
-  next: NextFunction
-) => Promise<void>
+/**
+ * @summary Interface for transforming input data (e.g., expression evaluation, secrets injection).
+ */
+export interface TransformEngine {
+  /**
+   * @summary Transforms input data.
+   * @param input - The input data to transform.
+   * @param context - The execution context.
+   * @param globals - Global variables (e.g., secrets).
+   * @returns The transformed data.
+   */
+  transform(
+    input: unknown,
+    context: Context,
+    globals?: unknown
+  ): Promise<unknown>
+}
+
+/**
+ * @summary Interface for handling errors and retry logic.
+ */
+export interface ErrorHandler {
+  /**
+   * @summary Determines if a failed node should be retried.
+   * @param error - The error that occurred.
+   * @param attempt - The current attempt number.
+   * @param node - The node that failed.
+   * @param definition - The node definition.
+   * @returns Whether the node should be retried.
+   */
+  shouldRetry(
+    error: unknown,
+    attempt: number,
+    node: Node,
+    definition: NodeDefinition
+  ): Promise<boolean>
+
+  /**
+   * @summary Gets the delay before the next retry attempt.
+   * @param attempt - The current attempt number.
+   * @param node - The node being retried.
+   * @param definition - The node definition.
+   * @returns The delay in milliseconds.
+   */
+  getRetryDelay(
+    attempt: number,
+    node: Node,
+    definition: NodeDefinition
+  ): Promise<number>
+}
+
+/**
+ * @summary Plugin context for node execution lifecycle hooks.
+ */
+export interface PluginContext {
+  /** The node being executed. */
+  node: Node
+  /** The node definition. */
+  definition: NodeDefinition
+  /** The current snapshot. */
+  snapshot: Snapshot
+  /** Global variables. */
+  globals?: unknown
+  /** External payload passed to execution. */
+  externalPayload?: unknown
+  /** The input data to the node. */
+  input: unknown
+  /** The output data from the node (available in onAfterNodeExecution). */
+  output?: unknown
+}
+
+/**
+ * @summary Plugin context for error handling lifecycle hooks.
+ */
+export interface ErrorPluginContext extends PluginContext {
+  /** The error that occurred. */
+  error: unknown
+  /** The current attempt number. */
+  attempt: number
+}
+
+/**
+ * @summary A plugin that can hook into the workflow execution lifecycle.
+ */
+export interface Plugin {
+  /** Unique name for the plugin. */
+  name: string
+
+  /** Called before a node is executed. */
+  onBeforeNodeExecution?(context: PluginContext): Promise<void>
+
+  /** Called after a node is executed successfully. */
+  onAfterNodeExecution?(context: PluginContext): Promise<void>
+
+  /** Called when a node execution fails. */
+  onNodeError?(context: ErrorPluginContext): Promise<void>
+
+  /** Called when the workflow starts. */
+  onWorkflowStart?(snapshot: Snapshot): Promise<void>
+
+  /** Called when the workflow completes successfully. */
+  onWorkflowComplete?(snapshot: Snapshot): Promise<void>
+
+  /** Called when the workflow is paused. */
+  onWorkflowPause?(snapshot: Snapshot): Promise<void>
+}
+
+/**
+ * @summary Default implementation of ErrorHandler.
+ * @description Uses the retry policy from the node definition.
+ */
+class DefaultErrorHandler implements ErrorHandler {
+  async shouldRetry(
+    _error: unknown,
+    attempt: number,
+    _node: Node,
+    definition: NodeDefinition
+  ): Promise<boolean> {
+    const policy = definition?.retryPolicy
+    if (!policy) return false
+    return attempt <= Number(policy.maxAttempts)
+  }
+
+  async getRetryDelay(
+    attempt: number,
+    _node: Node,
+    definition: NodeDefinition
+  ): Promise<number> {
+    const policy = definition?.retryPolicy
+    if (!policy) return 0
+
+    const interval = Number(policy.interval)
+    return policy.backoff === "exponential"
+      ? interval * 2 ** (attempt - 1)
+      : interval
+  }
+}
 
 /**
  * @summary The core engine responsible for executing workflows.
@@ -161,11 +300,10 @@ export type Middleware = (
 export class WorkflowEngine<T extends NodesDefinition = NodesDefinition> {
   workflow: Workflow
   nodeDefinitions: T
-  private middlewares: Middleware[] = []
-  private composedMiddleware: (
-    context: MiddlewareContext,
-    next?: NextFunction
-  ) => Promise<void>
+  private validator?: Validator
+  private transformEngines: TransformEngine[] = []
+  private errorHandler: ErrorHandler
+  private plugins: Plugin[] = []
 
   /**
    * @summary Creates a new instance of WorkflowEngine.
@@ -173,35 +311,35 @@ export class WorkflowEngine<T extends NodesDefinition = NodesDefinition> {
    * @param options - Configuration options.
    * @param options.workflow - The workflow definition.
    * @param options.nodeDefinitions - The definitions for the nodes used in the workflow.
-   * @param options.middlewares - Array of middlewares to use.
+   * @param options.validator - Optional validator for input/output validation.
+   * @param options.transformEngines - Optional array of transform engines (executed in pipeline).
+   * @param options.errorHandler - Optional error handler. Uses DefaultErrorHandler if not provided.
+   * @param options.plugins - Optional array of plugins for lifecycle hooks.
    */
   constructor({
     workflow,
     nodeDefinitions,
-    middlewares = []
+    validator,
+    transformEngines,
+    errorHandler,
+    plugins = []
   }: {
     workflow: WorkflowDefinition<T>
     nodeDefinitions: T
-    middlewares?: Middleware[]
+    validator?: Validator
+    transformEngines?: TransformEngine[]
+    errorHandler?: ErrorHandler
+    plugins?: Plugin[]
   }) {
     this.workflow = {
       nodes: new Map(workflow.nodes.map((node) => [node.id, node as Node])),
       edges: workflow.edges
     }
     this.nodeDefinitions = nodeDefinitions
-    this.middlewares = middlewares
-    this.composedMiddleware = this.compose(this.middlewares)
-  }
-
-  /**
-   * @summary Adds a middleware to the engine.
-   * @param middleware - The middleware function to add.
-   * @returns The engine instance for chaining.
-   */
-  use(middleware: Middleware): this {
-    this.middlewares.push(middleware)
-    this.composedMiddleware = this.compose(this.middlewares)
-    return this
+    this.validator = validator
+    this.transformEngines = transformEngines || []
+    this.errorHandler = errorHandler || new DefaultErrorHandler()
+    this.plugins = plugins
   }
 
   /**
@@ -213,6 +351,31 @@ export class WorkflowEngine<T extends NodesDefinition = NodesDefinition> {
     for (const node of this.workflow.nodes.values()) {
       if (!(node.type in this.nodeDefinitions)) {
         throw new Error(`Node definition not found for type: ${node.type}`)
+      }
+    }
+  }
+
+  /**
+   * @summary Calls a plugin hook for all plugins, catching errors to not interrupt other plugins.
+   */
+  private async callPluginHook(
+    hookName: keyof Plugin,
+    arg: any
+  ): Promise<void> {
+    for (const plugin of this.plugins) {
+      const hook = plugin[hookName] as
+        | ((...args: any[]) => Promise<void>)
+        | undefined
+      if (hook) {
+        try {
+          await hook.call(plugin, arg)
+        } catch (error) {
+          // Log error but don't interrupt other plugins
+          console.error(
+            `Error in plugin ${plugin.name} hook ${hookName}:`,
+            error
+          )
+        }
       }
     }
   }
@@ -283,6 +446,7 @@ export class WorkflowEngine<T extends NodesDefinition = NodesDefinition> {
         workflowId || "default",
         initialNodeId
       )
+      await this.callPluginHook("onWorkflowStart", currentSnapshot)
     } else {
       const shouldResume = ["paused", "error"].includes(currentSnapshot.status)
 
@@ -298,14 +462,15 @@ export class WorkflowEngine<T extends NodesDefinition = NodesDefinition> {
       const currentExternalPayload =
         currentStep === 0 ? externalPayload : undefined
       if (currentStep >= stepLimit) {
-        return {
+        const finalSnapshot: Snapshot = {
           ...currentSnapshot,
-          status: "failed",
+          status: "failed" as const,
           metadata: {
             ...currentSnapshot.metadata,
             failedReason: "Step limit exceeded"
           }
         }
+        return finalSnapshot
       }
       currentSnapshot = await this.executeStep(
         currentSnapshot,
@@ -315,33 +480,13 @@ export class WorkflowEngine<T extends NodesDefinition = NodesDefinition> {
       currentStep++
     }
 
-    return currentSnapshot
-  }
-
-  private compose(
-    middlewares: Middleware[]
-  ): (context: MiddlewareContext, next?: NextFunction) => Promise<void> {
-    return (context: MiddlewareContext, next?: NextFunction) => {
-      let index = -1
-      return dispatch(0)
-      function dispatch(i: number): Promise<void> {
-        if (i <= index)
-          return Promise.reject(new Error("next() called multiple times"))
-        index = i
-        let fn = middlewares[i]
-        if (i === middlewares.length) {
-          fn = async (_ctx, _next) => {
-            if (next) await next()
-          }
-        }
-        if (!fn) return Promise.resolve()
-        try {
-          return Promise.resolve(fn(context, dispatch.bind(null, i + 1)))
-        } catch (err) {
-          return Promise.reject(err)
-        }
-      }
+    if (currentSnapshot.status === "completed") {
+      await this.callPluginHook("onWorkflowComplete", currentSnapshot)
+    } else if (currentSnapshot.status === "paused") {
+      await this.callPluginHook("onWorkflowPause", currentSnapshot)
     }
+
+    return currentSnapshot
   }
 
   /**
@@ -376,41 +521,64 @@ export class WorkflowEngine<T extends NodesDefinition = NodesDefinition> {
     const definition = this.nodeDefinitions[node.type]
     if (!definition) throw new Error("Node definition not found")
 
-    const middlewareContext: MiddlewareContext = {
-      node,
-      definition,
-      snapshot,
-      globals,
-      externalPayload,
-      input: structuredClone(node.data),
-      state: {}
-    }
-
     try {
-      const executorMiddleware: Middleware = async (ctx, next) => {
-        const result = await definition.executor(
-          ctx.input,
-          ctx.snapshot.context,
-          ctx.externalPayload,
-          ctx.globals
+      // Call onBeforeNodeExecution plugins
+      await this.callPluginHook("onBeforeNodeExecution", {
+        node,
+        definition,
+        snapshot,
+        globals,
+        externalPayload,
+        input: node.data
+      } as PluginContext)
+
+      // Apply transform engines pipeline
+      let transformedInput = structuredClone(node.data)
+      for (const engine of this.transformEngines) {
+        transformedInput = await engine.transform(
+          transformedInput,
+          context,
+          globals
         )
-
-        if (result.__pause) {
-          ctx.state.__pause = true
-          return
-        }
-
-        ctx.output = result.data
-        ctx.state.nextHandle = result.nextHandle
-
-        await next()
       }
 
-      await this.composedMiddleware(middlewareContext, async () => {
-        await executorMiddleware(middlewareContext, async () => {})
-      })
+      // Validate if validator is provided
+      let validatedInput = transformedInput
+      if (this.validator && definition.metadata) {
+        const validationResult = await this.validator.validate(
+          transformedInput,
+          definition.metadata
+        )
+        if (!validationResult.valid) {
+          throw new Error(
+            `Validation failed for node '${node.id}': ${JSON.stringify(
+              validationResult.errors
+            )}`
+          )
+        }
+        validatedInput = validationResult.data ?? transformedInput
+      }
 
-      if (middlewareContext.state.__pause) {
+      // Execute the node
+      const result = await definition.executor(
+        validatedInput,
+        context,
+        externalPayload,
+        globals
+      )
+
+      if (result.__pause) {
+        const pluginContext: PluginContext = {
+          node,
+          definition,
+          snapshot,
+          globals,
+          externalPayload,
+          input: validatedInput,
+          output: undefined
+        }
+        await this.callPluginHook("onAfterNodeExecution", pluginContext)
+
         return {
           ...snapshot,
           status: "paused",
@@ -418,6 +586,20 @@ export class WorkflowEngine<T extends NodesDefinition = NodesDefinition> {
           totalExecutionTime
         }
       }
+
+      const output = result.data
+
+      // Call onAfterNodeExecution plugins
+      const pluginContext: PluginContext = {
+        node,
+        definition,
+        snapshot,
+        globals,
+        externalPayload,
+        input: validatedInput,
+        output
+      }
+      await this.callPluginHook("onAfterNodeExecution", pluginContext)
 
       const currentAttempt =
         snapshot.retryState?.nodeId === node.id
@@ -429,17 +611,14 @@ export class WorkflowEngine<T extends NodesDefinition = NodesDefinition> {
         [node.id]: [
           ...(context[node.id] || []),
           {
-            output: middlewareContext.output,
+            output,
             timestamp: Date.now(),
             attempt: currentAttempt
           }
         ]
       }
 
-      const nextNodeId = this.findNextNode(
-        currentNodeId,
-        middlewareContext.state.nextHandle as string | undefined
-      )
+      const nextNodeId = this.findNextNode(currentNodeId, result.nextHandle)
 
       return {
         ...snapshot,
@@ -452,21 +631,14 @@ export class WorkflowEngine<T extends NodesDefinition = NodesDefinition> {
         totalExecutionTime
       }
     } catch (error: unknown) {
-      if (middlewareContext.error) {
-        return this.handleError(
-          snapshot,
-          node,
-          definition,
-          middlewareContext.error,
-          middlewareContext
-        )
-      }
       return this.handleError(
         snapshot,
         node,
         definition,
         error,
-        middlewareContext
+        context,
+        globals,
+        externalPayload
       )
     }
   }
@@ -476,35 +648,45 @@ export class WorkflowEngine<T extends NodesDefinition = NodesDefinition> {
     node: Node,
     definition: NodeDefinition,
     error: unknown,
-    middlewareContext?: MiddlewareContext
+    context: Context,
+    globals: unknown,
+    externalPayload: unknown
   ): Promise<Snapshot> {
     const now = Date.now()
     const timeDiff = now - (snapshot.lastStartedAt || now)
     const totalExecutionTime = (snapshot.totalExecutionTime || 0) + timeDiff
-
-    const policy = definition?.retryPolicy
-
-    // Use resolved policy from middleware state if available, otherwise use definition policy
-    const resolvedPolicy =
-      (middlewareContext?.state?.retryPolicy as RetryPolicy) || policy
-
-    let maxAttempts = 0
-    if (resolvedPolicy) {
-      maxAttempts = Number(resolvedPolicy.maxAttempts)
-    }
 
     const currentAttempt =
       snapshot.retryState?.nodeId === node.id
         ? snapshot.retryState.attempts + 1
         : 1
 
-    if (resolvedPolicy && currentAttempt <= maxAttempts) {
-      const interval = Number(resolvedPolicy.interval)
+    // Call onNodeError plugins
+    const errorPluginContext: ErrorPluginContext = {
+      node,
+      definition,
+      snapshot,
+      globals,
+      externalPayload,
+      input: structuredClone(node.data),
+      error,
+      attempt: currentAttempt
+    }
+    await this.callPluginHook("onNodeError", errorPluginContext)
 
-      const delay =
-        resolvedPolicy.backoff === "exponential"
-          ? interval * 2 ** (currentAttempt - 1)
-          : interval
+    const shouldRetry = await this.errorHandler.shouldRetry(
+      error,
+      currentAttempt,
+      node,
+      definition
+    )
+
+    if (shouldRetry) {
+      const delay = await this.errorHandler.getRetryDelay(
+        currentAttempt,
+        node,
+        definition
+      )
 
       return {
         ...snapshot,
@@ -515,9 +697,9 @@ export class WorkflowEngine<T extends NodesDefinition = NodesDefinition> {
           nextRetryAt: Date.now() + delay
         },
         context: {
-          ...snapshot.context,
+          ...context,
           [node.id]: [
-            ...(snapshot.context[node.id] || []),
+            ...(context[node.id] || []),
             {
               output: null,
               error: String(error),
@@ -528,7 +710,7 @@ export class WorkflowEngine<T extends NodesDefinition = NodesDefinition> {
         },
         metadata: {
           ...snapshot.metadata,
-          pausedReason: `Retry attempt ${currentAttempt}/${maxAttempts}`
+          pausedReason: `Retry attempt ${currentAttempt}`
         },
         lastStartedAt: now,
         totalExecutionTime
@@ -540,9 +722,9 @@ export class WorkflowEngine<T extends NodesDefinition = NodesDefinition> {
       status: "failed",
       retryState: undefined,
       context: {
-        ...snapshot.context,
+        ...context,
         [node.id]: [
-          ...(snapshot.context[node.id] || []),
+          ...(context[node.id] || []),
           {
             output: null,
             error: String(error),
@@ -568,3 +750,5 @@ export class WorkflowEngine<T extends NodesDefinition = NodesDefinition> {
     return targetEdge ? targetEdge.target : null
   }
 }
+
+export { StandardSchemaValidator } from "./standard-schema"

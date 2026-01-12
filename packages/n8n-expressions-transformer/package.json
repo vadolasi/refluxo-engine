@@ -1,7 +1,7 @@
 {
-	"name": "@refluxo/standard-schema-middleware",
+	"name": "@refluxo/n8n-expressions-transformer",
 	"version": "1.0.0",
-	"description": "Standard Schema validation middleware for Refluxo",
+	"description": "n8n-compatible expressions for Refluxo",
 	"main": "./dist/index.js",
 	"module": "./dist/index.mjs",
 	"types": "./dist/index.d.ts",
@@ -21,36 +21,27 @@
 		"lint": "tsc --noEmit"
 	},
 	"keywords": [
-		"workflow",
+		"refluxo",
 		"middleware",
-		"validation",
-		"schema",
-		"standard-schema",
-		"zod",
-		"valibot",
-		"arktype"
+		"n8n",
+		"expressions",
+		"tournament"
 	],
 	"author": "Vitor Daniel <vitor036daniel@gmail.com>",
 	"license": "MIT",
-	"repository": {
-		"type": "git",
-		"url": "git+https://github.com/vadolasi/refluxo.git",
-		"directory": "packages/standard-schema-middleware"
-	},
-	"homepage": "https://github.com/vadolasi/refluxo-engine/tree/main/packages/standard-schema-middleware#readme",
-	"bugs": {
-		"url": "https://github.com/vadolasi/refluxo-engine/issues"
-	},
 	"dependencies": {
-		"@standard-schema/spec": "^1.1.0"
+		"@n8n/tournament": "^1.0.6",
+		"luxon": "^3.5.0",
+		"jmespath": "^0.16.0"
 	},
 	"peerDependencies": {
 		"@refluxo/core": "workspace:*"
 	},
 	"devDependencies": {
 		"@refluxo/core": "workspace:*",
+		"@types/luxon": "^3.4.2",
+		"@types/jmespath": "^0.15.2",
 		"tsup": "^8.5.1",
-		"typescript": "^5.9.3",
-		"valibot": "^1.2.0"
+		"typescript": "^5.9.3"
 	}
 }

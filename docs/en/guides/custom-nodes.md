@@ -65,7 +65,7 @@ const fetchApiNode: NodeDefinition = {
 
 ### 1. Metadata (Optional)
 
-The `metadata` property is where you can store additional information about the node, such as validation schemas. Middleware (like `@refluxo/standard-schema-middleware`) can use `metadata.input` to validate the resolved `data` of the node *before* executing it, and `metadata.output` to validate the return value.
+The `metadata` property is where you can store additional information about the node, such as validation schemas. Middleware (like `@refluxo/core`) can use `metadata.input` to validate the resolved `data` of the node *before* executing it, and `metadata.output` to validate the return value.
 
 ### 2. Retry Policy
 

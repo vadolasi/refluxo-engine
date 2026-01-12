@@ -36,7 +36,7 @@ Este middleware procura por strings começando com `SECRET:` e as resolve usando
 
 ```typescript
 import { Middleware, WorkflowEngine } from "@refluxo/core";
-import { createJexlMiddleware } from "@refluxo/jexl-middleware";
+import { createJexlMiddleware } from "@refluxo/jexl";
 
 const secretResolver: Middleware = async (context, next) => {
   const resolve = (data: any): any => {

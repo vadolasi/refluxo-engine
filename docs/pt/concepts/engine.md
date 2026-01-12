@@ -67,7 +67,7 @@ O motor utiliza um pipeline de **Middlewares** para processar dados antes e depo
 O `WorkflowEngine` aceita um array de middlewares em seu construtor:
 
 ```typescript
-import { createJexlMiddleware } from "@refluxo/jexl-middleware";
+import { createJexlMiddleware } from "@refluxo/jexl";
 
 const engine = new WorkflowEngine({
   workflow,

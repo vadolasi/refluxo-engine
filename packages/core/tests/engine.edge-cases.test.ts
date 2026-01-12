@@ -1,7 +1,7 @@
 import { describe, expect, it } from "vitest"
 import {
-  type Middleware,
   type NodeDefinition,
+  type Plugin,
   type WorkflowDefinition,
   WorkflowEngine
 } from "../src/index"
@@ -20,26 +20,6 @@ const nodeDefinitions = {
 }
 
 describe("WorkflowEngine Coverage", () => {
-  it("should throw error if middleware calls next() multiple times", async () => {
-    const engine = new WorkflowEngine({
-      workflow: simpleWorkflow,
-      nodeDefinitions
-    })
-
-    const doubleNextMiddleware: Middleware = async (_ctx, next) => {
-      await next()
-      await next()
-    }
-
-    engine.use(doubleNextMiddleware)
-
-    const result = await engine.execute({ initialNodeId: "start" })
-    expect(result.status).toBe("failed")
-    expect(result.context["start"][0].error).toContain(
-      "next() called multiple times"
-    )
-  })
-
   it("should handle step limit exceeded", async () => {
     const loopWorkflow: WorkflowDefinition = {
       nodes: [
@@ -87,21 +67,61 @@ describe("WorkflowEngine Coverage", () => {
     expect(result.status).toBe("completed")
   })
 
-  it("should handle middleware setting error", async () => {
+  it("should handle plugin errors gracefully", async () => {
     const engine = new WorkflowEngine({
       workflow: simpleWorkflow,
       nodeDefinitions
     })
 
-    const errorMiddleware: Middleware = async (ctx, _next) => {
-      ctx.error = new Error("Middleware error")
-      throw new Error("Ignored error")
+    const errorPlugin: Plugin = {
+      name: "error-plugin",
+      onBeforeNodeExecution: async () => {
+        throw new Error("Plugin error")
+      }
     }
 
-    engine.use(errorMiddleware)
+    const validPlugin: Plugin = {
+      name: "valid-plugin",
+      onBeforeNodeExecution: async () => {
+        // This should still execute even though previous plugin errored
+      }
+    }
 
-    const result = await engine.execute({ initialNodeId: "start" })
-    expect(result.status).toBe("failed")
-    expect(result.context["start"][0].error).toBe("Error: Middleware error")
+    const engineWithPlugins = new WorkflowEngine({
+      workflow: simpleWorkflow,
+      nodeDefinitions,
+      plugins: [errorPlugin, validPlugin]
+    })
+
+    const result = await engineWithPlugins.execute({ initialNodeId: "start" })
+    expect(result.status).toBe("completed")
+  })
+
+  it("should handle pause and resume workflow", async () => {
+    const pauseNode: NodeDefinition = {
+      executor: async (data, _ctx, payload) => {
+        return payload ? { data: payload } : { data, __pause: true }
+      }
+    }
+
+    const pauseWorkflow: WorkflowDefinition = {
+      nodes: [{ id: "pause", type: "pause-node", data: { test: true } }],
+      edges: []
+    }
+
+    const engine = new WorkflowEngine({
+      workflow: pauseWorkflow,
+      nodeDefinitions: { "pause-node": pauseNode }
+    })
+
+    let result = await engine.execute({ initialNodeId: "pause" })
+    expect(result.status).toBe("paused")
+
+    result = await engine.execute({
+      snapshot: result,
+      externalPayload: { resumed: true }
+    })
+    expect(result.status).toBe("completed")
+    expect(result.context.pause[0].output).toEqual({ resumed: true })
   })
 })

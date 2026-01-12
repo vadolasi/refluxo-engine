@@ -4,7 +4,7 @@ description: Contains the nodes and edges that define the process.
 
 # Interface: WorkflowDefinition\<T\>
 
-Defined in: index.ts:91
+Defined in: [index.ts:98](https://github.com/vadolasi/refluxo-engine/blob/e49f985bb3d0b5f8b6d444b2272a6a526eba442f/packages/core/src/index.ts#L98)
 
 ## Type Parameters
 
@@ -20,7 +20,7 @@ The type of NodesDefinition used in this workflow.
 
 > **edges**: [`Edge`](Edge.md)[]
 
-Defined in: index.ts:97
+Defined in: [index.ts:104](https://github.com/vadolasi/refluxo-engine/blob/e49f985bb3d0b5f8b6d444b2272a6a526eba442f/packages/core/src/index.ts#L104)
 
 #### Description
 
@@ -32,7 +32,7 @@ Array of edges connecting the nodes.
 
 > **nodes**: [`Node`](Node.md)\<keyof `T` & `string`\>[]
 
-Defined in: index.ts:95
+Defined in: [index.ts:102](https://github.com/vadolasi/refluxo-engine/blob/e49f985bb3d0b5f8b6d444b2272a6a526eba442f/packages/core/src/index.ts#L102)
 
 #### Description
 

@@ -1,9 +1,13 @@
-import { type WorkflowDefinition, WorkflowEngine } from "@refluxo/core"
 import { number, object, string } from "valibot"
 import { describe, expect, it } from "vitest"
-import { createStandardSchemaMiddleware } from "../src"
+import {
+  StandardSchemaValidator,
+  type Validator,
+  type WorkflowDefinition,
+  WorkflowEngine
+} from "../src"
 
-describe("Standard Schema Middleware", () => {
+describe("Standard Schema Validator", () => {
   it("should validate input using Valibot", async () => {
     const nodeDefinitions = {
       "test-node": {
@@ -30,10 +34,12 @@ describe("Standard Schema Middleware", () => {
       edges: []
     }
 
+    const validator = new StandardSchemaValidator()
+
     const engine = new WorkflowEngine({
       workflow,
       nodeDefinitions,
-      middlewares: [createStandardSchemaMiddleware()]
+      validator
     })
 
     const snapshot = await engine.execute({ initialNodeId: "node1" })
@@ -67,73 +73,47 @@ describe("Standard Schema Middleware", () => {
       edges: []
     }
 
+    const validator = new StandardSchemaValidator()
+
     const engine = new WorkflowEngine({
       workflow,
       nodeDefinitions,
-      middlewares: [createStandardSchemaMiddleware()]
+      validator
     })
 
     const snapshot = await engine.execute({ initialNodeId: "node1" })
     expect(snapshot.status).toBe("failed")
-    expect(snapshot.context["node1"][0].error).toContain(
-      "Input validation failed"
-    )
+    expect(snapshot.context["node1"][0].error).toContain("Validation failed")
   })
 
-  it("should validate output", async () => {
+  it("should validate input without metadata", async () => {
     const nodeDefinitions = {
       "test-node": {
-        metadata: {
-          output: object({
-            result: string()
-          })
-        },
-        executor: async () => ({ data: { result: "success" } })
+        // No metadata
+        executor: async (data: unknown) => ({ data })
       }
     }
 
     const workflow: WorkflowDefinition<typeof nodeDefinitions> = {
-      nodes: [{ id: "node1", type: "test-node", data: {} }],
+      nodes: [
+        {
+          id: "node1",
+          type: "test-node",
+          data: { name: 123 }
+        }
+      ],
       edges: []
     }
+
+    const validator = new StandardSchemaValidator()
 
     const engine = new WorkflowEngine({
       workflow,
       nodeDefinitions,
-      middlewares: [createStandardSchemaMiddleware()]
+      validator
     })
 
     const snapshot = await engine.execute({ initialNodeId: "node1" })
     expect(snapshot.status).toBe("completed")
-  })
-
-  it("should fail validation for invalid output", async () => {
-    const nodeDefinitions = {
-      "test-node": {
-        metadata: {
-          output: object({
-            result: string()
-          })
-        },
-        executor: async () => ({ data: { result: 123 } }) // Invalid type
-      }
-    }
-
-    const workflow: WorkflowDefinition<typeof nodeDefinitions> = {
-      nodes: [{ id: "node1", type: "test-node", data: {} }],
-      edges: []
-    }
-
-    const engine = new WorkflowEngine({
-      workflow,
-      nodeDefinitions,
-      middlewares: [createStandardSchemaMiddleware()]
-    })
-
-    const snapshot = await engine.execute({ initialNodeId: "node1" })
-    expect(snapshot.status).toBe("failed")
-    expect(snapshot.context["node1"][0].error).toContain(
-      "Output validation failed"
-    )
   })
 })

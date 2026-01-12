@@ -7,24 +7,27 @@ This guide will walk you through setting up and running your first workflow with
 
 ## 1. Installation
 
-Refluxo is designed to be modular. The core engine is lightweight and unopinionated, meaning it doesn't force any specific validation library or expression language on you.
-
-For a quick start and a robust development experience, we recommend installing the core engine along with the standard middleware for JEXL expressions and schema validation.
+Refluxo has a minimal core and optional extensions. For this guide, we'll use:
+- The core engine (required)
+- JEXL expressions for dynamic data
+- Valibot for schema validation
 
 ```bash
-npm install @refluxo/core @refluxo/jexl-middleware @refluxo/standard-schema-middleware
+npm install @refluxo/core @refluxo/jexl @refluxo/core valibot
 # or
-yarn add @refluxo/core @refluxo/jexl-middleware @refluxo/standard-schema-middleware
+yarn add @refluxo/core @refluxo/jexl @refluxo/core valibot
 # or
-pnpm add @refluxo/core @refluxo/jexl-middleware @refluxo/standard-schema-middleware
+pnpm add @refluxo/core @refluxo/jexl @refluxo/core valibot
 # or
-bun add @refluxo/core @refluxo/jexl-middleware @refluxo/standard-schema-middleware
+bun add @refluxo/core @refluxo/jexl @refluxo/core valibot
 ```
 
-### Why Middleware?
+### What are these packages?
 
-- **@refluxo/jexl-middleware**: Enables the use of JEXL expressions (e.g., `{{ input.name }}`) in your node data. Without this (or a similar middleware), the engine treats all data as static values.
-- **@refluxo/standard-schema-middleware**: (Optional but recommended) Automatically validates input and output data against schemas defined in your node metadata using libraries like Valibot or Zod.
+- **@refluxo/core**: The workflow engine - executes workflows and manages state
+- **@refluxo/jexl**: Adds support for dynamic expressions like `{{ input.name }}`
+- **@refluxo/core**: Adds automatic data validation
+- **valibot**: A schema library (similar to Zod)
 
 ## 2. Defining the Nodes
 
@@ -97,36 +100,43 @@ const workflow: WorkflowDefinition = {
 ```
 *Nota: We are using JEXL expressions. `input` refers to the external payload, and `nodes` allows access to other nodes' data.*
 
-## 4. Executing the Engine
+## 4. Creating the Engine
 
-Finally, let's instantiate the `WorkflowEngine` and run our workflow.
+Now let's create the engine with our workflow:
 
 ```typescript
 import { WorkflowEngine } from "@refluxo/core";
-import { createJexlMiddleware } from "@refluxo/jexl-middleware";
+import { JexlTransformEngine } from "@refluxo/jexl";
+import { StandardSchemaValidator } from "@refluxo/core";
 
+const engine = new WorkflowEngine({
+  workflow,
+  nodeDefinitions,
+  transformEngines: [new JexlTransformEngine()],  // Handles {{ }} expressions
+  validator: new StandardSchemaValidator()         // Validates data
+});
+```
+
+## 5. Executing the Workflow
+
+Finally, let's run our workflow:
+
+```typescript
 async function main() {
-  const engine = new WorkflowEngine({
-    workflow,
-    nodeDefinitions,
-    middlewares: [createJexlMiddleware()],
-  });
-
   console.log("Starting workflow...");
 
   const finalSnapshot = await engine.execute({
-    // We need to tell the engine where to start.
     initialNodeId: "inputNode",
-    // This payload will be available to the first node.
-    externalPayload: { name: "World" },
+    externalPayload: { name: "World" }
   });
 
   if (finalSnapshot.status === "completed") {
     console.log("Workflow completed successfully!");
-    // You can inspect the context to see the final output.
+    
+    // Access the final output
     const finalOutput = finalSnapshot.context.greetingNode[0].output;
     console.log("Final Output:", finalOutput);
-    // Expected Output: { greeting: 'Hello, World! Welcome to Refluxo.' }
+    // Output: { greeting: 'Hello, World! Welcome to Refluxo.' }
   } else {
     console.error("Workflow failed with status:", finalSnapshot.status);
   }
@@ -135,4 +145,152 @@ async function main() {
 main();
 ```
 
-And that's it! You have successfully defined and executed a workflow. From here, you can explore more advanced topics like creating [custom nodes](./custom-nodes.md), using [conditionals](./conditionals.md), and [handling errors](./error-handling.md).
+## Understanding the Snapshot
+
+The `execute` method returns a `Snapshot` object that contains the complete state of the workflow:
+
+```typescript
+interface Snapshot {
+  workflowId: string           // Unique identifier for this execution
+  status: "active" | "paused" | "completed" | "failed" | "error"
+  currentNodeId: string | null // Which node is currently being executed
+  context: Context             // All node outputs organized by node ID
+  version: number              // Snapshot version (increments with each step)
+  totalExecutionTime?: number  // Total time spent executing (ms)
+  metadata: Record<string, unknown>
+}
+```
+
+The `context` object stores outputs from each node execution:
+
+```typescript
+const snapshot = await engine.execute({ initialNodeId: "inputNode" });
+
+// Access outputs from specific nodes
+const inputNodeOutput = snapshot.context.inputNode[0].output;
+// { name: "World" }
+
+const greetingNodeOutput = snapshot.context.greetingNode[0].output;
+// { greeting: "Hello, World! Welcome to Refluxo." }
+```
+
+Each node can have multiple executions (useful for loops), so context stores an array of results.
+
+## Complete Example
+
+Here's the full code for reference:
+
+```typescript
+import { WorkflowEngine, WorkflowDefinition, NodesDefinition } from "@refluxo/core";
+import { JexlTransformEngine } from "@refluxo/jexl";
+import { StandardSchemaValidator } from "@refluxo/core";
+import { object, string } from "valibot";
+
+// 1. Define node types
+const nodeDefinitions: NodesDefinition = {
+  "process-input": {
+    metadata: {
+      input: object({ name: string() }),
+      output: object({ name: string() }),
+    },
+    executor: async (data) => {
+      return { data };
+    },
+  },
+  "create-greeting": {
+    metadata: {
+      input: object({ name: string() }),
+      output: object({ greeting: string() }),
+    },
+    executor: async (data) => {
+      return {
+        data: {
+          greeting: `Hello, ${data.name}! Welcome to Refluxo.`,
+        },
+      };
+    },
+  },
+};
+
+// 2. Define workflow structure
+const workflow: WorkflowDefinition = {
+  nodes: [
+    {
+      id: "inputNode",
+      type: "process-input",
+      data: { name: "{{ input.name }}" },
+    },
+    {
+      id: "greetingNode",
+      type: "create-greeting",
+      data: { name: "{{ nodes.inputNode.last.data.name }}" },
+    },
+  ],
+  edges: [
+    { id: "e1", source: "inputNode", target: "greetingNode" },
+  ],
+};
+
+// 3. Create engine
+const engine = new WorkflowEngine({
+  workflow,
+  nodeDefinitions,
+  transformEngines: [new JexlTransformEngine()],
+  validator: new StandardSchemaValidator(),
+});
+
+// 4. Execute
+async function main() {
+  const snapshot = await engine.execute({
+    initialNodeId: "inputNode",
+    externalPayload: { name: "World" },
+  });
+
+  console.log("Status:", snapshot.status);
+  console.log("Output:", snapshot.context.greetingNode[0].output);
+}
+
+main();
+```
+
+## Next Steps
+
+Now that you understand the basics, explore more advanced features:
+
+- **[Conditionals](./conditionals.md)** - Learn how to create branching workflows with `nextHandle`
+- **[Error Handling](./error-handling.md)** - Configure retry policies and custom error handlers
+- **[Custom Nodes](./custom-nodes.md)** - Build reusable node types for your domain
+- **[Loops](./loops.md)** - Create workflows that iterate over data
+- **[External Events](./external-events.md)** - Pause workflows and resume them later (Human-in-the-loop)
+- **[Handling Secrets](./handling-secrets.md)** - Securely inject secrets into your workflows
+
+## Common Patterns
+
+### Using Only What You Need
+
+All extensions are optional. Pick what fits your use case:
+
+```typescript
+// Just the basics - no expressions, no validation
+const simpleEngine = new WorkflowEngine({
+  workflow,
+  nodeDefinitions
+});
+
+// With expressions only
+const withExpressions = new WorkflowEngine({
+  workflow,
+  nodeDefinitions,
+  transformEngines: [new JexlTransformEngine()]
+});
+
+// With multiple transformations
+const withMultiple = new WorkflowEngine({
+  workflow,
+  nodeDefinitions,
+  transformEngines: [
+    new JexlTransformEngine(),      // Evaluate expressions
+    new SecretsInjectionEngine()    // Inject secrets
+  ]
+});
+```

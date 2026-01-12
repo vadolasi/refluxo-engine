@@ -1,7 +1,7 @@
 {
-	"name": "@refluxo/jexl-middleware",
-	"version": "1.0.0",
-	"description": "Jexl expression middleware for Refluxo",
+	"name": "@refluxo/jexl-transformer",
+	"version": "2.0.0",
+	"description": "JEXL expressions for Refluxo",
 	"main": "./dist/index.js",
 	"module": "./dist/index.mjs",
 	"types": "./dist/index.d.ts",

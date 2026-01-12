@@ -27,75 +27,198 @@ Refluxo is isomorphic. It runs wherever JavaScript runs:
 
 Every execution step is serializable. Pause a flow, save it to a database, and resume it days later.
 
-### 🛡️ Validation & Strict Schemasype Safety
+### 🛡️ Validation & Type Safety
 
-While not intrinsic to the core, most projects benefit from strict data contracts. We offer the optional `@refluxo/standard-schema-middleware` (coming soon) to integrate with [Standard Schema](https://standardschema.dev) libraries like Zod or Valibot. You are free to implement your own validation logic or skip it entirely.
+Refluxo provides an optional `Validator` interface that integrates seamlessly with [Standard Schema](https://standardschema.dev) libraries like Zod or Valibot through `@refluxo/core`. You are free to implement your own validation logic or skip it entirely.
 
-If you store your schema outside code, like in a database, you can write a logic to convert it to a Standard Schema object, for a example, [read the docs](https://refluxo-engine.vitor036daniel.workers.dev/guides/dynamic-schemas)
+If you store your schema outside code, like in a database, you can write logic to convert it to a Standard Schema object. For an example, [read the docs](https://refluxo-engine.vitor036daniel.workers.dev/guides/dynamic-schemas)
 
 ### 🧠 Powerful Expressions
 
-Dynamic data mapping is often essential for complex workflows. We offer `@refluxo/jexl-middleware` to provide JEXL-based expressions (similar to n8n). You are free to implement your own expression engine (e.g., using JavaScript `eval` or another library) or skip it entirely.
+Dynamic data mapping is often essential for complex workflows. We offer:
+- `@refluxo/jexl` - JEXL-based expressions (similar to n8n)
+- `@refluxo/n8n-expressions` - Native n8n expression support
 
-### 🧩 Unmatched Flexibility
+You are free to implement your own expression engine (e.g., using JavaScript `eval` or another library) through the `TransformEngine` interface, or skip it entirely.
 
-Refluxo's core is minimal, providing the primitives to build complex systems. Features like **Human-in-the-loop** (pausing for approval), **Webhooks**, or **Scheduled Tasks** are patterns you implement using the engine's pause/resume capabilities and external payload injection. You have full control over how state is stored and how events trigger workflows.
+### 🧩 Extensible by Design
+
+Refluxo can be extended to fit your needs:
+- **Validators** - Add schema validation with Valibot, Zod, or your own
+- **Transform Engines** - Process data with expressions, inject secrets, or transform structures
+- **Error Handlers** - Customize retry logic and error recovery
+- **Plugins** - Hook into workflow lifecycle for logging, metrics, and more
+
+All extensions are optional - use only what you need.
 
 ### 🔁 Smart Retries
 
-Define dynamic retry policies (fixed or exponential backoff) using expressions.
-
+Define retry policies (fixed or exponential backoff) per node with full control over retry logic through custom `ErrorHandler` implementations.
 
 ## 📦 Installation
 
 ```bash
-pnpm add @refluxo/core @refluxo/jexl-middleware
+# Core engine (minimal, no dependencies)
+pnpm add @refluxo/core
+
+# Optional: Expression engines
+pnpm add @refluxo/jexl
+# or
+pnpm add @refluxo/n8n-expressions
+
+# Optional: Schema validation
+pnpm add @refluxo/core valibot
 ```
 
-## 💡 Usage Examples
+## 💡 Quick Start
 
-### 🔧 1. Defining Node Executors
-
-Executors are pure logic. They receive resolved data and return an output.
+### Basic Example
 
 ```typescript
-import { NodeDefinition } from '@refluxo/core';
-import * as v from 'valibot'; // or any other
+import { WorkflowEngine } from '@refluxo/core'
+import { JexlTransformEngine } from '@refluxo/jexl'
+import { StandardSchemaValidator } from '@refluxo/core'
+import { object, string, number } from 'valibot'
 
-const httpRequest: NodeDefinition = {
-  // Validation is optional and can be handled by middleware
-  // metadata: {
-  //   input: v.object({ ... }),
-  // },
-  
-  async executor(data, context) {
-    const response = await fetch(data.url);
-    const json = await response.json();
-    return { data: json };
+// 1. Define node types
+const nodeDefinitions = {
+  'http:request': {
+    metadata: {
+      input: object({
+        url: string(),
+        method: string()
+      })
+    },
+    executor: async (data) => {
+      const response = await fetch(data.url, { method: data.method })
+      return { data: await response.json() }
+    }
   },
-};
-```
+  'data:transform': {
+    executor: async (data) => {
+      return { data }
+    }
+  }
+}
 
-### 🏗️ 2. Workflow Definition
-
-Workflows are plain JSON objects, making them easy to store and fetch from a frontend or database.
-
-```typescript
+// 2. Create workflow
 const workflow = {
   nodes: [
-    { id: 'start', type: 'http_request', data: { url: 'https://api.example.com/data' } },
-    data: { check: '{{ nodes.start.last.data.status === "ok" }}' }
+    { 
+      id: 'fetch', 
+      type: 'http:request', 
+      data: { 
+        url: 'https://api.example.com/users',
+        method: 'GET'
+      } 
+    },
+    { 
+      id: 'process', 
+      type: 'data:transform',
+      data: { 
+        count: '{{ nodes.fetch.last.data.length }}',
+        firstUser: '{{ nodes.fetch.last.data[0].name }}'
+      }
+    }
   ],
   edges: [
-    { source: 'start', target: 'check_status' },
-    { source: 'check_status', target: 'notify_node', sourceHandle: 'true' }
+    { id: 'e1', source: 'fetch', target: 'process' }
   ]
-};
+}
+
+// 3. Create engine with extensions
+const engine = new WorkflowEngine({
+  workflow,
+  nodeDefinitions,
+  transformEngines: [new JexlTransformEngine()],
+  validator: new StandardSchemaValidator()
+})
+
+// 4. Execute
+const snapshot = await engine.execute({ initialNodeId: 'fetch' })
+console.log(snapshot.context.process[0].output)
+// { count: 10, firstUser: "John Doe" }
 ```
 
-### ⏸ 3. Pause & Resume (Human-in-the-loop)
+## 🎯 Core Concepts
 
-You can pause execution to wait for an event or manual approval.
+### Data Transformation
+
+You can transform node data before execution. Multiple transformations are applied in order:
+
+```typescript
+const engine = new WorkflowEngine({
+  workflow,
+  nodeDefinitions,
+  transformEngines: [
+    new JexlTransformEngine(),      // 1. Evaluate expressions
+    new SecretsInjectionEngine(),   // 2. Inject secrets
+    new CustomTransformEngine()     // 3. Your custom logic
+  ]
+})
+```
+
+### Schema Validation
+
+Add validation to ensure data integrity:
+
+```typescript
+const validator = new StandardSchemaValidator()
+
+const engine = new WorkflowEngine({
+  workflow,
+  nodeDefinitions,
+  validator  // Validates inputs automatically
+})
+```
+
+### Custom Error Handling
+
+```typescript
+const customErrorHandler = {
+  async shouldRetry(error, attempt, node, definition) {
+    // Custom retry logic
+    return attempt <= 3 && error instanceof NetworkError
+  },
+  async getRetryDelay(attempt, node, definition) {
+    // Exponential backoff with jitter
+    return Math.min(1000 * 2 ** attempt, 30000) + Math.random() * 1000
+  }
+}
+
+const engine = new WorkflowEngine({
+  workflow,
+  nodeDefinitions,
+  errorHandler: customErrorHandler
+})
+```
+
+### Lifecycle Plugins
+
+```typescript
+const loggingPlugin = {
+  name: 'logging',
+  async onBeforeNodeExecution(ctx) {
+    console.log(`Executing ${ctx.node.id}`)
+  },
+  async onNodeError(ctx) {
+    console.error(`Node ${ctx.node.id} failed:`, ctx.error)
+  },
+  async onWorkflowComplete(snapshot) {
+    console.log(`Workflow completed in ${snapshot.totalExecutionTime}ms`)
+  }
+}
+
+const engine = new WorkflowEngine({
+  workflow,
+  nodeDefinitions,
+  plugins: [loggingPlugin]
+})
+```
+
+### Pause & Resume (Human-in-the-loop)
+
+Pause execution to wait for external events or manual approval:
 
 ```typescript
 // In your executor
@@ -117,32 +240,130 @@ snapshot = await engine.execute({
 });
 ```
 
-### 🔄 Smart Retry Policies
+### Conditional Branching
 
-Retries can be static or dynamic, driven by expressions.
+Use `nextHandle` to control workflow flow:
 
 ```typescript
-const apiNode = {
-  type: 'api_call',
-  retryPolicy: {
-    maxAttempts: 'nodes.config.last.data.retryCount',
-    interval: 5000,
-    backoff: 'exponential'
+const nodeDefinitions = {
+  'check:condition': {
+    executor: async (data) => {
+      const isValid = data.value > 100
+      return {
+        data: { result: isValid },
+        nextHandle: isValid ? 'success' : 'failure'
+      }
+    }
+  }
+}
+
+const workflow = {
+  nodes: [
+    { id: 'check', type: 'check:condition', data: { value: 150 } },
+    { id: 'success_node', type: 'process', data: {} },
+    { id: 'failure_node', type: 'log_error', data: {} }
+  ],
+  edges: [
+    { source: 'check', target: 'success_node', sourceHandle: 'success' },
+    { source: 'check', target: 'failure_node', sourceHandle: 'failure' }
+  ]
+}
+```
+
+### Smart Retry Policies
+
+Define retry behavior per node with custom `ErrorHandler`:
+
+```typescript
+const nodeDefinitions = {
+  'api:call': {
+    retryPolicy: {
+      maxAttempts: 3,
+      interval: 1000,
+      backoff: 'exponential'  // or 'fixed'
+    },
+    executor: async (data) => {
+      const response = await fetch(data.url)
+      if (!response.ok) throw new Error('API error')
+      return { data: await response.json() }
+    }
+  }
+}
+```
+
+## 🔧 Advanced Features
+
+### Custom Data Transformation
+
+Create your own logic to process node data:
+
+```typescript
+import { TransformEngine, Context } from '@refluxo/core'
+
+class SecretsInjectionEngine implements TransformEngine {
+  constructor(private secrets: Record<string, string>) {}
+
+  async transform(input: unknown, context: Context): Promise<unknown> {
+    const inputStr = JSON.stringify(input)
+    const resolved = inputStr.replace(
+      /\{\{secret\.(\w+)\}\}/g,
+      (_, key) => this.secrets[key] || ''
+    )
+    return JSON.parse(resolved)
+  }
+}
+
+const engine = new WorkflowEngine({
+  workflow,
+  nodeDefinitions,
+  transformEngines: [
+    new JexlTransformEngine(),
+    new SecretsInjectionEngine({ API_KEY: 'secret-123' })
+  ]
+})
+```
+
+### Observability with Plugins
+
+Track execution metrics and errors:
+
+```typescript
+const metricsPlugin = {
+  name: 'metrics',
+  
+  async onBeforeNodeExecution(ctx) {
+    ctx.startTime = Date.now()
   },
-  // ...
-};
+  
+  async onAfterNodeExecution(ctx) {
+    const duration = Date.now() - ctx.startTime
+    await metrics.record('node.execution.duration', duration, {
+      nodeId: ctx.node.id,
+      nodeType: ctx.definition.type
+    })
+  },
+  
+  async onNodeError(ctx) {
+    await metrics.increment('node.errors', {
+      nodeId: ctx.node.id,
+      errorType: ctx.error.constructor.name
+    })
+  }
+}
 ```
 
 ## 🚀 Why Refluxo?
 
-- Stateless by Design: No need for a persistent event loop. The state is in your database, not in memory.
-- Highly Extensible: Replace the Expression Engine or the Validation logic easily.
-- Traceable: Metadata tracks totalExecutionTime, attempts, and every node output, making debugging a breeze.
-- Developer Friendly: Built with TypeScript for full type safety.
+- **Truly Stateless**: The entire workflow state fits in a JSON object. Store it anywhere - database, cache, or even client-side.
+- **Runs Everywhere**: Serverless functions, edge workers, Node.js servers, or even in the browser.
+- **Easy to Extend**: Add validators, transform engines, or custom logic without modifying the core.
+- **Built for Real-World**: Pause workflows for days, retry failed steps, branch conditionally, and track everything.
+- **Developer Friendly**: Full TypeScript support with IntelliSense and type safety.
+- **Lightweight**: Minimal core (~10KB), use only what you need.
 
 ## 📝 Use Cases
 
-- Automation Platforms: Build a custom Zapier/n8n for your niche.
-- Approval Workflows: Systems that require human intervention (e.g., Expense approval).
-- Scheduled Tasks: Flows that wait for a specific date or time to continue.
-- Complex Orchestration: Microservices coordination with automatic retries.
+- **Automation Platforms**: Build a custom Zapier/n8n for your niche.
+- **Approval Workflows**: Systems that require human intervention (e.g., Expense approval).
+- **Scheduled Tasks**: Flows that wait for a specific date or time to continue.
+- **Complex Orchestration**: Microservices coordination with automatic retries.

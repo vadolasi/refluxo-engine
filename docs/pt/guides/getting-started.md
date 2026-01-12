@@ -12,19 +12,19 @@ O Refluxo foi projetado para ser modular. A engine principal é leve e não opin
 Para um início rápido e uma experiência de desenvolvimento robusta, recomendamos instalar a engine principal juntamente com os middlewares padrão para expressões JEXL e validação de schema.
 
 ```bash
-npm install @refluxo/core @refluxo/jexl-middleware @refluxo/standard-schema-middleware
+npm install @refluxo/core @refluxo/jexl @refluxo/core
 # ou
-yarn add @refluxo/core @refluxo/jexl-middleware @refluxo/standard-schema-middleware
+yarn add @refluxo/core @refluxo/jexl @refluxo/core
 # ou
-pnpm add @refluxo/core @refluxo/jexl-middleware @refluxo/standard-schema-middleware
+pnpm add @refluxo/core @refluxo/jexl @refluxo/core
 # ou
-bun add @refluxo/core @refluxo/jexl-middleware @refluxo/standard-schema-middleware
+bun add @refluxo/core @refluxo/jexl @refluxo/core
 ```
 
 ### Por que Middleware?
 
-- **@refluxo/jexl-middleware**: Habilita o uso de expressões JEXL (ex: `{{ input.name }}`) nos dados dos seus nós. Sem isso (ou um middleware similar), a engine trata todos os dados como valores estáticos.
-- **@refluxo/standard-schema-middleware**: (Opcional, mas recomendado) Valida automaticamente os dados de entrada e saída contra schemas definidos nos metadados do nó, usando bibliotecas como Valibot ou Zod.
+- **@refluxo/jexl**: Habilita o uso de expressões JEXL (ex: `{{ input.name }}`) nos dados dos seus nós. Sem isso (ou um middleware similar), a engine trata todos os dados como valores estáticos.
+- **@refluxo/core**: (Opcional, mas recomendado) Valida automaticamente os dados de entrada e saída contra schemas definidos nos metadados do nó, usando bibliotecas como Valibot ou Zod.
 
 ## 2. Definindo os Nós
 
@@ -103,7 +103,7 @@ Finalmente, vamos instanciar o `WorkflowEngine` e executar nosso workflow.
 
 ```typescript
 import { WorkflowEngine } from "@refluxo/core";
-import { createJexlMiddleware } from "@refluxo/jexl-middleware";
+import { createJexlMiddleware } from "@refluxo/jexl";
 
 async function main() {
   const engine = new WorkflowEngine({

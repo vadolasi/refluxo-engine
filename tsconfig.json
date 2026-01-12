@@ -9,8 +9,12 @@
 		"skipLibCheck": true,
 		"outDir": "dist",
 		"paths": {
-			"@refluxo/core": ["./packages/core/src/index.ts"]
+			"@refluxo/core": ["./packages/core/src/index.ts"],
+			"@refluxo/jexl-transformer": ["./packages/jexl-transformer/src/index.ts"],
+			"@refluxo/n8n-expressions-transformer": [
+				"./packages/n8n-expressions-transformer/src/index.ts"
+			]
 		}
 	},
-	"include": ["src"]
+	"include": ["packages/*/src"]
 }

@@ -1,6 +1,6 @@
 # Interface: NodeResult
 
-Defined in: index.ts:100
+Defined in: [index.ts:107](https://github.com/vadolasi/refluxo-engine/blob/e49f985bb3d0b5f8b6d444b2272a6a526eba442f/packages/core/src/index.ts#L107)
 
 ## Properties
 
@@ -8,7 +8,7 @@ Defined in: index.ts:100
 
 > **attempt**: `number`
 
-Defined in: index.ts:104
+Defined in: [index.ts:111](https://github.com/vadolasi/refluxo-engine/blob/e49f985bb3d0b5f8b6d444b2272a6a526eba442f/packages/core/src/index.ts#L111)
 
 ***
 
@@ -16,7 +16,7 @@ Defined in: index.ts:104
 
 > `optional` **error**: `string`
 
-Defined in: index.ts:103
+Defined in: [index.ts:110](https://github.com/vadolasi/refluxo-engine/blob/e49f985bb3d0b5f8b6d444b2272a6a526eba442f/packages/core/src/index.ts#L110)
 
 ***
 
@@ -24,7 +24,7 @@ Defined in: index.ts:103
 
 > **output**: `unknown`
 
-Defined in: index.ts:101
+Defined in: [index.ts:108](https://github.com/vadolasi/refluxo-engine/blob/e49f985bb3d0b5f8b6d444b2272a6a526eba442f/packages/core/src/index.ts#L108)
 
 ***
 
@@ -32,4 +32,4 @@ Defined in: index.ts:101
 
 > **timestamp**: `number`
 
-Defined in: index.ts:102
+Defined in: [index.ts:109](https://github.com/vadolasi/refluxo-engine/blob/e49f985bb3d0b5f8b6d444b2272a6a526eba442f/packages/core/src/index.ts#L109)

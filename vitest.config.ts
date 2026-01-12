@@ -2,7 +2,7 @@ import { defineConfig } from "vitest/config"
 
 export default defineConfig({
   test: {
-    projects: ["packages/*"],
+    include: ["packages/*/tests/**/*.test.ts"],
     coverage: {
       exclude: [
         "**/node_modules/**",
