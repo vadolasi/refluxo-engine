@@ -1,6 +1,6 @@
 # Interface: Node\<TType\>
 
-Defined in: [index.ts:76](https://github.com/vadolasi/refluxo-engine/blob/e49f985bb3d0b5f8b6d444b2272a6a526eba442f/packages/core/src/index.ts#L76)
+Defined in: [index.ts:76](https://github.com/vadolasi/refluxo-engine/blob/9ea77458e0d8c8100efa08e8aa47ba7c77e293c2/packages/core/src/index.ts#L76)
 
 ## Type Parameters
 
@@ -16,7 +16,7 @@ The type identifier of the node.
 
 > **data**: `unknown`
 
-Defined in: [index.ts:82](https://github.com/vadolasi/refluxo-engine/blob/e49f985bb3d0b5f8b6d444b2272a6a526eba442f/packages/core/src/index.ts#L82)
+Defined in: [index.ts:82](https://github.com/vadolasi/refluxo-engine/blob/9ea77458e0d8c8100efa08e8aa47ba7c77e293c2/packages/core/src/index.ts#L82)
 
 #### Description
 
@@ -28,7 +28,7 @@ Static configuration data for the node. Can contain expressions.
 
 > **id**: `string`
 
-Defined in: [index.ts:78](https://github.com/vadolasi/refluxo-engine/blob/e49f985bb3d0b5f8b6d444b2272a6a526eba442f/packages/core/src/index.ts#L78)
+Defined in: [index.ts:78](https://github.com/vadolasi/refluxo-engine/blob/9ea77458e0d8c8100efa08e8aa47ba7c77e293c2/packages/core/src/index.ts#L78)
 
 #### Description
 
@@ -40,7 +40,7 @@ Unique identifier for the node within the workflow.
 
 > `optional` **metadata**: `unknown`
 
-Defined in: [index.ts:84](https://github.com/vadolasi/refluxo-engine/blob/e49f985bb3d0b5f8b6d444b2272a6a526eba442f/packages/core/src/index.ts#L84)
+Defined in: [index.ts:84](https://github.com/vadolasi/refluxo-engine/blob/9ea77458e0d8c8100efa08e8aa47ba7c77e293c2/packages/core/src/index.ts#L84)
 
 #### Description
 
@@ -52,7 +52,7 @@ Metadata for the node, useful for transformers or UI.
 
 > **type**: `TType`
 
-Defined in: [index.ts:80](https://github.com/vadolasi/refluxo-engine/blob/e49f985bb3d0b5f8b6d444b2272a6a526eba442f/packages/core/src/index.ts#L80)
+Defined in: [index.ts:80](https://github.com/vadolasi/refluxo-engine/blob/9ea77458e0d8c8100efa08e8aa47ba7c77e293c2/packages/core/src/index.ts#L80)
 
 #### Description
 

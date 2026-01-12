@@ -1,6 +1,6 @@
 # Interface: PluginContext
 
-Defined in: [index.ts:210](https://github.com/vadolasi/refluxo-engine/blob/e49f985bb3d0b5f8b6d444b2272a6a526eba442f/packages/core/src/index.ts#L210)
+Defined in: [index.ts:210](https://github.com/vadolasi/refluxo-engine/blob/9ea77458e0d8c8100efa08e8aa47ba7c77e293c2/packages/core/src/index.ts#L210)
 
 ## Extended by
 
@@ -12,7 +12,7 @@ Defined in: [index.ts:210](https://github.com/vadolasi/refluxo-engine/blob/e49f9
 
 > **definition**: [`NodeDefinition`](NodeDefinition.md)
 
-Defined in: [index.ts:214](https://github.com/vadolasi/refluxo-engine/blob/e49f985bb3d0b5f8b6d444b2272a6a526eba442f/packages/core/src/index.ts#L214)
+Defined in: [index.ts:214](https://github.com/vadolasi/refluxo-engine/blob/9ea77458e0d8c8100efa08e8aa47ba7c77e293c2/packages/core/src/index.ts#L214)
 
 The node definition.
 
@@ -22,7 +22,7 @@ The node definition.
 
 > `optional` **externalPayload**: `unknown`
 
-Defined in: [index.ts:220](https://github.com/vadolasi/refluxo-engine/blob/e49f985bb3d0b5f8b6d444b2272a6a526eba442f/packages/core/src/index.ts#L220)
+Defined in: [index.ts:220](https://github.com/vadolasi/refluxo-engine/blob/9ea77458e0d8c8100efa08e8aa47ba7c77e293c2/packages/core/src/index.ts#L220)
 
 External payload passed to execution.
 
@@ -32,7 +32,7 @@ External payload passed to execution.
 
 > `optional` **globals**: `unknown`
 
-Defined in: [index.ts:218](https://github.com/vadolasi/refluxo-engine/blob/e49f985bb3d0b5f8b6d444b2272a6a526eba442f/packages/core/src/index.ts#L218)
+Defined in: [index.ts:218](https://github.com/vadolasi/refluxo-engine/blob/9ea77458e0d8c8100efa08e8aa47ba7c77e293c2/packages/core/src/index.ts#L218)
 
 Global variables.
 
@@ -42,7 +42,7 @@ Global variables.
 
 > **input**: `unknown`
 
-Defined in: [index.ts:222](https://github.com/vadolasi/refluxo-engine/blob/e49f985bb3d0b5f8b6d444b2272a6a526eba442f/packages/core/src/index.ts#L222)
+Defined in: [index.ts:222](https://github.com/vadolasi/refluxo-engine/blob/9ea77458e0d8c8100efa08e8aa47ba7c77e293c2/packages/core/src/index.ts#L222)
 
 The input data to the node.
 
@@ -52,7 +52,7 @@ The input data to the node.
 
 > **node**: [`Node`](Node.md)
 
-Defined in: [index.ts:212](https://github.com/vadolasi/refluxo-engine/blob/e49f985bb3d0b5f8b6d444b2272a6a526eba442f/packages/core/src/index.ts#L212)
+Defined in: [index.ts:212](https://github.com/vadolasi/refluxo-engine/blob/9ea77458e0d8c8100efa08e8aa47ba7c77e293c2/packages/core/src/index.ts#L212)
 
 The node being executed.
 
@@ -62,7 +62,7 @@ The node being executed.
 
 > `optional` **output**: `unknown`
 
-Defined in: [index.ts:224](https://github.com/vadolasi/refluxo-engine/blob/e49f985bb3d0b5f8b6d444b2272a6a526eba442f/packages/core/src/index.ts#L224)
+Defined in: [index.ts:224](https://github.com/vadolasi/refluxo-engine/blob/9ea77458e0d8c8100efa08e8aa47ba7c77e293c2/packages/core/src/index.ts#L224)
 
 The output data from the node (available in onAfterNodeExecution).
 
@@ -72,6 +72,6 @@ The output data from the node (available in onAfterNodeExecution).
 
 > **snapshot**: [`Snapshot`](Snapshot.md)
 
-Defined in: [index.ts:216](https://github.com/vadolasi/refluxo-engine/blob/e49f985bb3d0b5f8b6d444b2272a6a526eba442f/packages/core/src/index.ts#L216)
+Defined in: [index.ts:216](https://github.com/vadolasi/refluxo-engine/blob/9ea77458e0d8c8100efa08e8aa47ba7c77e293c2/packages/core/src/index.ts#L216)
 
 The current snapshot.

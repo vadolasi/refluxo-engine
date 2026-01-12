@@ -1,6 +1,6 @@
 # Interface: NodeDefinition\<TInput, TOutput, TMetadata\>
 
-Defined in: [index.ts:34](https://github.com/vadolasi/refluxo-engine/blob/e49f985bb3d0b5f8b6d444b2272a6a526eba442f/packages/core/src/index.ts#L34)
+Defined in: [index.ts:34](https://github.com/vadolasi/refluxo-engine/blob/9ea77458e0d8c8100efa08e8aa47ba7c77e293c2/packages/core/src/index.ts#L34)
 
 ## Type Parameters
 
@@ -28,7 +28,7 @@ The type of the metadata object.
 
 > **executor**: (`data`, `context`, `externalPayload?`, `globals?`) => `Promise`\<\{ `__pause?`: `true`; `data`: `TOutput`; `nextHandle?`: `string`; \}\>
 
-Defined in: [index.ts:52](https://github.com/vadolasi/refluxo-engine/blob/e49f985bb3d0b5f8b6d444b2272a6a526eba442f/packages/core/src/index.ts#L52)
+Defined in: [index.ts:52](https://github.com/vadolasi/refluxo-engine/blob/9ea77458e0d8c8100efa08e8aa47ba7c77e293c2/packages/core/src/index.ts#L52)
 
 #### Parameters
 
@@ -68,7 +68,7 @@ A promise resolving to the node's result, including data and optional control fl
 
 > `optional` **metadata**: `TMetadata`
 
-Defined in: [index.ts:40](https://github.com/vadolasi/refluxo-engine/blob/e49f985bb3d0b5f8b6d444b2272a6a526eba442f/packages/core/src/index.ts#L40)
+Defined in: [index.ts:40](https://github.com/vadolasi/refluxo-engine/blob/9ea77458e0d8c8100efa08e8aa47ba7c77e293c2/packages/core/src/index.ts#L40)
 
 #### Description
 
@@ -80,7 +80,7 @@ Optional metadata for the node definition (e.g., validation schemas).
 
 > `optional` **retryPolicy**: [`RetryPolicy`](RetryPolicy.md)
 
-Defined in: [index.ts:42](https://github.com/vadolasi/refluxo-engine/blob/e49f985bb3d0b5f8b6d444b2272a6a526eba442f/packages/core/src/index.ts#L42)
+Defined in: [index.ts:42](https://github.com/vadolasi/refluxo-engine/blob/9ea77458e0d8c8100efa08e8aa47ba7c77e293c2/packages/core/src/index.ts#L42)
 
 #### Description
 

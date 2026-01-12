@@ -65,7 +65,7 @@ const fetchApiNode: NodeDefinition = {
 
 ### 1. Metadados (Opcional)
 
-A propriedade `metadata` é onde você pode armazenar informações adicionais sobre o nó, como schemas de validação. Middlewares (como `@refluxo/core`) podem usar `metadata.input` para validar os `data` resolvidos do nó *antes* de executá-lo, e `metadata.output` para validar o valor de retorno.
+A propriedade `metadata` é onde você pode armazenar informações adicionais sobre o nó, como schemas de validação. A engine Refluxo e seus componentes (como `StandardSchemaValidator`) podem usar `metadata.input` para validar os `data` resolvidos do nó *antes* de executá-lo, e `metadata.output` para validar o valor de retorno.
 
 ### 2. Política de Retentativa (Retry Policy)
 

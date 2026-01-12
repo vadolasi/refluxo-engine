@@ -253,6 +253,8 @@ export default withMermaid(
 
     sitemap: {
       hostname: "https://refluxo-engine.vitor036daniel.workers.dev"
-    }
+    },
+
+    cleanUrls: true
   })
 )

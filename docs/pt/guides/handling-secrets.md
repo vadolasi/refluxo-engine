@@ -35,10 +35,10 @@ Para acessar esses segredos dentro do seu workflow, você pode usar um **Middlew
 Este middleware procura por strings começando com `SECRET:` e as resolve usando o objeto `globals`.
 
 ```typescript
-import { Middleware, WorkflowEngine } from "@refluxo/core";
-import { createJexlMiddleware } from "@refluxo/jexl";
+import { WorkflowEngine } from "@refluxo/core";
+import { createJexlTransformEngine } from "@refluxo/jexl-transformer";
 
-const secretResolver: Middleware = async (context, next) => {
+const secretResolver = async (context, next) => {
   const resolve = (data: any): any => {
     if (typeof data === 'string' && data.startsWith('SECRET:')) {
       const secretName = data.replace('SECRET:', '');
@@ -57,7 +57,7 @@ const secretResolver: Middleware = async (context, next) => {
 const engine = new WorkflowEngine({
   workflow,
   nodeDefinitions,
-  middlewares: [secretResolver, createJexlMiddleware()]
+  transformEngines: [secretResolver, createJexlTransformEngine()]
 });
 ```
 

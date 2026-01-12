@@ -1,5 +1,12 @@
 # @refluxo/jexl
 
+## 3.0.0
+
+### Patch Changes
+
+- Updated dependencies
+  - @refluxo/core@0.3.0
+
 ## 2.0.0
 
 ### Minor Changes

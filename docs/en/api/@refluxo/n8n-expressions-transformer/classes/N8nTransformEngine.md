@@ -1,6 +1,6 @@
 # Class: N8nTransformEngine
 
-Defined in: index.ts:9
+Defined in: [index.ts:9](https://github.com/vadolasi/refluxo-engine/blob/9ea77458e0d8c8100efa08e8aa47ba7c77e293c2/packages/n8n-expressions-transformer/src/index.ts#L9)
 
 ## Implements
 
@@ -12,7 +12,7 @@ Defined in: index.ts:9
 
 > **new N8nTransformEngine**(`errorHandler?`): `N8nTransformEngine`
 
-Defined in: index.ts:12
+Defined in: [index.ts:12](https://github.com/vadolasi/refluxo-engine/blob/9ea77458e0d8c8100efa08e8aa47ba7c77e293c2/packages/n8n-expressions-transformer/src/index.ts#L12)
 
 #### Parameters
 
@@ -30,7 +30,7 @@ Defined in: index.ts:12
 
 > **transform**(`input`, `context`, `globals?`): `Promise`\<`unknown`\>
 
-Defined in: index.ts:29
+Defined in: [index.ts:29](https://github.com/vadolasi/refluxo-engine/blob/9ea77458e0d8c8100efa08e8aa47ba7c77e293c2/packages/n8n-expressions-transformer/src/index.ts#L29)
 
 #### Parameters
 

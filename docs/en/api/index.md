@@ -78,6 +78,8 @@ pnpm add @refluxo/core valibot
 import { WorkflowEngine } from '@refluxo/core'
 import { JexlTransformEngine } from '@refluxo/jexl'
 import { StandardSchemaValidator } from '@refluxo/core'
+// Or import from the subpath:
+// import { StandardSchemaValidator } from '@refluxo/core/standard-schema-validator'
 import { object, string, number } from 'valibot'
 
 // 1. Define node types
@@ -164,6 +166,8 @@ Add validation to ensure data integrity:
 
 ```typescript
 const validator = new StandardSchemaValidator()
+// Alternatively: new import from subpath works the same
+// import { StandardSchemaValidator } from '@refluxo/core/standard-schema-validator'
 
 const engine = new WorkflowEngine({
   workflow,

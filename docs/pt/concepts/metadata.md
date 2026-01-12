@@ -55,7 +55,7 @@ metadata: {
 
 ## Caso de Uso 3: Configuração de Transformadores
 
-Como detalhado no guia de [Transformadores](./transformers.md), os metadados são o lugar perfeito para armazenar configurações para seus transformadores customizados.
+Os metadados são o lugar perfeito para armazenar configurações para seus transformadores customizados.
 
 Como o `metadata` é passado como o terceiro argumento para `transformInput` e `transformOutput`, você pode usá-lo para controlar como os dados são processados sem poluir a entrada `data` real do nó.
 

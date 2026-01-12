@@ -60,27 +60,27 @@ await engine.execute({
 
 Este modelo garante que cada passo seja uma transação atômica, tornando todo o processo altamente resiliente e observável.
 
-## Middleware
+## Transform Engines
 
-O motor utiliza um pipeline de **Middlewares** para processar dados antes e depois da execução de um nó. Isso permite comportamentos dinâmicos, como substituição de variáveis, criptografia/descriptografia ou manipulação de dados personalizada.
+O motor utiliza um pipeline de **Transform Engines** para processar dados antes e depois da execução de um nó. Isso permite comportamentos dinâmicos, como resolução de expressões, injeção de segredos, criptografia/descriptografia ou manipulação de dados personalizada.
 
-O `WorkflowEngine` aceita um array de middlewares em seu construtor:
+O `WorkflowEngine` aceita um array de `transformEngines` em seu construtor:
 
 ```typescript
-import { createJexlMiddleware } from "@refluxo/jexl";
+import { createJexlTransformEngine } from "@refluxo/jexl-transformer";
 
 const engine = new WorkflowEngine({
   workflow,
   nodeDefinitions,
-  middlewares: [createJexlMiddleware(), meuMiddlewareCustomizado]
+  transformEngines: [createJexlTransformEngine(), seuTransformEngineCustomizado]
 });
 ```
 
-### O Padrão Middleware
+### O Padrão Transform Engine
 
-O Refluxo usa um padrão de middleware estilo Koa. Um middleware é uma função que recebe um `context` e uma função `next`.
+O Refluxo usa um padrão de middleware estilo Koa. Um `transformEngine` é uma função que recebe um `context` e uma função `next`.
 
 1.  **Antes de `await next()`**: Executa antes que o `executor` de um nó seja chamado. Usado para resolver expressões (como Jexl) ou descriptografar dados recebidos.
 2.  **Depois de `await next()`**: Executa depois que o `executor` de um nó termina. Usado para filtrar resultados, criptografar dados ou otimizar o armazenamento.
 
-Por padrão, o motor não inclui nenhum middleware. Você geralmente vai querer adicionar `createJexlMiddleware` para lidar com a resolução de expressões.
+Por padrão, o motor não inclui nenhum `transformEngine`. Você geralmente vai querer adicionar `createJexlTransformEngine` para lidar com a resolução de expressões.

@@ -94,7 +94,12 @@ const nodeDefinitions = Object.fromEntries(
 );
 
 // 3. O objeto nodeDefinitions resultante agora pode ser passado para a engine
-// const engine = new WorkflowEngine({ workflow, nodeDefinitions });
+const engine = new WorkflowEngine({ 
+  workflow, 
+  nodeDefinitions,
+  // Opcionalmente, use a engine de validação built-in
+  validator: new (require('@refluxo/core').StandardSchemaValidator)()
+});
 ```
 
 Este padrão de adaptador fornece uma ponte poderosa entre definições estáticas de JSON Schema, armazenadas externamente, e a abordagem dinâmica e "code-first" do `StandardSchema`, dando a você a flexibilidade para construir plataformas dinâmicas e configuráveis pelo usuário.

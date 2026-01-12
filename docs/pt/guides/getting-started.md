@@ -1,75 +1,47 @@
 ---
-description: Este guia irá orientá-lo na configuração e execução do seu primeiro workflow com a engine Refluxo. Criaremos um workflow simples que recebe um nome como entrada, cumprimenta a pessoa e retorna a saudação.
+description: Comece com o Refluxo criando seu primeiro workflow
 ---
+
 # Primeiros Passos
 
-Este guia irá orientá-lo na configuração e execução do seu primeiro workflow com a engine Refluxo. Criaremos um workflow simples que recebe um nome como entrada, cumprimenta a pessoa e retorna a saudação.
+Aprenda como configurar e executar seu primeiro workflow com o motor Refluxo.
 
-## 1. Instalação
+## Instalação
 
-O Refluxo foi projetado para ser modular. A engine principal é leve e não opinativa, o que significa que ela não força nenhuma biblioteca de validação ou linguagem de expressão específica.
-
-Para um início rápido e uma experiência de desenvolvimento robusta, recomendamos instalar a engine principal juntamente com os middlewares padrão para expressões JEXL e validação de schema.
+Instale o pacote core e o transformador JEXL (e opcionalmente uma lib de schema como Valibot):
 
 ```bash
-npm install @refluxo/core @refluxo/jexl @refluxo/core
-# ou
-yarn add @refluxo/core @refluxo/jexl @refluxo/core
-# ou
-pnpm add @refluxo/core @refluxo/jexl @refluxo/core
-# ou
-bun add @refluxo/core @refluxo/jexl @refluxo/core
+npm install @refluxo/core @refluxo/jexl-transformer valibot
 ```
 
-### Por que Middleware?
+## Criando Seu Primeiro Workflow
 
-- **@refluxo/jexl**: Habilita o uso de expressões JEXL (ex: `{{ input.name }}`) nos dados dos seus nós. Sem isso (ou um middleware similar), a engine trata todos os dados como valores estáticos.
-- **@refluxo/core**: (Opcional, mas recomendado) Valida automaticamente os dados de entrada e saída contra schemas definidos nos metadados do nó, usando bibliotecas como Valibot ou Zod.
+Vamos construir um workflow simples que saúda um usuário.
 
-## 2. Definindo os Nós
-
-Precisamos de dois tipos de nós: um para iniciar o workflow e processar a entrada, e outro para gerar a saudação. Vamos definir seus comportamentos usando Valibot para nossos schemas.
+### Passo 1: Defina Seus Nós
 
 ```typescript
 import { NodesDefinition } from "@refluxo/core";
 import { object, string } from "valibot";
 
-const nodeDefinitions: NodesDefinition = {
-  // Um nó simples para receber e encaminhar dados
-  "process-input": {
-    metadata: {
-      input: object({ name: string() }),
-      output: object({ name: string() }),
-    },
-    executor: async (data) => {
-      // Os dados resolvidos da propriedade `data` do nó são passados aqui.
-      // Veremos como fornecê-los na definição do workflow.
-      return { data };
-    },
-  },
-
-  // Um nó que constrói uma mensagem de saudação
-  "create-greeting": {
+const nodes: NodesDefinition = {
+  greet: {
     metadata: {
       input: object({ name: string() }),
       output: object({ greeting: string() }),
     },
     executor: async (data) => {
-      // Aqui, `data.name` será fornecido dinamicamente pelo nó anterior.
-      const name = data.name;
       return {
         data: {
-          greeting: `Olá, ${name}! Bem-vindo ao Refluxo.`,
-        },
+          greeting: `Olá, ${data.name}!`
+        }
       };
-    },
-  },
+    }
+  }
 };
 ```
 
-## 3. Definindo o Workflow
-
-Agora, vamos conectar os nós em uma `WorkflowDefinition`. Configuraremos o nó `process-input` para obter seu nome de uma expressão, e o nó `create-greeting` para obter seus dados da saída do primeiro nó.
+### Passo 2: Crie um Workflow
 
 ```typescript
 import { WorkflowDefinition } from "@refluxo/core";
@@ -77,63 +49,40 @@ import { WorkflowDefinition } from "@refluxo/core";
 const workflow: WorkflowDefinition = {
   nodes: [
     {
-      id: "inputNode",
-      type: "process-input",
-      // Obteremos o nome do payload externo quando iniciarmos a execução.
-      data: { name: "{{ input.name }}" },
-    },
-    {
-      id: "greetingNode",
-      type: "create-greeting",
-      // Usamos uma expressão para obter a saída do nó anterior.
-      data: { name: "{{ nodes.inputNode.last.data.name }}" },
-    },
+      id: "greetNode",
+      type: "greet",
+      data: { name: "{{ input.name }}" }
+    }
   ],
-  edges: [
-    // Uma conexão simples e incondicional entre os dois nós.
-    { id: "e1", source: "inputNode", target: "greetingNode" },
-  ],
+  edges: []
 };
 ```
-*Nota: Estamos usando expressões JEXL. `input` refere-se ao payload externo, e `nodes` permite acesso aos dados de outros nós.*
 
-## 4. Executando a Engine
-
-Finalmente, vamos instanciar o `WorkflowEngine` e executar nosso workflow.
+### Passo 3: Execute
 
 ```typescript
 import { WorkflowEngine } from "@refluxo/core";
-import { createJexlMiddleware } from "@refluxo/jexl";
+import { createJexlTransformEngine } from "@refluxo/jexl-transformer";
+import { StandardSchemaValidator } from "@refluxo/core";
+// Ou importe pelo subcaminho dedicado:
+// import { StandardSchemaValidator } from "@refluxo/core/standard-schema-validator";
 
-async function main() {
-  const engine = new WorkflowEngine({
-    workflow,
-    nodeDefinitions,
-    middlewares: [createJexlMiddleware()],
-  });
+const engine = new WorkflowEngine({
+  workflow,
+  nodeDefinitions: nodes,
+  transformEngines: [createJexlTransformEngine()],
+  // Validação de schema (opcional): valida inputs/outputs se metadata estiver definida
+  validator: new StandardSchemaValidator()
+});
 
-  console.log("Iniciando workflow...");
+const result = await engine.execute({
+  initialNodeId: "greetNode",
+  externalPayload: { name: "Mundo" }
+});
 
-  const finalSnapshot = await engine.execute({
-    // Precisamos informar à engine por onde começar.
-    initialNodeId: "inputNode",
-    // Este payload estará disponível para o primeiro nó.
-    // Nossa expressão `{{ trigger.last.data.name }}` será resolvida para "Mundo".
-    externalPayload: { name: "Mundo" },
-  });
-
-  if (finalSnapshot.status === "completed") {
-    console.log("Workflow concluído com sucesso!");
-    // Você pode inspecionar o contexto para ver a saída final.
-    const finalOutput = finalSnapshot.context.greetingNode[0].output;
-    console.log("Saída Final:", finalOutput);
-    // Saída Esperada: { greeting: 'Olá, Mundo! Bem-vindo ao Refluxo.' }
-  } else {
-    console.error("Workflow falhou com o status:", finalSnapshot.status);
-  }
-}
-
-main();
+console.log(result);
 ```
 
-E é isso! Você definiu e executou um workflow com sucesso. A partir daqui, você pode explorar tópicos mais avançados como criar [nós customizados](./custom-nodes.md), usar [condicionais](./conditionals.md) e [tratar erros](./error-handling.md).
+## Próximos Passos
+
+Explore mais recursos nos outros guias.

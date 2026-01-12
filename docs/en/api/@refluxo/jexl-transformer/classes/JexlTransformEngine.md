@@ -1,6 +1,6 @@
 # Class: JexlTransformEngine
 
-Defined in: index.ts:26
+Defined in: [index.ts:26](https://github.com/vadolasi/refluxo-engine/blob/9ea77458e0d8c8100efa08e8aa47ba7c77e293c2/packages/jexl-transformer/src/index.ts#L26)
 
 ## Implements
 
@@ -12,7 +12,7 @@ Defined in: index.ts:26
 
 > **new JexlTransformEngine**(`customInstance?`): `JexlTransformEngine`
 
-Defined in: index.ts:29
+Defined in: [index.ts:29](https://github.com/vadolasi/refluxo-engine/blob/9ea77458e0d8c8100efa08e8aa47ba7c77e293c2/packages/jexl-transformer/src/index.ts#L29)
 
 #### Parameters
 
@@ -30,7 +30,7 @@ Defined in: index.ts:29
 
 > **transform**(`input`, `context`, `globals?`): `Promise`\<`unknown`\>
 
-Defined in: index.ts:40
+Defined in: [index.ts:40](https://github.com/vadolasi/refluxo-engine/blob/9ea77458e0d8c8100efa08e8aa47ba7c77e293c2/packages/jexl-transformer/src/index.ts#L40)
 
 #### Parameters
 

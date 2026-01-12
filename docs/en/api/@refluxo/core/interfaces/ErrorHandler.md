@@ -1,6 +1,6 @@
 # Interface: ErrorHandler
 
-Defined in: [index.ts:177](https://github.com/vadolasi/refluxo-engine/blob/e49f985bb3d0b5f8b6d444b2272a6a526eba442f/packages/core/src/index.ts#L177)
+Defined in: [index.ts:177](https://github.com/vadolasi/refluxo-engine/blob/9ea77458e0d8c8100efa08e8aa47ba7c77e293c2/packages/core/src/index.ts#L177)
 
 ## Methods
 
@@ -8,7 +8,7 @@ Defined in: [index.ts:177](https://github.com/vadolasi/refluxo-engine/blob/e49f9
 
 > **getRetryDelay**(`attempt`, `node`, `definition`): `Promise`\<`number`\>
 
-Defined in: [index.ts:200](https://github.com/vadolasi/refluxo-engine/blob/e49f985bb3d0b5f8b6d444b2272a6a526eba442f/packages/core/src/index.ts#L200)
+Defined in: [index.ts:200](https://github.com/vadolasi/refluxo-engine/blob/9ea77458e0d8c8100efa08e8aa47ba7c77e293c2/packages/core/src/index.ts#L200)
 
 #### Parameters
 
@@ -42,7 +42,7 @@ The delay in milliseconds.
 
 > **shouldRetry**(`error`, `attempt`, `node`, `definition`): `Promise`\<`boolean`\>
 
-Defined in: [index.ts:186](https://github.com/vadolasi/refluxo-engine/blob/e49f985bb3d0b5f8b6d444b2272a6a526eba442f/packages/core/src/index.ts#L186)
+Defined in: [index.ts:186](https://github.com/vadolasi/refluxo-engine/blob/9ea77458e0d8c8100efa08e8aa47ba7c77e293c2/packages/core/src/index.ts#L186)
 
 #### Parameters
 

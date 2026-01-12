@@ -55,7 +55,7 @@ metadata: {
 
 ## Use Case 3: Transformer Configuration
 
-As detailed in the [Transformers](./transformers.md) guide, metadata is the perfect place to store configuration for your custom transformers.
+Metadata is the perfect place to store configuration for your custom transformers.
 
 Since `metadata` is passed as the third argument to `transformInput` and `transformOutput`, you can use it to control how data is processed without polluting the node's actual `data` input.
 

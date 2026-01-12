@@ -43,7 +43,15 @@ import { workflow, nodeDefinitions } from "./workflow"; // Suas definições
 const app = express();
 app.use(express.json());
 
-const engine = new WorkflowEngine({ workflow, nodeDefinitions });
+import { createJexlTransformEngine } from "@refluxo/jexl-transformer";
+import { StandardSchemaValidator } from "@refluxo/core";
+
+const engine = new WorkflowEngine({ 
+  workflow, 
+  nodeDefinitions,
+  transformEngines: [createJexlTransformEngine()],
+  validator: new StandardSchemaValidator()
+});
 
 app.post("/webhooks/github", async (req, res) => {
   console.log("Webhook do GitHub recebido. Iniciando workflow...");

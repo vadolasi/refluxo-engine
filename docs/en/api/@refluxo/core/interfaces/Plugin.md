@@ -1,6 +1,6 @@
 # Interface: Plugin
 
-Defined in: [index.ts:240](https://github.com/vadolasi/refluxo-engine/blob/e49f985bb3d0b5f8b6d444b2272a6a526eba442f/packages/core/src/index.ts#L240)
+Defined in: [index.ts:240](https://github.com/vadolasi/refluxo-engine/blob/9ea77458e0d8c8100efa08e8aa47ba7c77e293c2/packages/core/src/index.ts#L240)
 
 ## Properties
 
@@ -8,7 +8,7 @@ Defined in: [index.ts:240](https://github.com/vadolasi/refluxo-engine/blob/e49f9
 
 > **name**: `string`
 
-Defined in: [index.ts:242](https://github.com/vadolasi/refluxo-engine/blob/e49f985bb3d0b5f8b6d444b2272a6a526eba442f/packages/core/src/index.ts#L242)
+Defined in: [index.ts:242](https://github.com/vadolasi/refluxo-engine/blob/9ea77458e0d8c8100efa08e8aa47ba7c77e293c2/packages/core/src/index.ts#L242)
 
 Unique name for the plugin.
 
@@ -18,7 +18,7 @@ Unique name for the plugin.
 
 > `optional` **onAfterNodeExecution**(`context`): `Promise`\<`void`\>
 
-Defined in: [index.ts:248](https://github.com/vadolasi/refluxo-engine/blob/e49f985bb3d0b5f8b6d444b2272a6a526eba442f/packages/core/src/index.ts#L248)
+Defined in: [index.ts:248](https://github.com/vadolasi/refluxo-engine/blob/9ea77458e0d8c8100efa08e8aa47ba7c77e293c2/packages/core/src/index.ts#L248)
 
 Called after a node is executed successfully.
 
@@ -38,7 +38,7 @@ Called after a node is executed successfully.
 
 > `optional` **onBeforeNodeExecution**(`context`): `Promise`\<`void`\>
 
-Defined in: [index.ts:245](https://github.com/vadolasi/refluxo-engine/blob/e49f985bb3d0b5f8b6d444b2272a6a526eba442f/packages/core/src/index.ts#L245)
+Defined in: [index.ts:245](https://github.com/vadolasi/refluxo-engine/blob/9ea77458e0d8c8100efa08e8aa47ba7c77e293c2/packages/core/src/index.ts#L245)
 
 Called before a node is executed.
 
@@ -58,7 +58,7 @@ Called before a node is executed.
 
 > `optional` **onNodeError**(`context`): `Promise`\<`void`\>
 
-Defined in: [index.ts:251](https://github.com/vadolasi/refluxo-engine/blob/e49f985bb3d0b5f8b6d444b2272a6a526eba442f/packages/core/src/index.ts#L251)
+Defined in: [index.ts:251](https://github.com/vadolasi/refluxo-engine/blob/9ea77458e0d8c8100efa08e8aa47ba7c77e293c2/packages/core/src/index.ts#L251)
 
 Called when a node execution fails.
 
@@ -78,7 +78,7 @@ Called when a node execution fails.
 
 > `optional` **onWorkflowComplete**(`snapshot`): `Promise`\<`void`\>
 
-Defined in: [index.ts:257](https://github.com/vadolasi/refluxo-engine/blob/e49f985bb3d0b5f8b6d444b2272a6a526eba442f/packages/core/src/index.ts#L257)
+Defined in: [index.ts:257](https://github.com/vadolasi/refluxo-engine/blob/9ea77458e0d8c8100efa08e8aa47ba7c77e293c2/packages/core/src/index.ts#L257)
 
 Called when the workflow completes successfully.
 
@@ -98,7 +98,7 @@ Called when the workflow completes successfully.
 
 > `optional` **onWorkflowPause**(`snapshot`): `Promise`\<`void`\>
 
-Defined in: [index.ts:260](https://github.com/vadolasi/refluxo-engine/blob/e49f985bb3d0b5f8b6d444b2272a6a526eba442f/packages/core/src/index.ts#L260)
+Defined in: [index.ts:260](https://github.com/vadolasi/refluxo-engine/blob/9ea77458e0d8c8100efa08e8aa47ba7c77e293c2/packages/core/src/index.ts#L260)
 
 Called when the workflow is paused.
 
@@ -118,7 +118,7 @@ Called when the workflow is paused.
 
 > `optional` **onWorkflowStart**(`snapshot`): `Promise`\<`void`\>
 
-Defined in: [index.ts:254](https://github.com/vadolasi/refluxo-engine/blob/e49f985bb3d0b5f8b6d444b2272a6a526eba442f/packages/core/src/index.ts#L254)
+Defined in: [index.ts:254](https://github.com/vadolasi/refluxo-engine/blob/9ea77458e0d8c8100efa08e8aa47ba7c77e293c2/packages/core/src/index.ts#L254)
 
 Called when the workflow starts.
 

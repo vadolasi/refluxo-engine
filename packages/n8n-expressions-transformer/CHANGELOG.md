@@ -1,5 +1,12 @@
 # @refluxo/n8n-expressions-transformer
 
+## 2.0.0
+
+### Patch Changes
+
+- Updated dependencies
+  - @refluxo/core@0.3.0
+
 ## 1.0.0
 
 ### Minor Changes
