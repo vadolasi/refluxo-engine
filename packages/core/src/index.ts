@@ -360,11 +360,11 @@ export class WorkflowEngine<T extends NodesDefinition = NodesDefinition> {
    */
   private async callPluginHook(
     hookName: keyof Plugin,
-    arg: any
+    arg: unknown
   ): Promise<void> {
     for (const plugin of this.plugins) {
       const hook = plugin[hookName] as
-        | ((...args: any[]) => Promise<void>)
+        | ((...args: unknown[]) => Promise<void>)
         | undefined
       if (hook) {
         try {
@@ -751,4 +751,4 @@ export class WorkflowEngine<T extends NodesDefinition = NodesDefinition> {
   }
 }
 
-export { StandardSchemaValidator } from "./standard-schema"
+export { StandardSchemaValidator } from "./standard-schema-validator"
